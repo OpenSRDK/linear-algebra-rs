@@ -2,12 +2,15 @@ use crate::{
     matrix::{operations::identity::identity, Matrix},
     types::{Diagonal, PositiveSemiDefinite, Square},
 };
-use lapack::*;
+use lapack::dgesvd;
 
 impl Matrix<PositiveSemiDefinite> {
-    pub fn singular_value_decomposition(
-        &self,
-    ) -> Result<(Matrix<Square>, Matrix<Diagonal>, Matrix<Square>), i32> {
+    /// # Singular Value Decomposition
+    ///
+    /// https://en.wikipedia.org/wiki/Singular_value_decomposition
+    ///
+    /// `M = U * Sigma * V^T`
+    pub fn svd(&self) -> Result<(Matrix<Square>, Matrix<Diagonal>, Matrix<Square>), i32> {
         if self.rows != self.columns {
             return Err(0);
         }
@@ -23,7 +26,7 @@ impl Matrix<PositiveSemiDefinite> {
                 'A' as u8,
                 self.rows as i32,
                 self.columns as i32,
-                &mut self.transpose().elements,
+                &mut self.t().elements,
                 self.rows as i32,
                 &mut s.elements,
                 &mut vec![],
@@ -38,7 +41,7 @@ impl Matrix<PositiveSemiDefinite> {
 
         match info {
             0 => {
-                let u_t = u.transpose();
+                let u_t = u.t();
                 Ok((u, s, u_t))
             }
             i => Err(i),

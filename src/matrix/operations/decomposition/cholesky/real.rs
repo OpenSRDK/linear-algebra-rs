@@ -3,7 +3,13 @@ use crate::types::{PositiveDefinite, Standard};
 use lapack::dpftrf;
 
 impl Matrix<PositiveDefinite> {
-    pub fn cholesky_decomposition(&self) -> Result<Matrix, i32> {
+    /// # Cholesky decomposition
+    /// for f64
+    ///
+    /// https://en.wikipedia.org/wiki/Cholesky_decomposition
+    ///
+    /// `A = L * L^T`
+    pub fn cholesky(&self) -> Result<Matrix, i32> {
         if self.rows != self.columns {
             return Err(0);
         }

@@ -15,12 +15,12 @@ where
 macro_rules! implement {
     {$t: ty} => {
       impl Diagonalized<$t> {
-            pub fn inverse(&self) -> Matrix<Square, $t> {
-                &self.0 * self.1.inverse() * &self.2
+            pub fn inv(&self) -> Matrix<Square, $t> {
+                &self.0 * self.1.inv() * &self.2
             }
 
-            pub fn determinant(&self) -> $t {
-                self.1.determinant()
+            pub fn det(&self) -> $t {
+                self.1.det()
             }
         }
     };

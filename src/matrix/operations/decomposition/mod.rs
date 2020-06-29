@@ -1,2 +1,2 @@
 pub mod cholesky;
-pub mod singular_value;
+pub mod svd;

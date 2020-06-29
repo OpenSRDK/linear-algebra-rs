@@ -4,7 +4,9 @@ use crate::{
 };
 
 impl Matrix<PositiveDefinite> {
-    pub fn solve_linear_equations_cgm(self, constants: &Matrix) -> Result<Matrix, i32> {
+    /// # Solve equations Conjugate Gradient Method
+    /// for Positive definite Matrix
+    pub fn solve_eqs_cgm(self, constants: &Matrix) -> Result<Matrix, i32> {
         if self.rows != constants.rows || constants.columns != 1 {
             return Err(0);
         }
@@ -14,9 +16,9 @@ impl Matrix<PositiveDefinite> {
         let mut p = r.clone();
 
         loop {
-            let r_t = r.transpose();
+            let r_t = r.t();
             let a_p = &self * &p;
-            let alpha = (&r_t * &p)[0][0] / (p.transpose() * &a_p)[0][0];
+            let alpha = (&r_t * &p)[0][0] / (p.t() * &a_p)[0][0];
 
             let old_r = r.clone();
             x = x + p.clone() * alpha;
@@ -27,7 +29,7 @@ impl Matrix<PositiveDefinite> {
                 break;
             }
 
-            let beta = (r.transpose() * &r)[0][0] / (&r_t * &old_r)[0][0];
+            let beta = (r.t() * &r)[0][0] / (&r_t * &old_r)[0][0];
             p = r.clone() + p.clone() * beta;
         }
 

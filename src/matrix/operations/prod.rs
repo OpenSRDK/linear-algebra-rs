@@ -10,7 +10,7 @@ where
     T: Type,
     U: Number,
 {
-    pub fn linear_product<V: Type>(&self, rhs: &Matrix<V, U>) -> U {
+    pub fn linear_prod<V: Type>(&self, rhs: &Matrix<V, U>) -> U {
         if !self.is_same_size(rhs) {
             panic!("different dimensions")
         } else {
@@ -22,7 +22,7 @@ where
         }
     }
 
-    pub fn hadamard_product<V: Type>(self, rhs: &Matrix<V, U>) -> Matrix<Standard, U> {
+    pub fn hadamard_prod<V: Type>(self, rhs: &Matrix<V, U>) -> Matrix<Standard, U> {
         if !self.is_same_size(rhs) {
             panic!("different dimensions")
         }
@@ -37,5 +37,18 @@ where
             .collect::<Vec<_>>();
 
         slf.transmute()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::prelude::*;
+    #[test]
+    fn it_works() {
+        let a = identity::<f64>(2);
+        let b = identity::<f64>(2);
+        let c = a.hadamard_prod(&b);
+
+        assert_eq!(b[0][0], c[0][0])
     }
 }

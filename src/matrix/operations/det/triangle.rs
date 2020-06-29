@@ -1,6 +1,10 @@
-use crate::{types::{Type, UpperTriangle, LowerTriangle, Diagonal}, number::Number, matrix::Matrix};
+use crate::{
+    matrix::Matrix,
+    number::Number,
+    types::{Diagonal, LowerTriangle, Type, UpperTriangle},
+};
 
-fn determinant_triangle<T, U>(slf: &Matrix<T, U>) -> U
+fn det_triangle<T, U>(slf: &Matrix<T, U>) -> U
 where
     T: Type,
     U: Number,
@@ -12,8 +16,10 @@ macro_rules! implement_triangle {
   ( $($t: ty),+ ) => {
       $(
           impl<U> Matrix<$t, U> where U: Number {
-              pub fn determinant(&self) -> U {
-                  determinant_triangle(self)
+              /// # Determinant
+              /// for $t Matrix
+              pub fn det(&self) -> U {
+                  det_triangle(self)
               }
           }
       )+

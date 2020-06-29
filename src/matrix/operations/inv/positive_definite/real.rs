@@ -2,10 +2,12 @@ use crate::{
     matrix::{operations::identity::identity, Matrix},
     types::PositiveDefinite,
 };
-use lapack::*;
+use lapack::dposv;
 
 impl Matrix<PositiveDefinite> {
-    pub fn inverse(&self) -> Result<Matrix<PositiveDefinite>, i32> {
+    /// # Inverse
+    /// for Positive Definite Matrix
+    pub fn inv(&self) -> Result<Matrix<PositiveDefinite>, i32> {
         if self.rows != self.columns {
             return Err(0);
         }
@@ -17,7 +19,7 @@ impl Matrix<PositiveDefinite> {
 
         unsafe {
             dposv(
-                'L' as u8,
+                'U' as u8,
                 self.rows as i32,
                 self.rows as i32,
                 &mut elements,

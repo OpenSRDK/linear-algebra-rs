@@ -74,7 +74,7 @@ impl CirculantMatrix<f64> {
             }
         }
 
-        let fourier_matrix_t = fourier_matrix.transpose();
+        let fourier_matrix_t = fourier_matrix.t();
 
         let eigenvalues: Vec<c64> = (0..n)
             .into_par_iter()

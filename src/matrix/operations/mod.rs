@@ -1,10 +1,10 @@
 pub mod decomposition;
-pub mod determinant;
+pub mod det;
 pub mod diag;
 pub mod identity;
-pub mod inverse;
-pub mod product;
-pub mod solve_linear_equations;
+pub mod inv;
+pub mod prod;
+pub mod solve_eqs;
+pub mod t;
 pub mod trace;
-pub mod transpose;
 pub mod zeros;

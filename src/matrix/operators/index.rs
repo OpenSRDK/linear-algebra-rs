@@ -10,9 +10,6 @@ where
 {
     type Output = [U];
     fn index(&self, index: usize) -> &Self::Output {
-        if index >= self.rows {
-            panic!()
-        }
         let i = self.columns * index;
         &self.elements[i..i + self.columns]
     }
@@ -24,9 +21,6 @@ where
     U: Number,
 {
     fn index_mut(&mut self, index: usize) -> &mut Self::Output {
-        if index >= self.columns {
-            panic!()
-        }
         let i = self.columns * index;
         &mut self.elements[i..i + self.columns]
     }

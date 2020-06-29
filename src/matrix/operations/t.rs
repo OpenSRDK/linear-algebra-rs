@@ -2,7 +2,7 @@ use crate::matrix::Matrix;
 use crate::number::Number;
 use crate::types::*;
 
-fn transpose<T, U, V>(slf: &Matrix<T, U>) -> Matrix<V, U>
+fn t<T, U, V>(slf: &Matrix<T, U>) -> Matrix<V, U>
 where
     T: Type,
     U: Number,
@@ -25,8 +25,8 @@ macro_rules! implement {
         where
             U: Number,
         {
-            pub fn transpose(&self) -> Matrix<$t2, U> {
-                transpose(self)
+            pub fn t(&self) -> Matrix<$t2, U> {
+                t(self)
             }
         }
     };
@@ -43,7 +43,7 @@ macro_rules! implement_clone {
         where
             U: Number,
         {
-            pub fn transpose(&self) -> Matrix<$t1, U> {
+            pub fn t(&self) -> Matrix<$t1, U> {
                 self.clone()
             }
         }

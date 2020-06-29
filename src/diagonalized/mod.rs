@@ -4,6 +4,8 @@ use crate::{
     types::{Diagonal, Square},
 };
 
+/// # Diagonalized
+/// `A = P * Lambda * P^{-1}`
 pub struct Diagonalized<U>(
     pub Matrix<Square, U>,
     pub Matrix<Diagonal, U>,

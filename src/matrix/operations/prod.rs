@@ -10,6 +10,7 @@ where
     T: Type,
     U: Number,
 {
+    /// # Linear product
     pub fn linear_prod<V: Type>(&self, rhs: &Matrix<V, U>) -> U {
         if !self.is_same_size(rhs) {
             panic!("different dimensions")
@@ -22,6 +23,7 @@ where
         }
     }
 
+    /// # Hamadard product
     pub fn hadamard_prod<V: Type>(self, rhs: &Matrix<V, U>) -> Matrix<Standard, U> {
         if !self.is_same_size(rhs) {
             panic!("different dimensions")

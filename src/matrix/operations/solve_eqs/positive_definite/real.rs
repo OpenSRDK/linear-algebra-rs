@@ -5,7 +5,7 @@ use crate::{
 
 impl Matrix<PositiveDefinite> {
     /// # Solve equations Conjugate Gradient Method
-    /// for Positive definite Matrix
+    /// for PositiveDefinite Matrix
     pub fn solve_eqs_cgm(self, constants: &Matrix) -> Result<Matrix, i32> {
         if self.rows != constants.rows || constants.columns != 1 {
             return Err(0);

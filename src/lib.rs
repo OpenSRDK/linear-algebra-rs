@@ -1,7 +1,8 @@
 extern crate blas;
+extern crate blas_src;
 extern crate lapack;
+extern crate lapack_src;
 extern crate num_complex;
-extern crate openblas_src;
 extern crate rayon;
 
 pub mod circulant_matrix;

@@ -32,3 +32,23 @@ impl Matrix<Square> {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::prelude::*;
+    #[test]
+    fn it_works() {
+        let mut a = Matrix::<Square, f64>::zeros(2);
+        a[0][0] = 1.0;
+        a[0][1] = 2.0;
+        a[1][0] = 2.0;
+        a[1][1] = 1.0;
+
+        let mut b = Matrix::<Standard, f64>::zeros(2, 1);
+        b[0][0] = 3.0;
+        b[1][0] = 3.0;
+        let x = a.solve_eqs(&b);
+
+        assert_eq!(x.unwrap()[0][0], 1.0)
+    }
+}

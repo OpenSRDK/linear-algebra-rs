@@ -4,6 +4,7 @@ use crate::{
     types::{Diagonal, Square},
 };
 
+/// # Identity
 pub fn identity<U>(n: usize) -> Matrix<Diagonal, U>
 where
     U: Number,

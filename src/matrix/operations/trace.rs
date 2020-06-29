@@ -12,6 +12,7 @@ macro_rules! implement {
   ( $($t: ty),+ ) => {
       $(
           impl<U: Number> Matrix<$t, U> {
+              /// # Trace
               pub fn trace(&self) -> U {
                   trace(self)
               }

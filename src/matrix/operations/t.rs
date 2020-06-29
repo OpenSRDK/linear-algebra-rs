@@ -25,6 +25,7 @@ macro_rules! implement {
         where
             U: Number,
         {
+            /// # Transpose
             pub fn t(&self) -> Matrix<$t2, U> {
                 t(self)
             }

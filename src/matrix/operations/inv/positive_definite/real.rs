@@ -6,7 +6,7 @@ use lapack::dposv;
 
 impl Matrix<PositiveDefinite> {
     /// # Inverse
-    /// for Positive Definite Matrix
+    /// for PositiveDefinite Matrix
     pub fn inv(&self) -> Result<Matrix<PositiveDefinite>, i32> {
         if self.rows != self.columns {
             return Err(0);

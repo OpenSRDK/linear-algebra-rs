@@ -6,6 +6,7 @@ use crate::types::{Standard, Type};
 use rayon::prelude::*;
 use std::marker::PhantomData;
 
+/// # Matrix
 #[derive(Clone, Debug, Default, Hash)]
 pub struct Matrix<T = Standard, U = f64>
 where

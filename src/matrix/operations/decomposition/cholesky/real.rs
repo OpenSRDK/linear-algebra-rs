@@ -1,5 +1,5 @@
 use crate::matrix::Matrix;
-use crate::types::{PositiveDefinite, Standard};
+use crate::types::{LowerTriangle, PositiveDefinite};
 use lapack::dpftrf;
 
 impl Matrix<PositiveDefinite> {
@@ -9,12 +9,12 @@ impl Matrix<PositiveDefinite> {
     /// https://en.wikipedia.org/wiki/Cholesky_decomposition
     ///
     /// `A = L * L^T`
-    pub fn cholesky(&self) -> Result<Matrix, i32> {
+    pub fn cholesky(&self) -> Result<Matrix<LowerTriangle>, i32> {
         if self.rows != self.columns {
             return Err(0);
         }
 
-        let mut a = self.clone().transmute::<Standard>();
+        let mut a = self.clone().transmute();
 
         let mut info = 0;
 

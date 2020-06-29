@@ -32,6 +32,8 @@ macro_rules! implement_square {
   ( $($t: ty),+ ) => {
       $(
           impl Matrix<$t> {
+              /// # Determinant
+              /// for $t Matrix
               pub fn det(&self) -> Result<f64, i32> {
                   det_square(self)
               }

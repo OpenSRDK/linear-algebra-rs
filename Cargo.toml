@@ -13,7 +13,8 @@ categories = ["mathematics", "science"]
 
 [dependencies]
 blas = "0.20"
-openblas-src = "0.9"
+blas-src = { version = "0.6", features = ["openblas"] }
 lapack = "0.16"
+lapack-src = { version = "0.6", features = ["openblas"] }
 rayon = "1.3.1"
 num-complex = "0.3.0"

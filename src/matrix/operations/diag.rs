@@ -4,6 +4,7 @@ use crate::{
     types::{Diagonal, Square},
 };
 
+/// # Diagonal matrix
 pub fn diag<U>(vec: &[U]) -> Matrix<Diagonal, U>
 where
     U: Number,

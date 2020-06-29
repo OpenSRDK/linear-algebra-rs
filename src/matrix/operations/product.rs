@@ -1,4 +1,8 @@
-use crate::{types::{Standard, Type}, number::Number, matrix::Matrix};
+use crate::{
+    matrix::Matrix,
+    number::Number,
+    types::{Standard, Type},
+};
 use rayon::prelude::*;
 
 impl<T, U> Matrix<T, U>

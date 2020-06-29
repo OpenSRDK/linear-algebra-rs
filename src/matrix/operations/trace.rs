@@ -1,4 +1,4 @@
-use crate::{types::*, number::Number, matrix::Matrix};
+use crate::{matrix::Matrix, number::Number, types::*};
 
 fn trace<T, U>(slf: &Matrix<T, U>) -> U
 where

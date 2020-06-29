@@ -1,6 +1,6 @@
-use crate::types::*;
 use crate::matrix::Matrix;
 use crate::number::Number;
+use crate::types::*;
 use rayon::prelude::*;
 use std::ops::Add;
 

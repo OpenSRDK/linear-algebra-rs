@@ -1,5 +1,5 @@
 use crate::matrix::Matrix;
-use crate::types::{Type, UpperTriangle, Square, PositiveDefinite, PositiveSemiDefinite};
+use crate::types::{PositiveDefinite, PositiveSemiDefinite, Square, Type, UpperTriangle};
 use lapack::dgetrf;
 
 fn determinant_square<T>(slf: &Matrix<T, f64>) -> Result<f64, i32>

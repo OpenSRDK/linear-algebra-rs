@@ -1,6 +1,6 @@
-use crate::types::*;
 use crate::matrix::Matrix;
-use crate::number::{Number,c64};
+use crate::number::{c64, Number};
+use crate::types::*;
 use blas::{dgemm, zgemm};
 use rayon::prelude::*;
 
@@ -197,20 +197,21 @@ implement_commutate! {LowerTriangle, Diagonal, LowerTriangle}
 implement_commutate! {LowerTriangle, PositiveDefinite, Square}
 implement_commutate! {LowerTriangle, PositiveSemiDefinite, Square}
 
-implement! {Diagonal, PositiveDefinite, Diagonal}
-implement_commutate! {Diagonal, PositiveSemiDefinite, Diagonal}
+implement! {Diagonal, Diagonal, Diagonal}
+implement_commutate! {Diagonal, PositiveDefinite, Square}
+implement_commutate! {Diagonal, PositiveSemiDefinite, Square}
 
 implement! {PositiveDefinite, PositiveDefinite, Square}
 implement_commutate! {PositiveDefinite, PositiveSemiDefinite, Square}
 
 implement! {PositiveSemiDefinite, PositiveSemiDefinite, Square}
 
-
 #[cfg(test)]
 mod tests {
     use crate::prelude::*;
     #[test]
     fn it_works() {
-        
+        let i: Matrix<Diagonal> = identity::<f64>(2) * identity::<f64>(2);
+        assert_eq!(i[0][0], 1.0)
     }
 }

@@ -1,4 +1,7 @@
-use crate::{types::{PositiveDefinite}, matrix::{operations::identity::identity, Matrix}};
+use crate::{
+    matrix::{operations::identity::identity, Matrix},
+    types::PositiveDefinite,
+};
 use lapack::*;
 
 impl Matrix<PositiveDefinite> {

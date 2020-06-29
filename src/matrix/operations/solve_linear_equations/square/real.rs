@@ -1,5 +1,5 @@
 use crate::{matrix::Matrix, types::Square};
-use lapack::*;
+use lapack::dgesv;
 
 impl Matrix<Square> {
     pub fn solve_linear_equations(self, constants: &Matrix) -> Result<Matrix, i32> {

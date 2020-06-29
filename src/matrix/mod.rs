@@ -1,8 +1,8 @@
 pub mod operations;
 pub mod operators;
 
+use crate::number::{c64, Number};
 use crate::types::{Standard, Type};
-use crate::number::{Number, c64};
 use rayon::prelude::*;
 use std::marker::PhantomData;
 

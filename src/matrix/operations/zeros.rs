@@ -1,5 +1,8 @@
-
-use crate::{number::Number, types::{Square, Standard}, matrix::Matrix};
+use crate::{
+    matrix::Matrix,
+    number::Number,
+    types::{Square, Standard},
+};
 
 impl<U> Matrix<Standard, U>
 where
@@ -10,8 +13,11 @@ where
     }
 }
 
-impl<U> Matrix<Square, U> where U:Number {
-  pub fn zeros(dim: usize) -> Self {
-      Self::new(dim, dim, vec![U::default(); dim * dim])
-  }
+impl<U> Matrix<Square, U>
+where
+    U: Number,
+{
+    pub fn zeros(dim: usize) -> Self {
+        Self::new(dim, dim, vec![U::default(); dim * dim])
+    }
 }

@@ -1,6 +1,6 @@
-use crate::types::Type;
 use crate::matrix::Matrix;
-use crate::number::{Number};
+use crate::number::Number;
+use crate::types::Type;
 use std::ops::{Index, IndexMut};
 
 impl<T, U> Index<usize> for Matrix<T, U>

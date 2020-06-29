@@ -1,4 +1,8 @@
-use crate::{matrix::Matrix, number::{Number, c64}, types::{Diagonal, Square}};
+use crate::{
+    matrix::Matrix,
+    number::{c64, Number},
+    types::{Diagonal, Square},
+};
 
 pub struct Diagonalized<U>(
     pub Matrix<Square, U>,

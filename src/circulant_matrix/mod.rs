@@ -1,9 +1,8 @@
 use crate::{
-  diagonalized::Diagonalized, number::{
-    Number, c64
-  }, matrix::{
-    operations::diag::diag, Matrix
-  }, types::Square
+    diagonalized::Diagonalized,
+    matrix::{operations::diag::diag, Matrix},
+    number::{c64, Number},
+    types::Square,
 };
 use rayon::prelude::*;
 use std::f64::consts::PI;

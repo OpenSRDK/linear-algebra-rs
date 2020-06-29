@@ -1,4 +1,7 @@
-use crate::{types::{Diagonal, PositiveSemiDefinite, Square}, matrix::{Matrix, operations::identity::identity}};
+use crate::{
+    matrix::{operations::identity::identity, Matrix},
+    types::{Diagonal, PositiveSemiDefinite, Square},
+};
 use lapack::*;
 
 impl Matrix<PositiveSemiDefinite> {
@@ -10,7 +13,7 @@ impl Matrix<PositiveSemiDefinite> {
         }
 
         let mut info = 0;
-        let mut  u = Matrix::<Square>::zeros(self.rows);
+        let mut u = Matrix::<Square>::zeros(self.rows);
         let mut s = identity(self.rows);
         let lwork = 2 * self.rows;
 
@@ -35,9 +38,9 @@ impl Matrix<PositiveSemiDefinite> {
 
         match info {
             0 => {
-              let u_t = u.transpose();
-              Ok((u, s, u_t))
-            },
+                let u_t = u.transpose();
+                Ok((u, s, u_t))
+            }
             i => Err(i),
         }
     }

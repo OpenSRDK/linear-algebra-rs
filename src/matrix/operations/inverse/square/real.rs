@@ -1,4 +1,7 @@
-use crate::{types::{Square, Standard}, matrix::{operations::identity::identity, Matrix}};
+use crate::{
+    matrix::{operations::identity::identity, Matrix},
+    types::{Square, Standard},
+};
 use lapack::*;
 
 impl Matrix<Square> {

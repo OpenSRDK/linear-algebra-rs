@@ -4,9 +4,9 @@ use lapack::dgesv;
 impl Matrix<Square> {
     /// # Solve equations
     /// for Square Matrix
-    pub fn solve_eqs(self, constants: &Matrix) -> Result<Matrix, i32> {
+    pub fn solve_eqs(self, constants: &Matrix) -> Result<Matrix, String> {
         if self.rows != constants.rows || constants.columns != 1 {
-            return Err(0);
+            return Err("dimension mismatch".to_owned());
         }
 
         let mut solution_matrix = constants.clone();
@@ -28,7 +28,7 @@ impl Matrix<Square> {
 
         match info {
             0 => Ok(solution_matrix),
-            i => Err(i),
+            i => Err(i.to_string()),
         }
     }
 }

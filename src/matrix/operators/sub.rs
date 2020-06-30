@@ -1,6 +1,6 @@
-use crate::types::*;
 use crate::matrix::Matrix;
 use crate::number::Number;
+use crate::types::*;
 use rayon::prelude::*;
 use std::ops::Sub;
 
@@ -12,7 +12,7 @@ where
     W: Type,
 {
     if !slf.is_same_size(&rhs) {
-        panic!("different dimensions")
+        panic!("dimension mismatch")
     }
 
     slf.elements

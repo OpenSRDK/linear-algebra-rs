@@ -7,9 +7,9 @@ use lapack::dposv;
 impl Matrix<PositiveDefinite> {
     /// # Inverse
     /// for PositiveDefinite Matrix
-    pub fn inv(&self) -> Result<Matrix<PositiveDefinite>, i32> {
+    pub fn inv(&self) -> Result<Matrix<PositiveDefinite>, String> {
         if self.rows != self.columns {
-            return Err(0);
+            return Err("dimension mismatch".to_owned());
         }
 
         let mut elements = self.elements.clone();
@@ -32,7 +32,7 @@ impl Matrix<PositiveDefinite> {
 
         match info {
             0 => Ok(solution_matrix),
-            i => Err(i),
+            i => Err(i.to_string()),
         }
     }
 }

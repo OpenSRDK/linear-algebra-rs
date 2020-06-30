@@ -10,9 +10,9 @@ impl Matrix<PositiveSemiDefinite> {
     /// https://en.wikipedia.org/wiki/Singular_value_decomposition
     ///
     /// `M = U * Sigma * V^T`
-    pub fn svd(&self) -> Result<(Matrix<Square>, Matrix<Diagonal>, Matrix<Square>), i32> {
+    pub fn svd(&self) -> Result<(Matrix<Square>, Matrix<Diagonal>, Matrix<Square>), String> {
         if self.rows != self.columns {
-            return Err(0);
+            return Err("dimension mismatch".to_owned());
         }
 
         let mut info = 0;
@@ -44,7 +44,7 @@ impl Matrix<PositiveSemiDefinite> {
                 let u_t = u.t();
                 Ok((u, s, u_t))
             }
-            i => Err(i),
+            i => Err(i.to_string()),
         }
     }
 }

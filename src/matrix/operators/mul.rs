@@ -50,7 +50,7 @@ where
     W: Type,
 {
     if lhs.columns != rhs.rows {
-        panic!("different dimensions")
+        panic!("dimension mismatch")
     }
 
     let mut new_matrix = Matrix::<Standard>::zeros(lhs.rows, rhs.columns).transmute();
@@ -83,7 +83,7 @@ where
     W: Type,
 {
     if lhs.columns != rhs.rows {
-        panic!("different dimensions")
+        panic!("dimension mismatch")
     }
 
     let mut new_matrix = Matrix::<Standard, c64>::zeros(lhs.rows, rhs.columns).transmute();

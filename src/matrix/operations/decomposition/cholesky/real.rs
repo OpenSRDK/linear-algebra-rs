@@ -9,9 +9,9 @@ impl Matrix<PositiveDefinite> {
     /// https://en.wikipedia.org/wiki/Cholesky_decomposition
     ///
     /// `A = L * L^T`
-    pub fn cholesky(&self) -> Result<Matrix<LowerTriangle>, i32> {
+    pub fn cholesky(&self) -> Result<Matrix<LowerTriangle>, String> {
         if self.rows != self.columns {
-            return Err(0);
+            return Err("dimension mismatch".to_owned());
         }
 
         let mut a = self.clone().transmute();
@@ -30,7 +30,7 @@ impl Matrix<PositiveDefinite> {
 
         match info {
             0 => Ok(a),
-            i => Err(i),
+            i => Err(i.to_string()),
         }
     }
 }

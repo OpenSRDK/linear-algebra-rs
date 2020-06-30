@@ -7,7 +7,7 @@ use lapack::dgesv;
 impl Matrix<Square> {
     /// # Inverse
     /// for Square Matrix
-    pub fn inv(&self) -> Result<Matrix, i32> {
+    pub fn inv(&self) -> Result<Matrix, String> {
         let mut elements = self.elements.clone();
         let mut solution_matrix = identity(self.rows).transmute::<Standard>();
 
@@ -29,7 +29,7 @@ impl Matrix<Square> {
 
         match info {
             0 => Ok(solution_matrix),
-            i => Err(i),
+            i => Err(i.to_string()),
         }
     }
 }

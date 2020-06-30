@@ -12,7 +12,7 @@ where
     W: Type,
 {
     if !slf.is_same_size(&rhs) {
-        panic!("different dimensions")
+        panic!("dimension mismatch")
     }
 
     slf.elements

@@ -2,7 +2,7 @@ use crate::matrix::Matrix;
 use crate::types::{PositiveDefinite, PositiveSemiDefinite, Square, Type, UpperTriangle};
 use lapack::dgetrf;
 
-fn det_square<T>(slf: &Matrix<T, f64>) -> Result<f64, i32>
+fn det_square<T>(slf: &Matrix<T, f64>) -> Result<f64, String>
 where
     T: Type,
 {
@@ -24,7 +24,7 @@ where
 
     match info {
         i if i == 0 => Ok(solution_matrix.det()),
-        i => Err(i),
+        i => Err(i.to_string()),
     }
 }
 
@@ -34,7 +34,7 @@ macro_rules! implement_square {
           impl Matrix<$t> {
               /// # Determinant
               /// for $t Matrix
-              pub fn det(&self) -> Result<f64, i32> {
+              pub fn det(&self) -> Result<f64, String> {
                   det_square(self)
               }
           }

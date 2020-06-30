@@ -17,7 +17,7 @@ where
         let dim = row.len();
 
         if column.len() != dim {
-            panic!("different dimensions")
+            panic!("dimension mismatch")
         }
         if dim < 2 || row[0] != column[0] {
             panic!("")

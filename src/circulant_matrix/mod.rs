@@ -1,3 +1,5 @@
+pub mod teoplitz_matrix;
+
 use crate::{
     diagonalized::Diagonalized,
     matrix::{operations::diag::diag, Matrix},
@@ -6,43 +8,6 @@ use crate::{
 };
 use rayon::prelude::*;
 use std::f64::consts::PI;
-
-pub struct ToeplitzMatrix<U>
-where
-    U: Number,
-{
-    dim: usize,
-    row: Vec<U>,
-    column: Vec<U>,
-}
-
-impl<U> ToeplitzMatrix<U>
-where
-    U: Number,
-{
-    pub fn new(row: Vec<U>, column: Vec<U>) -> Self {
-        let dim = row.len();
-
-        if column.len() != dim {
-            panic!("different dimensions")
-        }
-        if dim < 2 || row[0] != column[0] {
-            panic!("")
-        }
-
-        Self { dim, row, column }
-    }
-
-    pub fn embedded_circulant(&self) -> CirculantMatrix<U> {
-        let row = (0..self.dim)
-            .into_iter()
-            .chain((1..self.dim - 1).rev().into_iter())
-            .map(|i| self.row[i])
-            .collect();
-
-        CirculantMatrix::<U>::new(row)
-    }
-}
 
 pub struct CirculantMatrix<U>
 where
@@ -68,7 +33,10 @@ impl CirculantMatrix<f64> {
         let mut fourier_matrix: Matrix<Square, c64> = Matrix::<Square, c64>::zeros(n);
 
         for i in 0..n {
-            for j in 0..n {
+            for j in 0..i {
+                fourier_matrix[i][j] = fourier_matrix[j][i];
+            }
+            for j in i..n {
                 fourier_matrix[i][j] =
                     c64::new(0.0, -2.0 * PI * (i as f64) * (j as f64) / (n as f64));
             }
@@ -89,5 +57,18 @@ impl CirculantMatrix<f64> {
         let eigen_diag = diag(&eigenvalues);
 
         Diagonalized(fourier_matrix, eigen_diag, fourier_matrix_t)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::prelude::*;
+    #[test]
+    fn it_works() {
+        let a = CirculantMatrix::new(vec![1.0, 2.0]);
+        let diagonalized = a.eigen_decomposition();
+
+        assert_eq!(diagonalized.1[0][0].re, -1.0);
+        assert_eq!(diagonalized.1[1][1].re, 3.0);
     }
 }

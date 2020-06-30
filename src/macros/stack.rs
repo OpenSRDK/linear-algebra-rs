@@ -1,24 +1,19 @@
-
-use crate::{number::Number, macros::sub_matrix::SubMatrix, types::Standard, matrix::Matrix};
+use crate::{macros::sub_matrix::SubMatrix, matrix::Matrix, number::Number, types::Standard};
 
 #[macro_export]
 macro_rules! stack_v {
-    [$e: expr] => {
-        {
-            use $crate::macros::stack::Stack;
-            Stack::Vertical($e)
-        }
-  };
+    ($e: expr) => {{
+        use $crate::macros::stack::Stack;
+        Stack::Vertical($e)
+    }};
 }
 
 #[macro_export]
 macro_rules! stack_h {
-    [$e: expr] => {
-        {
-            use $crate::macros::stack::Stack;
-            Stack::Horizontal($e)
-        }
-    };
+    ($e: expr) => {{
+        use $crate::macros::stack::Stack;
+        Stack::Horizontal($e)
+    }};
 }
 
 #[macro_export]
@@ -29,24 +24,25 @@ macro_rules! stack {
             Stack::Only(Box::new($e))
         }
     };
-    [$($($e: expr),+);+] => {
-        {
-            use $crate::stack_v;
-            stack_v![vec![$(stack![$($e),+]),+]]
-        }
-    };
-    [$($e: expr),+] => {
+    ($($e: expr),+) => {
         {
             use $crate::stack_h;
-            stack_h![vec![$(stack![$e]),+]]
+            stack_h!(vec![$(stack!($e)),+])
         }
     };
+    ($($($e: expr),+);+) => {
+        {
+            use $crate::stack_v;
+            stack_v!(vec![$(stack!($($e),+)),+])
+        }
+    };
+
 }
 
 pub enum Stack<'a, U: Number> {
     Only(Box<dyn SubMatrix<U> + 'a>),
-    Vertical(Vec<Stack<'a, U>>),
     Horizontal(Vec<Stack<'a, U>>),
+    Vertical(Vec<Stack<'a, U>>),
 }
 
 impl<'a, U> Stack<'a, U>
@@ -64,24 +60,6 @@ where
     fn size(&self) -> (usize, usize) {
         match self {
             Stack::Only(sub_matrix) => sub_matrix.size(),
-            Stack::Vertical(vec) => {
-                let mut rows = 0usize;
-                let mut columns = 0usize;
-
-                for e in vec.iter() {
-                    let size = e.size();
-
-                    if columns == 0 {
-                        columns = size.1;
-                    } else if columns != size.1 {
-                        panic!("different dimensions")
-                    }
-
-                    rows += size.0;
-                }
-
-                (rows, columns)
-            }
             Stack::Horizontal(vec) => {
                 let mut rows = 0usize;
                 let mut columns = 0usize;
@@ -100,15 +78,28 @@ where
 
                 (rows, columns)
             }
+            Stack::Vertical(vec) => {
+                let mut rows = 0usize;
+                let mut columns = 0usize;
+
+                for e in vec.iter() {
+                    let size = e.size();
+
+                    if columns == 0 {
+                        columns = size.1;
+                    } else if columns != size.1 {
+                        panic!("different dimensions")
+                    }
+
+                    rows += size.0;
+                }
+
+                (rows, columns)
+            }
         }
     }
 
-    fn transcript(
-        &self,
-        matrix: &mut Matrix<Standard, U>,
-        i: usize,
-        j: usize,
-    ) -> (usize, usize) {
+    fn transcript(&self, matrix: &mut Matrix<Standard, U>, i: usize, j: usize) -> (usize, usize) {
         match self {
             Stack::Only(sub_matrix) => {
                 let size = sub_matrix.size();
@@ -121,7 +112,7 @@ where
 
                 size
             }
-            Stack::Vertical(vec) => {
+            Stack::Horizontal(vec) => {
                 let mut size = (0usize, 0usize);
 
                 for e in vec.iter() {
@@ -132,7 +123,7 @@ where
 
                 size
             }
-            Stack::Horizontal(vec) => {
+            Stack::Vertical(vec) => {
                 let mut size = (0usize, 0usize);
 
                 for e in vec.iter() {

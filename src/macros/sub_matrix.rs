@@ -1,4 +1,3 @@
-
 use crate::{matrix::Matrix, number::Number, types::Type};
 
 pub trait SubMatrix<U>: Send + Sync {
@@ -16,19 +15,6 @@ where
 
     fn index(&self, _: usize, _: usize) -> U {
         *self
-    }
-}
-
-impl<'a, U> SubMatrix<U> for &'a [U]
-where
-    U: Number,
-{
-    fn size(&self) -> (usize, usize) {
-        (1usize, self.len())
-    }
-
-    fn index(&self, _: usize, j: usize) -> U {
-        self[j]
     }
 }
 

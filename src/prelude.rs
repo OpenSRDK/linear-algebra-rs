@@ -1,4 +1,6 @@
 pub use crate::{
+    circulant_matrix::{teoplitz_matrix::ToeplitzMatrix, CirculantMatrix},
+    diagonalized::Diagonalized,
     mat,
     matrix::{
         operations::{diag::diag, identity::identity},

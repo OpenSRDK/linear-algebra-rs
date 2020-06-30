@@ -26,7 +26,6 @@ where
 }
 
 impl CirculantMatrix<f64> {
-    /// Read MLP series "GP amd ML"
     pub fn eigen_decomposition(&self) -> Diagonalized<c64> {
         let n = self.row.len();
 
@@ -62,7 +61,7 @@ impl CirculantMatrix<f64> {
 
 #[cfg(test)]
 mod tests {
-    use crate::prelude::*;
+    use super::*;
     #[test]
     fn it_works() {
         let a = CirculantMatrix::new(vec![1.0, 2.0]);

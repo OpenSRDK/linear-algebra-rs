@@ -106,7 +106,7 @@ where
 
                 for k in 0..size.0 {
                     for l in 0..size.1 {
-                        matrix[i + k][j + l] = sub_matrix.index(i + k, j + l);
+                        matrix[i + k][j + l] = sub_matrix.index(k, l);
                     }
                 }
 

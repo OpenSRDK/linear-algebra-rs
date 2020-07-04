@@ -1,6 +1,7 @@
 extern crate blas;
 extern crate lapack;
 extern crate num_complex;
+#[cfg(test)]
 extern crate openblas_src;
 extern crate rayon;
 

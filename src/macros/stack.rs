@@ -116,9 +116,9 @@ where
                 let mut size = (0usize, 0usize);
 
                 for e in vec.iter() {
-                    let s = e.transcript(matrix, i + size.0, j);
-                    size.0 += s.0;
-                    size.1 = s.1;
+                    let s = e.transcript(matrix, i, j + size.1);
+                    size.0 = s.0;
+                    size.1 += s.1;
                 }
 
                 size

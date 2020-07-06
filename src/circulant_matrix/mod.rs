@@ -37,25 +37,26 @@ impl CirculantMatrix<f64> {
             }
             for j in i..n {
                 fourier_matrix[i][j] =
-                    c64::new(0.0, -2.0 * PI * (i as f64) * (j as f64) / (n as f64));
+                    c64::new(0.0, -2.0 * PI * (i as f64) * (j as f64) / (n as f64)).exp();
             }
         }
-
-        let fourier_matrix_t = fourier_matrix.t();
 
         let eigenvalues: Vec<c64> = (0..n)
             .into_par_iter()
             .map(|i| {
                 (0..n)
                     .into_par_iter()
-                    .map(|j| self.row[j] * fourier_matrix_t[i][j])
+                    .map(|j| self.row[j] * fourier_matrix[i][j])
                     .sum()
             })
             .collect();
 
         let eigen_diag = diag(&eigenvalues);
 
-        Diagonalized(fourier_matrix, eigen_diag, fourier_matrix_t)
+        fourier_matrix = fourier_matrix * c64::new(1.0 / (n as f64).sqrt(), 0.0);
+        let fourier_matrix_inv = fourier_matrix.adjoint();
+
+        Diagonalized(fourier_matrix, eigen_diag, fourier_matrix_inv)
     }
 }
 
@@ -64,10 +65,12 @@ mod tests {
     use super::*;
     #[test]
     fn it_works() {
-        let a = CirculantMatrix::new(vec![1.0, 2.0]);
+        let a = CirculantMatrix::new(vec![1.0, 2.0, 3.0]);
         let diagonalized = a.eigen_decomposition();
 
-        assert_eq!(diagonalized.1[0][0].re, -1.0);
-        assert_eq!(diagonalized.1[1][1].re, 3.0);
+        assert_eq!(diagonalized.1[0][0].re, 6.0);
+
+        let b = diagonalized.0 * diagonalized.1 * diagonalized.2;
+        assert_eq!(b[0][0].re, 1.0);
     }
 }

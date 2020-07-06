@@ -1,3 +1,4 @@
+pub mod adjoint;
 pub mod decomposition;
 pub mod det;
 pub mod diag;

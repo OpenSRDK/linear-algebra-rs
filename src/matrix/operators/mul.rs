@@ -211,7 +211,13 @@ mod tests {
     use crate::prelude::*;
     #[test]
     fn it_works() {
-        let i: Matrix<Diagonal> = identity::<f64>(2) * identity::<f64>(2);
-        assert_eq!(i[0][0], 1.0)
+        let a = mat!(
+          1.0, 2.0;
+          3.0, 4.0
+        ) * mat!(
+          5.0, 6.0;
+          7.0, 8.0
+        );
+        assert_eq!(a[0][0], 19.0)
     }
 }

@@ -30,14 +30,14 @@ impl CirculantMatrix<f64> {
         let n = self.row.len();
 
         let mut fourier_matrix: Matrix<Square, c64> = Matrix::<Square, c64>::zeros(n);
+        let omega = c64::new(0.0, -2.0 * PI / (n as f64)).exp() / (n as f64).sqrt();
 
         for i in 0..n {
             for j in 0..i {
                 fourier_matrix[i][j] = fourier_matrix[j][i];
             }
             for j in i..n {
-                fourier_matrix[i][j] =
-                    c64::new(0.0, -2.0 * PI * (i as f64) * (j as f64) / (n as f64)).exp();
+                fourier_matrix[i][j] = omega.powi((i * j) as i32);
             }
         }
 
@@ -53,7 +53,6 @@ impl CirculantMatrix<f64> {
 
         let eigen_diag = diag(&eigenvalues);
 
-        fourier_matrix = fourier_matrix * c64::new(1.0 / (n as f64).sqrt(), 0.0);
         let fourier_matrix_inv = fourier_matrix.adjoint();
 
         Diagonalized(fourier_matrix, eigen_diag, fourier_matrix_inv)

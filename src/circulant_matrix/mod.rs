@@ -2,11 +2,11 @@ pub mod teoplitz_matrix;
 
 use crate::{
     diagonalized::Diagonalized,
+    matrix::Vector,
     matrix::{operations::diag::diag, Matrix},
     number::{c64, Number},
     types::Square,
 };
-use rayon::prelude::*;
 use std::f64::consts::PI;
 
 pub struct CirculantMatrix<U>
@@ -30,7 +30,7 @@ impl CirculantMatrix<f64> {
         let n = self.row.len();
 
         let mut fourier_matrix: Matrix<Square, c64> = Matrix::<Square, c64>::zeros(n);
-        let omega = c64::new(0.0, -2.0 * PI / (n as f64)).exp() / (n as f64).sqrt();
+        let omega = c64::new(0.0, 2.0 * PI / (n as f64)).exp();
 
         for i in 0..n {
             for j in 0..i {
@@ -41,17 +41,10 @@ impl CirculantMatrix<f64> {
             }
         }
 
-        let eigenvalues: Vec<c64> = (0..n)
-            .into_par_iter()
-            .map(|i| {
-                (0..n)
-                    .into_par_iter()
-                    .map(|j| self.row[j] * fourier_matrix[i][j])
-                    .sum()
-            })
-            .collect();
+        let eigenvalues = self.row.to_row_vector().to_complex() * &fourier_matrix;
+        let eigen_diag = diag(&eigenvalues[0]);
 
-        let eigen_diag = diag(&eigenvalues);
+        fourier_matrix = fourier_matrix * c64::new(1.0 / (n as f64).sqrt(), 0.0);
 
         let fourier_matrix_inv = fourier_matrix.adjoint();
 
@@ -68,8 +61,5 @@ mod tests {
         let diagonalized = a.eigen_decomposition();
 
         assert_eq!(diagonalized.1[0][0].re, 6.0);
-
-        let b = diagonalized.0 * diagonalized.1 * diagonalized.2;
-        assert_eq!(b[0][0].re, 1.0);
     }
 }

@@ -50,7 +50,7 @@ impl<T> Matrix<T, f64>
 where
     T: Type,
 {
-    pub fn into_complex(&self) -> Matrix<T, c64> {
+    pub fn to_complex(&self) -> Matrix<T, c64> {
         Matrix::<T, c64>::new(
             self.rows,
             self.columns,
@@ -66,7 +66,7 @@ impl<T> Matrix<T, c64>
 where
     T: Type,
 {
-    pub fn into_real(&self) -> Matrix<T, f64> {
+    pub fn to_real(&self) -> Matrix<T, f64> {
         Matrix::<T, f64>::new(
             self.rows,
             self.columns,

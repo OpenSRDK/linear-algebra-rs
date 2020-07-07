@@ -57,15 +57,15 @@ where
 
     unsafe {
         dgemm(
-            'T' as u8,
-            'T' as u8,
+            'N' as u8,
+            'N' as u8,
             lhs.rows as i32,
             lhs.columns as i32,
             rhs.columns as i32,
             1.0,
-            lhs.elements.as_slice(),
-            lhs.rows as i32,
             rhs.elements.as_slice(),
+            lhs.rows as i32,
+            lhs.elements.as_slice(),
             rhs.columns as i32,
             0.0,
             &mut new_matrix.elements,
@@ -90,15 +90,15 @@ where
 
     unsafe {
         zgemm(
-            'T' as u8,
-            'T' as u8,
+            'N' as u8,
+            'N' as u8,
             lhs.rows as i32,
             lhs.columns as i32,
             rhs.columns as i32,
             blas::c64::new(1.0, 0.0),
-            transmute::<&[c64], &[blas::c64]>(&lhs.elements),
-            lhs.rows as i32,
             transmute::<&[c64], &[blas::c64]>(&rhs.elements),
+            lhs.rows as i32,
+            transmute::<&[c64], &[blas::c64]>(&lhs.elements),
             rhs.columns as i32,
             blas::c64::new(1.0, 0.0),
             transmute::<&mut [c64], &mut [blas::c64]>(&mut new_matrix.elements),

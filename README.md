@@ -4,7 +4,7 @@
 
 ```toml
 [dependencies]
-opensrdk-linear-algebra = { git = "https://github.com/OpenSRDK/linear-algebra-rs.git" }
+opensrdk-linear-algebra = "0.1.0"
 openblas-src = "0.9"
 ```
 

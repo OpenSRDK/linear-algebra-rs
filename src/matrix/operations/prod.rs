@@ -18,19 +18,18 @@ where
             self.elements
                 .par_iter()
                 .zip(rhs.elements.par_iter())
-                .map(|(s, r)| *s * *r)
+                .map(|(&s, &r)| s * r)
                 .sum()
         }
     }
 
     /// # Hamadard product
-    pub fn hadamard_prod<V: Type>(self, rhs: &Matrix<V, U>) -> Matrix<Standard, U> {
+    pub fn hadamard_prod<V: Type>(mut self, rhs: &Matrix<V, U>) -> Matrix<Standard, U> {
         if !self.is_same_size(rhs) {
             panic!("dimension mismatch")
         }
-        let mut slf = self;
 
-        slf.elements
+        self.elements
             .par_iter_mut()
             .zip(rhs.elements.par_iter())
             .map(|(s, r)| {
@@ -38,7 +37,30 @@ where
             })
             .collect::<Vec<_>>();
 
-        slf.transmute()
+        self.transmute()
+    }
+
+    /// # Kronecker product
+    pub fn kronecker_prod<V: Type>(&self, rhs: &Matrix<V, U>) -> Matrix<Standard, U> {
+        let sn = self.rows;
+        let sm = self.columns;
+        let rn = rhs.rows;
+        let rm = rhs.columns;
+        let n = sn * rn;
+        let m = sm * rm;
+        let mut matrix = Matrix::<Standard, U>::zeros(n, m);
+
+        for si in 0..sn {
+            for sj in 0..sm {
+                for ri in 0..rn {
+                    for rj in 0..rm {
+                        matrix[si * sn + ri][sj * sn + rj] = self[si][sj] * rhs[ri][rj];
+                    }
+                }
+            }
+        }
+
+        matrix
     }
 }
 

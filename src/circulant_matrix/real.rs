@@ -1,35 +1,14 @@
 use super::CirculantMatrix;
 use crate::{
     diagonalized::Diagonalized,
-    matrix::{operations::diag::diag, Matrix, Vector},
+    matrix::{operations::diag::diag, Matrix},
     number::c64,
     types::Square,
 };
+use rayon::prelude::*;
+use rustfft::FFTplanner;
 use std::f64::consts::PI;
-
-fn fft(a: &mut [c64]) {
-    let n = a.len();
-    if n == 1 {
-        return;
-    }
-    let mut b = vec![c64::default(); n / 2];
-    let mut c = vec![c64::default(); n / 2];
-
-    for i in 0..n {
-        match i % 2 {
-            0 => b[i / 2] = a[i],
-            1 => c[i / 2] = a[i],
-            _ => {}
-        }
-    }
-    fft(&mut b);
-    fft(&mut c);
-
-    let omega = c64::new(0.0, 2.0 * PI / (n as f64)).exp();
-    for i in 0..n {
-        a[i] = b[i % (n / 2)] + c[i % (n / 2)] * omega.powi(i as i32);
-    }
-}
+use std::mem::transmute;
 
 impl CirculantMatrix<f64> {
     pub fn eigen_decomposition(&self) -> Diagonalized<c64> {
@@ -47,10 +26,24 @@ impl CirculantMatrix<f64> {
             }
         }
 
-        let mut c = self.row.to_row_vector().to_complex();
-        fft(c.get_elements());
+        let mut input = self
+            .row
+            .par_iter()
+            .map(|&e| c64::new(e, 0.0))
+            .collect::<Vec<c64>>();
 
-        let eigen_diag = diag(&c[0]);
+        let mut output = vec![c64::default(); n];
+
+        let mut planner = FFTplanner::new(false);
+        let fft = planner.plan_fft(n);
+        unsafe {
+            fft.process(
+                transmute::<&mut [c64], &mut [rustfft::num_complex::Complex<f64>]>(&mut input),
+                transmute::<&mut [c64], &mut [rustfft::num_complex::Complex<f64>]>(&mut output),
+            );
+        }
+
+        let eigen_diag = diag(&output);
 
         fourier_matrix = fourier_matrix * c64::new(1.0 / (n as f64).sqrt(), 0.0);
 

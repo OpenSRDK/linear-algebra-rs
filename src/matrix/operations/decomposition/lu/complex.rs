@@ -1,7 +1,7 @@
 use crate::matrix::Matrix;
 use crate::{lu_decomposed::LUDecomposed, number::c64, types::Type};
 use lapack::zgetrf;
-use std::intrinsics::transmute;
+use std::mem::transmute;
 
 impl<T> Matrix<T, c64>
 where

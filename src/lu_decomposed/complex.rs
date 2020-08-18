@@ -5,7 +5,7 @@ use crate::{
     types::{PositiveDefinite, PositiveSemiDefinite, Square, UpperTriangle},
 };
 use lapack::zgetri;
-use std::intrinsics::transmute;
+use std::mem::transmute;
 
 macro_rules! implement {
   ( $($t: ty),+ ) => {

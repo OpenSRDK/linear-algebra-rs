@@ -4,7 +4,7 @@ use crate::types::*;
 use blas::{dgemm, zgemm};
 use rayon::prelude::*;
 
-use std::{intrinsics::transmute, ops::Mul};
+use std::{mem::transmute, ops::Mul};
 
 fn mul<T, U>(slf: U, mut rhs: Matrix<T, U>) -> Matrix<T, U>
 where

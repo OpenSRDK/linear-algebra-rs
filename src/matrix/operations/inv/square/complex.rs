@@ -4,7 +4,7 @@ use crate::{
     types::{Square, Standard},
 };
 use lapack::zgesv;
-use std::intrinsics::transmute;
+use std::mem::transmute;
 
 impl Matrix<Square, c64> {
     /// # Inverse

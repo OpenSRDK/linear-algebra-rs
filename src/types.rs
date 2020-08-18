@@ -1,6 +1,6 @@
 use crate::matrix::Matrix;
 use crate::number::Number;
-use std::{fmt::Debug, intrinsics::transmute};
+use std::{fmt::Debug, mem::transmute};
 
 pub trait Type: Clone + Copy + Debug + Default + Send + Sync {}
 

@@ -7,6 +7,7 @@ extern crate rayon;
 
 pub mod circulant_matrix;
 pub mod diagonalized;
+pub mod lu_decomposed;
 pub mod macros;
 pub mod matrix;
 pub mod number;

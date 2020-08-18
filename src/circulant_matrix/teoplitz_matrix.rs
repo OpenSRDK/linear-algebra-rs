@@ -26,6 +26,18 @@ where
         Self { dim, row, column }
     }
 
+    pub fn get_dim(&self) -> usize {
+        self.dim
+    }
+
+    pub fn get_row(&self) -> &[U] {
+        &self.row
+    }
+
+    pub fn get_column(&self) -> &[U] {
+        &self.column
+    }
+
     pub fn embedded_circulant(&self) -> CirculantMatrix<U> {
         let row = (0..self.dim)
             .into_iter()

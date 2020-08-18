@@ -4,12 +4,12 @@ use lapack::dgesv;
 impl Matrix<Square> {
     /// # Solve equations
     /// for Square Matrix
-    pub fn solve_eqs(self, constants: &Matrix) -> Result<Matrix, String> {
+    pub fn solve_eqs(self, constants: Matrix) -> Result<Matrix, String> {
         if self.rows != constants.rows || constants.columns != 1 {
             return Err("dimension mismatch".to_owned());
         }
 
-        let mut solution_matrix = constants.clone();
+        let mut solution_matrix = constants;
         let mut ipiv = vec![0; self.rows];
         let mut info = 0;
 
@@ -47,7 +47,7 @@ mod tests {
         let mut b = Matrix::<Standard, f64>::zeros(2, 1);
         b[0][0] = 3.0;
         b[1][0] = 3.0;
-        let x = a.solve_eqs(&b);
+        let x = a.solve_eqs(b);
 
         assert_eq!(x.unwrap()[0][0], 1.0)
     }

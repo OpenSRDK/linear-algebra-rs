@@ -44,6 +44,10 @@ where
     pub fn get_columns(&self) -> usize {
         self.columns
     }
+
+    pub fn get_elements(&mut self) -> &mut [U] {
+        &mut self.elements
+    }
 }
 
 impl<T> Matrix<T, f64>

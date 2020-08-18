@@ -6,13 +6,13 @@ use crate::{
 impl Matrix<PositiveDefinite> {
     /// # Solve equations Conjugate Gradient Method
     /// for PositiveDefinite Matrix
-    pub fn solve_eqs_cgm(self, constants: &Matrix) -> Result<Matrix, String> {
+    pub fn solve_eqs_cgm(self, constants: Matrix) -> Result<Matrix, String> {
         if self.rows != constants.rows || constants.columns != 1 {
             return Err("dimension mismatch".to_owned());
         }
 
         let mut x = Matrix::<Standard>::zeros(constants.rows, 1);
-        let mut r = constants.clone();
+        let mut r = constants;
         let mut p = r.clone();
 
         loop {

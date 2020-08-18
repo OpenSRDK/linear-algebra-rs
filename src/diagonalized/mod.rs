@@ -18,7 +18,7 @@ macro_rules! implement {
     {$t: ty} => {
       impl Diagonalized<$t> {
             pub fn inv(&self) -> Matrix<Square, $t> {
-                &self.0 * self.1.inv() * &self.2
+                &self.0 * self.1.clone().inv() * &self.2
             }
 
             pub fn det(&self) -> $t {

@@ -7,8 +7,7 @@ use lapack::dgesv;
 impl Matrix<Square> {
     /// # Inverse
     /// for Square Matrix
-    pub fn inv(&self) -> Result<Matrix, String> {
-        let mut elements = self.elements.clone();
+    pub fn inv(mut self) -> Result<Matrix, String> {
         let mut solution_matrix = identity(self.rows).transmute::<Standard>();
 
         let mut ipiv = vec![0; self.rows];
@@ -18,7 +17,7 @@ impl Matrix<Square> {
             dgesv(
                 self.rows as i32,
                 self.rows as i32,
-                &mut elements,
+                &mut self.elements,
                 self.rows as i32,
                 &mut ipiv,
                 &mut solution_matrix.elements,

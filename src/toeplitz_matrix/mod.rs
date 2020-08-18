@@ -1,4 +1,4 @@
-use super::CirculantMatrix;
+use crate::circulant_matrix::CirculantMatrix;
 use crate::number::Number;
 pub struct ToeplitzMatrix<U>
 where

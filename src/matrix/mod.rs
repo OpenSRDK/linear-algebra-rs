@@ -60,7 +60,7 @@ where
             self.columns,
             self.elements
                 .par_iter()
-                .map(|e| c64::new(*e, 0.0))
+                .map(|&e| c64::new(e, 0.0))
                 .collect(),
         )
     }

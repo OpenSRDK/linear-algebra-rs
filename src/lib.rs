@@ -12,4 +12,5 @@ pub mod macros;
 pub mod matrix;
 pub mod number;
 pub mod prelude;
+pub mod toeplitz_matrix;
 pub mod types;

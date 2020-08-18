@@ -1,5 +1,5 @@
 pub use crate::{
-    circulant_matrix::{teoplitz_matrix::ToeplitzMatrix, CirculantMatrix},
+    circulant_matrix::CirculantMatrix,
     diagonalized::Diagonalized,
     mat,
     matrix::{
@@ -8,6 +8,7 @@ pub use crate::{
     },
     number::*,
     stack, stack_h, stack_v,
+    toeplitz_matrix::ToeplitzMatrix,
     types::*,
     zeros,
 };

@@ -1,18 +1,16 @@
-use crate::{
-    matrix::Matrix,
-    number::Number,
-    types::{Diagonal, Square},
-};
+use crate::{matrix::Matrix, number::Number};
 
-/// # Identity
-pub fn identity<U>(n: usize) -> Matrix<Diagonal, U>
+impl<T> Matrix<T>
 where
-    U: Number,
+    T: Number,
 {
-    let mut new_matrix = Matrix::<Square, U>::zeros(n).transmute();
-    for i in 0..n {
-        new_matrix[i][i] = U::one();
-    }
+    /// # Identity
+    pub fn identity(n: usize) -> Matrix<T> {
+        let mut new_matrix = Matrix::<T>::zeros(n, n);
+        for i in 0..n {
+            new_matrix[i][i] = T::one();
+        }
 
-    new_matrix
+        new_matrix
+    }
 }

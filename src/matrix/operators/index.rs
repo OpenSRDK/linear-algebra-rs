@@ -1,24 +1,21 @@
 use crate::matrix::Matrix;
 use crate::number::Number;
-use crate::types::Type;
 use std::ops::{Index, IndexMut};
 
-impl<T, U> Index<usize> for Matrix<T, U>
+impl<T> Index<usize> for Matrix<T>
 where
-    T: Type,
-    U: Number,
+    T: Number,
 {
-    type Output = [U];
+    type Output = [T];
     fn index(&self, index: usize) -> &Self::Output {
         let i = self.columns * index;
         &self.elements[i..i + self.columns]
     }
 }
 
-impl<T, U> IndexMut<usize> for Matrix<T, U>
+impl<T> IndexMut<usize> for Matrix<T>
 where
-    T: Type,
-    U: Number,
+    T: Number,
 {
     fn index_mut(&mut self, index: usize) -> &mut Self::Output {
         let i = self.columns * index;

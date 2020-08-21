@@ -1,39 +1,39 @@
+pub mod ci;
+pub mod di;
+pub mod ge;
 pub mod operations;
 pub mod operators;
+pub mod po;
+pub mod to;
+pub mod tr;
 
 use crate::number::{c64, Number};
-use crate::types::{Standard, Type};
 use rayon::prelude::*;
-use std::marker::PhantomData;
 
 /// # Matrix
 #[derive(Clone, Debug, Default, Hash)]
-pub struct Matrix<T = Standard, U = f64>
+pub struct Matrix<T = f64>
 where
-    T: Type,
-    U: Number,
+    T: Number,
 {
     rows: usize,
     columns: usize,
-    elements: Vec<U>,
-    phantom: PhantomData<T>,
+    elements: Vec<T>,
 }
 
-impl<T, U> Matrix<T, U>
+impl<T> Matrix<T>
 where
-    T: Type,
-    U: Number,
+    T: Number,
 {
-    pub fn new(rows: usize, columns: usize, elements: Vec<U>) -> Self {
+    pub fn new(rows: usize, columns: usize, elements: Vec<T>) -> Self {
         Self {
             rows,
             columns,
             elements,
-            phantom: PhantomData,
         }
     }
 
-    pub fn is_same_size<V: Type>(&self, rhs: &Matrix<V, U>) -> bool {
+    pub fn is_same_size(&self, rhs: &Matrix<T>) -> bool {
         self.rows == rhs.rows && self.columns == rhs.columns
     }
 
@@ -45,17 +45,14 @@ where
         self.columns
     }
 
-    pub fn get_elements(&mut self) -> &mut [U] {
-        &mut self.elements
+    pub fn get_elements(&self) -> &[T] {
+        &self.elements
     }
 }
 
-impl<T> Matrix<T, f64>
-where
-    T: Type,
-{
-    pub fn to_complex(&self) -> Matrix<T, c64> {
-        Matrix::<T, c64>::new(
+impl Matrix<f64> {
+    pub fn to_complex(&self) -> Matrix<c64> {
+        Matrix::<c64>::new(
             self.rows,
             self.columns,
             self.elements
@@ -66,12 +63,9 @@ where
     }
 }
 
-impl<T> Matrix<T, c64>
-where
-    T: Type,
-{
-    pub fn to_real(&self) -> Matrix<T, f64> {
-        Matrix::<T, f64>::new(
+impl Matrix<c64> {
+    pub fn to_real(&self) -> Matrix<f64> {
+        Matrix::new(
             self.rows,
             self.columns,
             self.elements.par_iter().map(|e| e.re).collect(),
@@ -79,17 +73,17 @@ where
     }
 }
 
-pub trait Vector<U: Number> {
-    fn to_row_vector(&self) -> Matrix<Standard, U>;
-    fn to_column_vector(&self) -> Matrix<Standard, U>;
+pub trait Vector<T: Number> {
+    fn to_row_vector(&self) -> Matrix<T>;
+    fn to_column_vector(&self) -> Matrix<T>;
 }
 
-impl<U: Number> Vector<U> for [U] {
-    fn to_row_vector(&self) -> Matrix<Standard, U> {
-        Matrix::<Standard, U>::new(1, self.len(), self.to_vec())
+impl<T: Number> Vector<T> for [T] {
+    fn to_row_vector(&self) -> Matrix<T> {
+        Matrix::<T>::new(1, self.len(), self.to_vec())
     }
 
-    fn to_column_vector(&self) -> Matrix<Standard, U> {
-        Matrix::<Standard, U>::new(self.len(), 1, self.to_vec())
+    fn to_column_vector(&self) -> Matrix<T> {
+        Matrix::<T>::new(self.len(), 1, self.to_vec())
     }
 }

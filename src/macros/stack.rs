@@ -1,4 +1,4 @@
-use crate::{macros::sub_matrix::SubMatrix, matrix::Matrix, number::Number, types::Standard};
+use crate::{macros::sub_matrix::SubMatrix, matrix::Matrix, number::Number};
 
 #[macro_export]
 macro_rules! stack_v {
@@ -39,19 +39,19 @@ macro_rules! stack {
 
 }
 
-pub enum Stack<'a, U: Number> {
-    Only(Box<dyn SubMatrix<U> + 'a>),
-    Horizontal(Vec<Stack<'a, U>>),
-    Vertical(Vec<Stack<'a, U>>),
+pub enum Stack<'a, T: Number> {
+    Only(Box<dyn SubMatrix<T> + 'a>),
+    Horizontal(Vec<Stack<'a, T>>),
+    Vertical(Vec<Stack<'a, T>>),
 }
 
-impl<'a, U> Stack<'a, U>
+impl<'a, T> Stack<'a, T>
 where
-    U: Number,
+    T: Number,
 {
-    pub fn matrix(&self) -> Matrix<Standard, U> {
+    pub fn matrix(&self) -> Matrix<T> {
         let size = self.size();
-        let mut matrix = Matrix::<Standard, U>::zeros(size.0, size.1);
+        let mut matrix = Matrix::<T>::zeros(size.0, size.1);
         self.transcript(&mut matrix, 0, 0);
 
         matrix
@@ -99,7 +99,7 @@ where
         }
     }
 
-    fn transcript(&self, matrix: &mut Matrix<Standard, U>, i: usize, j: usize) -> (usize, usize) {
+    fn transcript(&self, matrix: &mut Matrix<T>, i: usize, j: usize) -> (usize, usize) {
         match self {
             Stack::Only(sub_matrix) => {
                 let size = sub_matrix.size();

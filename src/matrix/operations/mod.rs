@@ -1,11 +1,7 @@
 pub mod adjoint;
-pub mod decomposition;
-pub mod det;
 pub mod diag;
 pub mod identity;
-pub mod inv;
 pub mod prod;
-pub mod solve_eqs;
 pub mod t;
-pub mod trace;
+pub mod tr;
 pub mod zeros;

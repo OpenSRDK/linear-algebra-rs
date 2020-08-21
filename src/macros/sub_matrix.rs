@@ -1,47 +1,45 @@
-use crate::{matrix::Matrix, number::Number, types::Type};
+use crate::{matrix::Matrix, number::Number};
 
-pub trait SubMatrix<U>: Send + Sync {
+pub trait SubMatrix<T>: Send + Sync {
     fn size(&self) -> (usize, usize);
-    fn index(&self, i: usize, j: usize) -> U;
+    fn index(&self, i: usize, j: usize) -> T;
 }
 
-impl<U> SubMatrix<U> for U
+impl<T> SubMatrix<T> for T
 where
-    U: Number,
+    T: Number,
 {
     fn size(&self) -> (usize, usize) {
         (1usize, 1usize)
     }
 
-    fn index(&self, _: usize, _: usize) -> U {
+    fn index(&self, _: usize, _: usize) -> T {
         *self
     }
 }
 
-impl<T, U> SubMatrix<U> for Matrix<T, U>
+impl<T> SubMatrix<T> for Matrix<T>
 where
-    T: Type,
-    U: Number,
+    T: Number,
 {
     fn size(&self) -> (usize, usize) {
         (self.get_rows(), self.get_columns())
     }
 
-    fn index(&self, i: usize, j: usize) -> U {
+    fn index(&self, i: usize, j: usize) -> T {
         self[i][j]
     }
 }
 
-impl<T, U> SubMatrix<U> for &Matrix<T, U>
+impl<T> SubMatrix<T> for &Matrix<T>
 where
-    T: Type,
-    U: Number,
+    T: Number,
 {
     fn size(&self) -> (usize, usize) {
         (self.get_rows(), self.get_columns())
     }
 
-    fn index(&self, i: usize, j: usize) -> U {
+    fn index(&self, i: usize, j: usize) -> T {
         self[i][j]
     }
 }

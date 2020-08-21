@@ -2,7 +2,6 @@ use crate::matrix::Matrix;
 use crate::number::c64;
 use lapack::dgetrf;
 use lapack::{zgetrf, zgetri};
-use std::mem::transmute;
 
 impl Matrix {
     /// # LU decomposition
@@ -36,14 +35,7 @@ impl Matrix<c64> {
         let mut info = 0;
 
         unsafe {
-            zgetrf(
-                n,
-                m,
-                transmute::<&mut [c64], &mut [blas::c64]>(&mut slf.elements),
-                n,
-                &mut ipiv,
-                &mut info,
-            );
+            zgetrf(n, m, &mut slf.elements, n, &mut ipiv, &mut info);
         }
 
         match info {
@@ -64,10 +56,10 @@ impl Matrix<c64> {
         unsafe {
             zgetri(
                 n as i32,
-                transmute::<&mut [c64], &mut [blas::c64]>(&mut slf.elements),
+                &mut slf.elements,
                 n as i32,
                 ipiv,
-                transmute::<&mut [c64], &mut [blas::c64]>(&mut work),
+                &mut work,
                 n as i32,
                 &mut info,
             );

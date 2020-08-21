@@ -22,7 +22,7 @@ impl<U: Number> SubMatrix<U> for Zeros {
 
 #[cfg(test)]
 mod tests {
-    use crate::prelude::*;
+    use crate::*;
     #[test]
     fn it_works() {
         let a = mat!(

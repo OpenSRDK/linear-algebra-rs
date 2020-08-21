@@ -1,4 +1,4 @@
-use num_complex::Complex64;
+pub use blas::c64;
 use std::{
     fmt::Debug,
     iter::Product,
@@ -28,9 +28,6 @@ pub trait Number:
 {
     fn one() -> Self;
 }
-
-#[allow(non_camel_case_types)]
-pub type c64 = Complex64;
 
 impl Number for f64 {
     fn one() -> Self {

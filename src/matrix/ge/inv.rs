@@ -1,7 +1,6 @@
 use crate::{matrix::Matrix, number::c64};
 use lapack::dgesv;
 use lapack::zgesv;
-use std::mem::transmute;
 
 impl Matrix {
     /// # Inverse
@@ -45,10 +44,10 @@ impl Matrix<c64> {
             zgesv(
                 slf.rows as i32,
                 slf.rows as i32,
-                transmute::<&mut [c64], &mut [blas::c64]>(&mut slf.elements),
+                &mut slf.elements,
                 slf.rows as i32,
                 &mut ipiv,
-                transmute::<&mut [c64], &mut [blas::c64]>(&mut solution_matrix.elements),
+                &mut solution_matrix.elements,
                 slf.rows as i32,
                 &mut info,
             );

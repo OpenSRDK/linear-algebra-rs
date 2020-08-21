@@ -2,7 +2,6 @@ use crate::matrix::Matrix;
 use crate::number::{c64, Number};
 use blas::{dgemm, zgemm};
 use rayon::prelude::*;
-use std::mem::transmute;
 use std::ops::Mul;
 
 fn mul<T>(slf: T, rhs: Matrix<T>) -> Matrix<T>
@@ -71,12 +70,12 @@ fn mul_c64(lhs: &Matrix<c64>, rhs: &Matrix<c64>) -> Matrix<c64> {
             n,
             k,
             blas::c64::new(1.0, 0.0),
-            transmute::<&[c64], &[blas::c64]>(&lhs.elements),
+            &lhs.elements,
             k,
-            transmute::<&[c64], &[blas::c64]>(&rhs.elements),
+            &rhs.elements,
             n,
             blas::c64::new(0.0, 0.0),
-            transmute::<&mut [c64], &mut [blas::c64]>(&mut new_matrix.elements),
+            &mut new_matrix.elements,
             m,
         );
     }
@@ -148,7 +147,7 @@ impl_mul! {c64, mul_c64}
 
 #[cfg(test)]
 mod tests {
-    use crate::prelude::*;
+    use crate::*;
     #[test]
     fn it_works() {
         let a = mat![1.0, 2.0, 3.0];

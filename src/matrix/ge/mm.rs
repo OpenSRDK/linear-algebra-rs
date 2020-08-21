@@ -1,7 +1,6 @@
 use crate::{matrix::Matrix, number::c64};
 use blas::dgemm;
 use blas::zgemm;
-use std::mem::transmute;
 
 impl Matrix {
     pub fn gemm(self, lhs: &Matrix, rhs: &Matrix, alpha: f64, beta: f64) -> Result<Matrix, String> {
@@ -62,13 +61,13 @@ impl Matrix<c64> {
                 m,
                 n,
                 k,
-                transmute::<c64, blas::c64>(alpha),
-                transmute::<&[c64], &[blas::c64]>(rhs.elements.as_slice()),
+                alpha,
+                rhs.elements.as_slice(),
                 k,
-                transmute::<&[c64], &[blas::c64]>(lhs.elements.as_slice()),
+                lhs.elements.as_slice(),
                 n,
-                transmute::<c64, blas::c64>(beta),
-                transmute::<&mut [c64], &mut [blas::c64]>(&mut slf.elements),
+                beta,
+                &mut slf.elements,
                 m,
             );
         }

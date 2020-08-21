@@ -35,7 +35,7 @@ impl Matrix {
 
 #[cfg(test)]
 mod tests {
-    use crate::prelude::*;
+    use crate::*;
     #[test]
     fn it_works() {
         let mut a = Matrix::zeros(2, 2);

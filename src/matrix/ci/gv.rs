@@ -3,7 +3,6 @@ use crate::{matrix::Matrix, number::c64};
 use rayon::prelude::*;
 use rustfft::FFTplanner;
 use std::f64::consts::PI;
-use std::mem::transmute;
 
 impl CirculantMatrix<f64> {
     pub fn cigv(&self) -> (Matrix<c64>, Matrix<c64>) {
@@ -31,12 +30,7 @@ impl CirculantMatrix<f64> {
 
         let mut planner = FFTplanner::new(false);
         let fft = planner.plan_fft(n);
-        unsafe {
-            fft.process(
-                transmute::<&mut [c64], &mut [rustfft::num_complex::Complex<f64>]>(&mut input),
-                transmute::<&mut [c64], &mut [rustfft::num_complex::Complex<f64>]>(&mut output),
-            );
-        }
+        fft.process(&mut input, &mut output);
 
         let eigen_diag = Matrix::diag(&output);
 

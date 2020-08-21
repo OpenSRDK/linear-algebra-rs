@@ -62,7 +62,7 @@ where
 
 #[cfg(test)]
 mod tests {
-    use crate::prelude::*;
+    use crate::*;
     #[test]
     fn it_works() {
         let a = Matrix::<f64>::identity(2);

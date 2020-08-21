@@ -4,6 +4,8 @@ pub mod ge;
 pub mod operations;
 pub mod operators;
 pub mod po;
+pub mod pt;
+pub mod sy;
 pub mod to;
 pub mod tr;
 
@@ -74,16 +76,16 @@ impl Matrix<c64> {
 }
 
 pub trait Vector<T: Number> {
-    fn to_row_vector(&self) -> Matrix<T>;
-    fn to_column_vector(&self) -> Matrix<T>;
+    fn to_row_vector(self) -> Matrix<T>;
+    fn to_column_vector(self) -> Matrix<T>;
 }
 
-impl<T: Number> Vector<T> for [T] {
-    fn to_row_vector(&self) -> Matrix<T> {
-        Matrix::<T>::new(1, self.len(), self.to_vec())
+impl<T: Number> Vector<T> for Vec<T> {
+    fn to_row_vector(self) -> Matrix<T> {
+        Matrix::<T>::new(1, self.len(), self)
     }
 
-    fn to_column_vector(&self) -> Matrix<T> {
-        Matrix::<T>::new(self.len(), 1, self.to_vec())
+    fn to_column_vector(self) -> Matrix<T> {
+        Matrix::<T>::new(self.len(), 1, self)
     }
 }

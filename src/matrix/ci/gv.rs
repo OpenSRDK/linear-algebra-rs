@@ -6,7 +6,7 @@ use std::f64::consts::PI;
 use std::mem::transmute;
 
 impl CirculantMatrix<f64> {
-    pub fn cigv(&self) -> (Matrix<c64>, Matrix<c64>, Matrix<c64>) {
+    pub fn cigv(&self) -> (Matrix<c64>, Matrix<c64>) {
         let n = self.row.len();
 
         let mut fourier_matrix: Matrix<c64> = Matrix::<c64>::zeros(n, n);
@@ -40,11 +40,7 @@ impl CirculantMatrix<f64> {
 
         let eigen_diag = Matrix::diag(&output);
 
-        fourier_matrix = fourier_matrix * c64::new(1.0 / (n as f64).sqrt(), 0.0);
-
-        let fourier_matrix_inv = fourier_matrix.t();
-
-        (fourier_matrix, eigen_diag, fourier_matrix_inv)
+        (fourier_matrix, eigen_diag)
     }
 }
 

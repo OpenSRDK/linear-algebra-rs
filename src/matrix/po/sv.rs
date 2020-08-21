@@ -1,7 +1,7 @@
 use crate::matrix::Matrix;
 
 impl Matrix {
-    /// # Solve equations Conjugate Gradient Method
+    /// # Solve equations with Conjugate Gradient Method
     /// for positiveDefinite matrix
     pub fn posvcgm(self, constants: Matrix) -> Result<Matrix, String> {
         if self.rows != constants.rows || constants.columns != 1 {

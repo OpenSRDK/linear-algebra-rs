@@ -3,13 +3,11 @@ use lapack::dpotrf;
 
 impl Matrix {
     /// # Cholesky decomposition
-    /// for f64
+    /// for positive definite matrix
     ///
     /// https://en.wikipedia.org/wiki/Cholesky_decomposition
     ///
     /// `A = L * L^T`
-    /// ## Requirements
-    /// - Positive definite
     pub fn potrf(self) -> Result<Matrix, String> {
         if self.rows != self.columns {
             return Err("dimension mismatch".to_owned());

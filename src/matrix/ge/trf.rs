@@ -22,7 +22,7 @@ impl Matrix {
         }
     }
 
-    pub fn dgetri(self, ipiv: &[i32]) -> Result<Matrix, String> {
+    pub fn getri(self, ipiv: &[i32]) -> Result<Matrix, String> {
         let n = self.get_rows();
         if n != self.get_columns() {
             return Err("dimension mismatch".to_owned());
@@ -53,7 +53,7 @@ impl Matrix {
 impl Matrix<c64> {
     /// # LU decomposition
     /// for c64
-    pub fn zgetrf(self) -> Result<(Matrix<c64>, Vec<i32>), String> {
+    pub fn getrf(self) -> Result<(Matrix<c64>, Vec<i32>), String> {
         let m = self.rows as i32;
         let n = self.columns as i32;
         let mut slf = self;
@@ -70,7 +70,7 @@ impl Matrix<c64> {
         }
     }
 
-    pub fn zgetri(self, ipiv: &[i32]) -> Result<Matrix<c64>, String> {
+    pub fn getri(self, ipiv: &[i32]) -> Result<Matrix<c64>, String> {
         let n = self.get_rows();
         if n != self.get_columns() {
             return Err("dimension mismatch".to_owned());

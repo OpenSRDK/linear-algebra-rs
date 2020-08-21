@@ -1,7 +1,6 @@
 use crate::matrix::Matrix;
 use crate::number::c64;
-use lapack::dgetrf;
-use lapack::{zgetrf, zgetri};
+use lapack::{dgetrf, dgetri, zgetrf, zgetri};
 
 impl Matrix {
     /// # LU decomposition
@@ -19,6 +18,33 @@ impl Matrix {
 
         match info {
             0 => Ok((slf, ipiv)),
+            i => Err(i.to_string()),
+        }
+    }
+
+    pub fn dgetri(self, ipiv: &[i32]) -> Result<Matrix, String> {
+        let n = self.get_rows();
+        if n != self.get_columns() {
+            return Err("dimension mismatch".to_owned());
+        }
+
+        let mut slf = self;
+        let mut work = vec![f64::default(); n];
+        let mut info = 0;
+        unsafe {
+            dgetri(
+                n as i32,
+                &mut slf.elements,
+                n as i32,
+                ipiv,
+                &mut work,
+                n as i32,
+                &mut info,
+            );
+        }
+
+        match info {
+            0 => Ok(slf),
             i => Err(i.to_string()),
         }
     }

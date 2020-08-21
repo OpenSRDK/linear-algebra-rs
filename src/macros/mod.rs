@@ -28,13 +28,13 @@ mod tests {
     #[test]
     fn it_works() {
         let a = mat!(
-            1.0, 0.0;
-            0.0, 1.0
+            1.0, 0.0, 1.0;
+            0.0, 1.0, 0.0
         );
 
         assert_eq!(a[0][0], 1.0);
         assert_eq!(a[0][1], 0.0);
         assert_eq!(a[1][0], 0.0);
-        assert_eq!(a[1][1], 1.0);
+        assert_eq!(a[1][2], 0.0);
     }
 }

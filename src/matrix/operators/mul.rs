@@ -26,26 +26,26 @@ fn mul_f64(lhs: &Matrix, rhs: &Matrix) -> Matrix {
     }
 
     let m = lhs.rows as i32;
-    let n = lhs.columns as i32;
-    let k = rhs.columns as i32;
+    let k = lhs.columns as i32;
+    let n = rhs.columns as i32;
 
     let mut new_matrix = Matrix::zeros(lhs.rows, rhs.columns);
 
     unsafe {
         dgemm(
-            'N' as u8,
-            'N' as u8,
-            k,
+            'T' as u8,
+            'T' as u8,
+            m,
             n,
-            m,
-            1.0,
-            rhs.elements.as_slice(),
             k,
+            1.0,
             lhs.elements.as_slice(),
-            m,
+            k,
+            rhs.elements.as_slice(),
+            n,
             0.0,
             &mut new_matrix.elements,
-            k,
+            m,
         );
     }
 
@@ -58,26 +58,26 @@ fn mul_c64(lhs: &Matrix<c64>, rhs: &Matrix<c64>) -> Matrix<c64> {
     }
 
     let m = lhs.rows as i32;
-    let n = lhs.columns as i32;
-    let k = rhs.columns as i32;
+    let k = lhs.columns as i32;
+    let n = rhs.columns as i32;
 
     let mut new_matrix = Matrix::<c64>::zeros(lhs.rows, rhs.columns);
 
     unsafe {
         zgemm(
-            'N' as u8,
-            'N' as u8,
-            k,
+            'T' as u8,
+            'T' as u8,
+            m,
             n,
-            m,
-            blas::c64::new(1.0, 0.0),
-            transmute::<&[c64], &[blas::c64]>(&rhs.elements),
             k,
+            blas::c64::new(1.0, 0.0),
             transmute::<&[c64], &[blas::c64]>(&lhs.elements),
-            m,
+            k,
+            transmute::<&[c64], &[blas::c64]>(&rhs.elements),
+            n,
             blas::c64::new(0.0, 0.0),
             transmute::<&mut [c64], &mut [blas::c64]>(&mut new_matrix.elements),
-            k,
+            m,
         );
     }
 
@@ -145,3 +145,20 @@ macro_rules! impl_mul {
 
 impl_mul! {f64, mul_f64}
 impl_mul! {c64, mul_c64}
+
+#[cfg(test)]
+mod tests {
+    use crate::prelude::*;
+    #[test]
+    fn it_works() {
+        let a = mat![1.0, 2.0, 3.0];
+        let b = mat![
+            1.0, 3.0;
+            2.0, 4.0;
+            3.0, 6.0
+        ];
+        let c = a * b;
+
+        assert_eq!(c[0][0], 14.0)
+    }
+}

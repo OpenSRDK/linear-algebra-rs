@@ -10,26 +10,26 @@ impl Matrix {
         }
 
         let m = lhs.rows as i32;
-        let n = lhs.columns as i32;
-        let k = rhs.columns as i32;
+        let k = lhs.columns as i32;
+        let n = rhs.columns as i32;
 
         let mut slf = self;
 
         unsafe {
             dgemm(
-                'N' as u8,
-                'N' as u8,
-                k,
+                'T' as u8,
+                'T' as u8,
+                m,
                 n,
-                m,
-                alpha,
-                rhs.elements.as_slice(),
                 k,
+                alpha,
                 lhs.elements.as_slice(),
-                m,
+                k,
+                rhs.elements.as_slice(),
+                n,
                 beta,
                 &mut slf.elements,
-                k,
+                m,
             );
         }
 
@@ -50,26 +50,26 @@ impl Matrix<c64> {
         }
 
         let m = lhs.rows as i32;
-        let n = lhs.columns as i32;
-        let k = rhs.columns as i32;
+        let k = lhs.columns as i32;
+        let n = rhs.columns as i32;
 
         let mut slf = self;
 
         unsafe {
             zgemm(
-                'N' as u8,
-                'N' as u8,
-                k,
-                n,
+                'T' as u8,
+                'T' as u8,
                 m,
+                n,
+                k,
                 transmute::<c64, blas::c64>(alpha),
                 transmute::<&[c64], &[blas::c64]>(rhs.elements.as_slice()),
                 k,
                 transmute::<&[c64], &[blas::c64]>(lhs.elements.as_slice()),
-                m,
+                n,
                 transmute::<c64, blas::c64>(beta),
                 transmute::<&mut [c64], &mut [blas::c64]>(&mut slf.elements),
-                k,
+                m,
             );
         }
 

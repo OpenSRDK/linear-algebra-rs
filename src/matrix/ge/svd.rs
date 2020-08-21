@@ -8,7 +8,7 @@ impl Matrix {
     ///
     /// `M = U * Sigma * V^T`
     /// `(u, sigma, vt)`
-    pub fn dgesvd(&self) -> Result<(Matrix, Matrix, Matrix), String> {
+    pub fn gesvd(&self) -> Result<(Matrix, Matrix, Matrix), String> {
         if self.rows != self.columns {
             return Err("dimension mismatch".to_owned());
         }

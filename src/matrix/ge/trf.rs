@@ -7,7 +7,7 @@ use std::mem::transmute;
 impl Matrix {
     /// # LU decomposition
     /// for f64
-    pub fn dgetrf(self) -> Result<(Matrix, Vec<i32>), String> {
+    pub fn getrf(self) -> Result<(Matrix, Vec<i32>), String> {
         let m = self.rows as i32;
         let n = self.columns as i32;
         let mut slf = self;

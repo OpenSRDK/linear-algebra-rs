@@ -22,6 +22,8 @@ impl Matrix {
         }
     }
 
+    /// # Solve equation
+    /// with matrix decomposed by getrf
     pub fn getri(self, ipiv: &[i32]) -> Result<Matrix, String> {
         let n = self.get_rows();
         if n != self.get_columns() {
@@ -70,6 +72,8 @@ impl Matrix<c64> {
         }
     }
 
+    /// # Solve equation
+    /// with matrix decomposed by getrf
     pub fn getri(self, ipiv: &[i32]) -> Result<Matrix<c64>, String> {
         let n = self.get_rows();
         if n != self.get_columns() {

@@ -5,7 +5,7 @@ use rayon::prelude::*;
 impl Matrix {
     /// # Cholesky decomposition
     /// for tridiagonal matrix
-    pub fn dpttrf(d: Vec<f64>, e: Vec<f64>) -> Result<(Vec<f64>, Vec<f64>), String> {
+    pub fn pttrf(d: Vec<f64>, e: Vec<f64>) -> Result<(Vec<f64>, Vec<f64>), String> {
         let n = d.len() as i32;
         let mut d_mut = d;
         let mut e_mut = e;

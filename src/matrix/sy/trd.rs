@@ -55,7 +55,11 @@ impl Matrix {
     /// # Lanczos algorithm
     /// for symmetric matrix
     /// only k iteration
-    pub fn sytrd_k(&self, k: usize) -> Result<(Vec<f64>, Vec<f64>, Matrix), String> {
+    pub fn sytrd_k(
+        &self,
+        k: usize,
+        probe: Option<Vec<f64>>,
+    ) -> Result<(Vec<f64>, Vec<f64>, Matrix), String> {
         let n = self.rows;
         if n == 0 || n != self.columns {
             return Err("dimension mismatch".to_owned());
@@ -66,7 +70,20 @@ impl Matrix {
         let mut e = vec![0.0; k - 1];
 
         let mut u = vec![vec![0.0; n]; k];
-        u[0][0] = 1.0;
+
+        match probe {
+            Some(v) => {
+                if v.len() != n {
+                    return Err("dimension mismatch".to_owned());
+                }
+                let norm = v.par_iter().map(|&v_e| v_e.powi(2)).sum::<f64>().sqrt();
+                u[0] = v.par_iter().map(|&v_e| v_e / norm).collect::<Vec<_>>();
+            }
+            None => {
+                u[0][0] = 1.0;
+            }
+        }
+
         let mut u_prev = vec![0.0; n].to_column_vector();
         let mut e_prev = 0.0;
 

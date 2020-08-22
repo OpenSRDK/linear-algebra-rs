@@ -47,8 +47,12 @@ where
         self.columns
     }
 
-    pub fn get_elements(&self) -> &[T] {
+    pub fn get_elements_ref(&self) -> &[T] {
         &self.elements
+    }
+
+    pub fn get_elements(self) -> Vec<T> {
+        self.elements
     }
 }
 

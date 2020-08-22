@@ -1,21 +1,23 @@
 use crate::matrix::Matrix;
-use lapack::{dpotrf, dpotri};
+use crate::number::c64;
+use lapack::{dpotrf, zpotrf};
 
 impl Matrix {
     /// # Cholesky decomposition
-    /// for positive definite matrix
+    /// for positive definite f64 matrix
     ///
     /// https://en.wikipedia.org/wiki/Cholesky_decomposition
     ///
     /// `A = L * L^T`
     pub fn potrf(self) -> Result<Matrix, String> {
-        if self.rows != self.columns {
+        let n = self.rows;
+        if n != self.columns {
             return Err("dimension mismatch".to_owned());
         }
 
-        let n = self.rows as i32;
-        let mut slf = self;
         let mut info = 0;
+        let mut slf = self;
+        let n = n as i32;
 
         unsafe {
             dpotrf('U' as u8, n, &mut slf.elements, n, &mut info);
@@ -26,20 +28,27 @@ impl Matrix {
             i => Err(i.to_string()),
         }
     }
+}
 
-    /// # Solve equation
-    /// with matrix decomposed by potrf
-    pub fn potri(self) -> Result<Matrix, String> {
-        if self.rows != self.columns {
+impl Matrix<c64> {
+    /// # Cholesky decomposition
+    /// for positive definite c64 matrix
+    ///
+    /// https://en.wikipedia.org/wiki/Cholesky_decomposition
+    ///
+    /// `A = L * L^*`
+    pub fn potrf(self) -> Result<Matrix<c64>, String> {
+        let n = self.rows;
+        if n != self.columns {
             return Err("dimension mismatch".to_owned());
         }
 
-        let n = self.rows as i32;
-        let mut slf = self;
         let mut info = 0;
+        let mut slf = self;
+        let n = n as i32;
 
         unsafe {
-            dpotri('U' as u8, n, &mut slf.elements, n, &mut info);
+            zpotrf('U' as u8, n, &mut slf.elements, n, &mut info);
         }
 
         match info {

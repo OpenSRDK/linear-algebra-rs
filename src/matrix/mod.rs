@@ -66,12 +66,12 @@ where
         self.cols
     }
 
-    pub fn elems_ref(&self) -> &[T] {
-        &self.elems
-    }
-
     pub fn elems(self) -> Vec<T> {
         self.elems
+    }
+
+    pub fn elems_ref(&self) -> &[T] {
+        &self.elems
     }
 }
 

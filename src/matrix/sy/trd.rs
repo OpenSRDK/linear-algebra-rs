@@ -60,12 +60,12 @@ impl Matrix {
     /// for symmetric matrix
     /// only k iteration
     pub fn sytrd_k(
-        &self,
+        n: usize,
         k: usize,
+        vec_mul: impl Fn(&[f64]) -> Result<Vec<f64>, String>,
         probe: Option<Vec<f64>>,
     ) -> Result<(SymmetricTridiagonalMatrix, Matrix), String> {
-        let n = self.rows;
-        if n == 0 || n != self.columns {
+        if n == 0 {
             return Err("dimension mismatch".to_owned());
         }
         let k = k.min(n);
@@ -88,18 +88,21 @@ impl Matrix {
             }
         }
 
-        let mut u_prev = vec![0.0; n].to_column_vector();
+        let mut u_prev = vec![0.0; n];
         let mut e_prev = 0.0;
 
         for i in 0..k {
-            let u_mat = u[i].clone().to_column_vector();
-            d[i] = (u_mat.t() * self * &u_mat)[0][0];
+            let u_t = u[i].clone().to_row_vector();
+
+            let a_u = vec_mul(&u[i])?.to_column_vector();
+            d[i] = (u_t * &a_u)[0][0];
 
             if i + 1 == k {
                 break;
             }
 
-            let v: Matrix = self * &u_mat - e_prev * u_prev.clone() - d[i] * u_mat.clone();
+            let v: Matrix =
+                a_u - e_prev * u_prev.to_column_vector() - d[i] * u[i].clone().to_column_vector();
             e[i] = v
                 .elements
                 .par_iter()
@@ -108,7 +111,7 @@ impl Matrix {
                 .sqrt();
             u[i + 1] = ((1.0 / e[i]) * v).elements;
 
-            u_prev = u_mat;
+            u_prev = u[i].clone();
             e_prev = e[i];
         }
         let q_t = Matrix::from(k, u.concat());

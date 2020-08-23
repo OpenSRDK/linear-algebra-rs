@@ -6,7 +6,7 @@ pub mod zeros;
 macro_rules! mat {
     () => {
         {
-            Matrix::new(0, 0, vec![])
+            Matrix::new(0, 0)
         }
     };
     ($($e: expr),+) => {

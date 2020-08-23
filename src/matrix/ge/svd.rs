@@ -9,14 +9,14 @@ impl Matrix {
     /// `M = U * Sigma * V^T`
     /// `(u, sigma, vt)`
     pub fn gesvd(&self) -> Result<(Matrix, Matrix, Matrix), String> {
-        if self.rows != self.columns {
+        if self.rows != self.cols {
             return Err("dimension mismatch".to_owned());
         }
 
         let mut info = 0;
         let mut u = Matrix::new(self.rows, self.rows);
-        let mut sigma = Matrix::new(self.rows, self.columns);
-        let mut vt = Matrix::new(self.columns, self.columns);
+        let mut sigma = Matrix::new(self.rows, self.cols);
+        let mut vt = Matrix::new(self.cols, self.cols);
         let lwork = 2 * self.rows;
 
         unsafe {
@@ -24,14 +24,14 @@ impl Matrix {
                 'A' as u8,
                 'A' as u8,
                 self.rows as i32,
-                self.columns as i32,
-                &mut self.t().elements,
+                self.cols as i32,
+                &mut self.t().elems,
                 self.rows as i32,
-                &mut sigma.elements,
-                &mut u.elements,
+                &mut sigma.elems,
+                &mut u.elems,
                 self.rows as i32,
-                &mut vt.elements,
-                self.columns as i32,
+                &mut vt.elems,
+                self.cols as i32,
                 &mut vec![0.0; lwork],
                 lwork as i32,
                 &mut info,

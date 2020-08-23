@@ -6,8 +6,8 @@ impl Matrix {
     /// # Inverse
     /// with matrix decomposed by getrf
     pub fn getri(self, ipiv: &[i32]) -> Result<Matrix, String> {
-        let n = self.get_rows();
-        if n != self.get_columns() {
+        let n = self.rows();
+        if n != self.cols() {
             return Err("dimension mismatch".to_owned());
         }
 
@@ -18,7 +18,7 @@ impl Matrix {
         let n = n as i32;
 
         unsafe {
-            dgetri(n, &mut slf.elements, n, ipiv, &mut work, n, &mut info);
+            dgetri(n, &mut slf.elems, n, ipiv, &mut work, n, &mut info);
         }
 
         match info {
@@ -32,8 +32,8 @@ impl Matrix<c64> {
     /// # Inverse
     /// with matrix decomposed by getrf
     pub fn getri(self, ipiv: &[i32]) -> Result<Matrix<c64>, String> {
-        let n = self.get_rows();
-        if n != self.get_columns() {
+        let n = self.rows();
+        if n != self.cols() {
             return Err("dimension mismatch".to_owned());
         }
 
@@ -44,7 +44,7 @@ impl Matrix<c64> {
         let n = n as i32;
 
         unsafe {
-            zgetri(n, &mut slf.elements, n, ipiv, &mut work, n, &mut info);
+            zgetri(n, &mut slf.elems, n, ipiv, &mut work, n, &mut info);
         }
 
         match info {

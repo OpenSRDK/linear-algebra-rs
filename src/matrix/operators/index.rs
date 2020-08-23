@@ -8,8 +8,8 @@ where
 {
     type Output = [T];
     fn index(&self, index: usize) -> &Self::Output {
-        let i = self.columns * index;
-        &self.elements[i..i + self.columns]
+        let i = self.cols * index;
+        &self.elems[i..i + self.cols]
     }
 }
 
@@ -18,7 +18,7 @@ where
     T: Number,
 {
     fn index_mut(&mut self, index: usize) -> &mut Self::Output {
-        let i = self.columns * index;
-        &mut self.elements[i..i + self.columns]
+        let i = self.cols * index;
+        &mut self.elems[i..i + self.cols]
     }
 }

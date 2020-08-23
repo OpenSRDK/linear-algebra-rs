@@ -7,14 +7,14 @@ fn add<T>(lhs: Matrix<T>, rhs: &Matrix<T>) -> Matrix<T>
 where
     T: Number,
 {
-    if !lhs.is_same_size(rhs) {
+    if !lhs.same_size(rhs) {
         panic!("dimension mismatch")
     }
     let mut lhs = lhs;
 
-    lhs.elements
+    lhs.elems
         .par_iter_mut()
-        .zip(rhs.elements.par_iter())
+        .zip(rhs.elems.par_iter())
         .map(|(l, &r)| {
             *l += r;
         })

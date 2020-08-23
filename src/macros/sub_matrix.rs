@@ -23,7 +23,7 @@ where
     T: Number,
 {
     fn size(&self) -> (usize, usize) {
-        (self.get_rows(), self.get_columns())
+        (self.rows(), self.cols())
     }
 
     fn index(&self, i: usize, j: usize) -> T {
@@ -36,7 +36,7 @@ where
     T: Number,
 {
     fn size(&self) -> (usize, usize) {
-        (self.get_rows(), self.get_columns())
+        (self.rows(), self.cols())
     }
 
     fn index(&self, i: usize, j: usize) -> T {

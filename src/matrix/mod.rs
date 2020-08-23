@@ -22,48 +22,56 @@ where
     T: Number,
 {
     rows: usize,
-    columns: usize,
-    elements: Vec<T>,
+    cols: usize,
+    elems: Vec<T>,
 }
 
 impl<T> Matrix<T>
 where
     T: Number,
 {
-    pub fn new(rows: usize, columns: usize) -> Self {
+    pub fn new(rows: usize, cols: usize) -> Self {
         Self {
             rows,
-            columns,
-            elements: vec![T::default(); rows * columns],
+            cols,
+            elems: vec![T::default(); rows * cols],
         }
     }
 
-    pub fn from(rows: usize, elements: Vec<T>) -> Self {
+    pub fn from(rows: usize, elems: Vec<T>) -> Self {
         Self {
             rows,
-            columns: elements.len() / rows,
-            elements,
+            cols: elems.len() / rows,
+            elems,
         }
     }
 
-    pub fn is_same_size(&self, rhs: &Matrix<T>) -> bool {
-        self.rows == rhs.rows && self.columns == rhs.columns
+    pub fn row(v: Vec<T>) -> Self {
+        Matrix::<T>::from(1, v)
     }
 
-    pub fn get_rows(&self) -> usize {
+    pub fn col(v: Vec<T>) -> Self {
+        Matrix::<T>::from(v.len(), v)
+    }
+
+    pub fn same_size(&self, rhs: &Matrix<T>) -> bool {
+        self.rows == rhs.rows && self.cols == rhs.cols
+    }
+
+    pub fn rows(&self) -> usize {
         self.rows
     }
 
-    pub fn get_columns(&self) -> usize {
-        self.columns
+    pub fn cols(&self) -> usize {
+        self.cols
     }
 
-    pub fn get_elements_ref(&self) -> &[T] {
-        &self.elements
+    pub fn elems_ref(&self) -> &[T] {
+        &self.elems
     }
 
-    pub fn get_elements(self) -> Vec<T> {
-        self.elements
+    pub fn elems(self) -> Vec<T> {
+        self.elems
     }
 }
 
@@ -71,31 +79,13 @@ impl Matrix<f64> {
     pub fn to_complex(&self) -> Matrix<c64> {
         Matrix::<c64>::from(
             self.rows,
-            self.elements
-                .par_iter()
-                .map(|&e| c64::new(e, 0.0))
-                .collect(),
+            self.elems.par_iter().map(|&e| c64::new(e, 0.0)).collect(),
         )
     }
 }
 
 impl Matrix<c64> {
     pub fn to_real(&self) -> Matrix<f64> {
-        Matrix::from(self.rows, self.elements.par_iter().map(|e| e.re).collect())
-    }
-}
-
-pub trait Vector<T: Number> {
-    fn to_row_vector(self) -> Matrix<T>;
-    fn to_column_vector(self) -> Matrix<T>;
-}
-
-impl<T: Number> Vector<T> for Vec<T> {
-    fn to_row_vector(self) -> Matrix<T> {
-        Matrix::<T>::from(1, self)
-    }
-
-    fn to_column_vector(self) -> Matrix<T> {
-        Matrix::<T>::from(self.len(), self)
+        Matrix::from(self.rows, self.elems.par_iter().map(|e| e.re).collect())
     }
 }

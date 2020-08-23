@@ -9,7 +9,7 @@ where
     T: Number,
 {
     let mut rhs = rhs;
-    rhs.elements
+    rhs.elems
         .par_iter_mut()
         .map(|r| {
             *r *= slf;
@@ -20,15 +20,15 @@ where
 }
 
 fn mul_f64(lhs: &Matrix, rhs: &Matrix) -> Matrix {
-    if lhs.columns != rhs.rows {
+    if lhs.cols != rhs.rows {
         panic!("dimension mismatch")
     }
 
     let m = lhs.rows as i32;
-    let k = lhs.columns as i32;
-    let n = rhs.columns as i32;
+    let k = lhs.cols as i32;
+    let n = rhs.cols as i32;
 
-    let mut new_matrix = Matrix::new(lhs.rows, rhs.columns);
+    let mut new_matrix = Matrix::new(lhs.rows, rhs.cols);
 
     unsafe {
         dgemm(
@@ -38,12 +38,12 @@ fn mul_f64(lhs: &Matrix, rhs: &Matrix) -> Matrix {
             n,
             k,
             1.0,
-            lhs.elements.as_slice(),
+            lhs.elems.as_slice(),
             k,
-            rhs.elements.as_slice(),
+            rhs.elems.as_slice(),
             n,
             0.0,
-            &mut new_matrix.elements,
+            &mut new_matrix.elems,
             m,
         );
     }
@@ -52,15 +52,15 @@ fn mul_f64(lhs: &Matrix, rhs: &Matrix) -> Matrix {
 }
 
 fn mul_c64(lhs: &Matrix<c64>, rhs: &Matrix<c64>) -> Matrix<c64> {
-    if lhs.columns != rhs.rows {
+    if lhs.cols != rhs.rows {
         panic!("dimension mismatch")
     }
 
     let m = lhs.rows as i32;
-    let k = lhs.columns as i32;
-    let n = rhs.columns as i32;
+    let k = lhs.cols as i32;
+    let n = rhs.cols as i32;
 
-    let mut new_matrix = Matrix::<c64>::new(lhs.rows, rhs.columns);
+    let mut new_matrix = Matrix::<c64>::new(lhs.rows, rhs.cols);
 
     unsafe {
         zgemm(
@@ -70,12 +70,12 @@ fn mul_c64(lhs: &Matrix<c64>, rhs: &Matrix<c64>) -> Matrix<c64> {
             n,
             k,
             blas::c64::new(1.0, 0.0),
-            &lhs.elements,
+            &lhs.elems,
             k,
-            &rhs.elements,
+            &rhs.elems,
             n,
             blas::c64::new(0.0, 0.0),
-            &mut new_matrix.elements,
+            &mut new_matrix.elems,
             m,
         );
     }

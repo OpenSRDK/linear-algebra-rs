@@ -7,12 +7,12 @@ where
 {
     /// # Linear product
     pub fn linear_prod(&self, rhs: &Matrix<T>) -> T {
-        if !self.is_same_size(rhs) {
+        if !self.same_size(rhs) {
             panic!("dimension mismatch")
         } else {
-            self.elements
+            self.elems
                 .par_iter()
-                .zip(rhs.elements.par_iter())
+                .zip(rhs.elems.par_iter())
                 .map(|(&s, &r)| s * r)
                 .sum()
         }
@@ -20,14 +20,14 @@ where
 
     /// # Hamadard product
     pub fn hadamard_prod(self, rhs: &Matrix<T>) -> Matrix<T> {
-        if !self.is_same_size(rhs) {
+        if !self.same_size(rhs) {
             panic!("dimension mismatch")
         }
         let mut slf = self;
 
-        slf.elements
+        slf.elems
             .par_iter_mut()
-            .zip(rhs.elements.par_iter())
+            .zip(rhs.elems.par_iter())
             .map(|(s, &r)| {
                 *s *= r;
             })

@@ -1,5 +1,4 @@
 use crate::matrix::Matrix;
-use crate::matrix::Vector;
 
 impl Matrix {
     /// # Solve equations with Conjugate Gradient Method
@@ -10,12 +9,12 @@ impl Matrix {
         iterations: usize,
     ) -> Result<Vec<f64>, String> {
         let mut x = Matrix::new(b.len(), 1);
-        let mut r = b.to_row_vector();
+        let mut r = Matrix::row(b);
         let mut p = r.clone();
 
         for _ in 0..iterations {
             let r_t = r.t();
-            let a_p = vec_mul(p.get_elements_ref())?.to_column_vector();
+            let a_p = Matrix::col(vec_mul(p.elems_ref())?);
             let alpha = (&r_t * &p)[0][0] / (p.t() * &a_p)[0][0];
 
             let old_r = r.clone();
@@ -26,6 +25,6 @@ impl Matrix {
             p = r.clone() + p.clone() * beta;
         }
 
-        Ok(x.get_elements())
+        Ok(x.elems())
     }
 }

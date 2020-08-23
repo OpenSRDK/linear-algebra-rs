@@ -4,13 +4,13 @@ use blas::zgemm;
 
 impl Matrix {
     pub fn gemm(self, lhs: &Matrix, rhs: &Matrix, alpha: f64, beta: f64) -> Result<Matrix, String> {
-        if self.rows != lhs.rows || self.columns != rhs.columns || lhs.columns != rhs.rows {
+        if self.rows != lhs.rows || self.cols != rhs.cols || lhs.cols != rhs.rows {
             return Err("dimension mismatch".to_owned());
         }
 
         let m = lhs.rows as i32;
-        let k = lhs.columns as i32;
-        let n = rhs.columns as i32;
+        let k = lhs.cols as i32;
+        let n = rhs.cols as i32;
 
         let mut slf = self;
 
@@ -22,12 +22,12 @@ impl Matrix {
                 n,
                 k,
                 alpha,
-                lhs.elements.as_slice(),
+                lhs.elems.as_slice(),
                 k,
-                rhs.elements.as_slice(),
+                rhs.elems.as_slice(),
                 n,
                 beta,
-                &mut slf.elements,
+                &mut slf.elems,
                 m,
             );
         }
@@ -44,13 +44,13 @@ impl Matrix<c64> {
         alpha: c64,
         beta: c64,
     ) -> Result<Matrix<c64>, String> {
-        if self.rows != lhs.rows || self.columns != rhs.columns || lhs.columns != rhs.rows {
+        if self.rows != lhs.rows || self.cols != rhs.cols || lhs.cols != rhs.rows {
             return Err("dimension mismatch".to_owned());
         }
 
         let m = lhs.rows as i32;
-        let k = lhs.columns as i32;
-        let n = rhs.columns as i32;
+        let k = lhs.cols as i32;
+        let n = rhs.cols as i32;
 
         let mut slf = self;
 
@@ -62,12 +62,12 @@ impl Matrix<c64> {
                 n,
                 k,
                 alpha,
-                rhs.elements.as_slice(),
+                rhs.elems.as_slice(),
                 k,
-                lhs.elements.as_slice(),
+                lhs.elems.as_slice(),
                 n,
                 beta,
-                &mut slf.elements,
+                &mut slf.elems,
                 m,
             );
         }

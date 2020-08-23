@@ -7,8 +7,8 @@ impl Matrix {
     /// with matrix decomposed by getrf
     /// `Ax = b`
     pub fn getrs(&self, ipiv: &[i32], b_t: Matrix) -> Result<Matrix, String> {
-        let n = self.get_rows();
-        if n != self.get_columns() || n != b_t.columns {
+        let n = self.rows();
+        if n != self.cols() || n != b_t.cols {
             return Err("dimension mismatch".to_owned());
         }
 
@@ -22,10 +22,10 @@ impl Matrix {
                 'T' as u8,
                 n,
                 b_t.rows as i32,
-                &self.elements,
+                &self.elems,
                 n,
                 ipiv,
-                &mut b_t.elements,
+                &mut b_t.elems,
                 n,
                 &mut info,
             );
@@ -43,8 +43,8 @@ impl Matrix<c64> {
     /// with matrix decomposed by getrf
     /// `Ax = b`
     pub fn getrs(&self, ipiv: &[i32], b_t: Matrix<c64>) -> Result<Matrix<c64>, String> {
-        let n = self.get_rows();
-        if n != self.get_columns() || n != b_t.columns {
+        let n = self.rows();
+        if n != self.cols() || n != b_t.cols {
             return Err("dimension mismatch".to_owned());
         }
 
@@ -58,10 +58,10 @@ impl Matrix<c64> {
                 'T' as u8,
                 n,
                 b_t.rows as i32,
-                &self.elements,
+                &self.elems,
                 n,
                 ipiv,
-                &mut b_t.elements,
+                &mut b_t.elems,
                 n,
                 &mut info,
             );

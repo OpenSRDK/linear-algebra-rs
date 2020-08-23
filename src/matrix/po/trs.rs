@@ -7,8 +7,8 @@ impl Matrix {
     /// with matrix decomposed by potrf
     /// `Ax = b`
     pub fn potrs(&self, b_t: Matrix) -> Result<Matrix, String> {
-        let n = self.get_rows();
-        if n != self.get_columns() || n != b_t.columns {
+        let n = self.rows();
+        if n != self.cols() || n != b_t.cols {
             return Err("dimension mismatch".to_owned());
         }
 
@@ -22,9 +22,9 @@ impl Matrix {
                 'U' as u8,
                 n,
                 b_t.rows as i32,
-                &self.elements,
+                &self.elems,
                 n,
-                &mut b_t.elements,
+                &mut b_t.elems,
                 n,
                 &mut info,
             );
@@ -42,8 +42,8 @@ impl Matrix<c64> {
     /// with matrix decomposed by potrf
     /// `Ax = b`
     pub fn potrs(&self, b_t: Matrix<c64>) -> Result<Matrix<c64>, String> {
-        let n = self.get_rows();
-        if n != self.get_columns() || n != b_t.columns {
+        let n = self.rows();
+        if n != self.cols() || n != b_t.cols {
             return Err("dimension mismatch".to_owned());
         }
 
@@ -57,9 +57,9 @@ impl Matrix<c64> {
                 'U' as u8,
                 n,
                 b_t.rows as i32,
-                &self.elements,
+                &self.elems,
                 n,
-                &mut b_t.elements,
+                &mut b_t.elems,
                 n,
                 &mut info,
             );

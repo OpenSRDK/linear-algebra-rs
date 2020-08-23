@@ -1,7 +1,4 @@
-use crate::{
-    matrix::{Matrix, Vector},
-    st::SymmetricTridiagonalMatrix,
-};
+use crate::{matrix::Matrix, st::SymmetricTridiagonalMatrix};
 use lapack::{dorgtr, dsytrd};
 use rayon::prelude::*;
 
@@ -9,7 +6,7 @@ impl Matrix {
     /// # Tridiagonalize
     /// for symmetric matrix
     pub fn sytrd(self) -> Result<(Matrix, SymmetricTridiagonalMatrix), String> {
-        if self.rows == 0 || self.rows != self.columns {
+        if self.rows == 0 || self.rows != self.cols {
             return Err("dimension mismatch".to_owned());
         }
         let n = self.rows as i32;
@@ -25,7 +22,7 @@ impl Matrix {
             dsytrd(
                 'U' as u8,
                 n,
-                &mut slf.elements,
+                &mut slf.elems,
                 n,
                 &mut d,
                 &mut e,
@@ -41,7 +38,7 @@ impl Matrix {
             dorgtr(
                 'U' as u8,
                 n,
-                &mut slf.elements,
+                &mut slf.elems,
                 n,
                 &tau,
                 &mut work,
@@ -92,24 +89,23 @@ impl Matrix {
         let mut e_prev = 0.0;
 
         for i in 0..k {
-            let u_t = u[i].clone().to_row_vector();
+            let u_t = Matrix::row(u[i].clone());
 
-            let a_u = vec_mul(&u[i])?.to_column_vector();
+            let a_u = Matrix::col(vec_mul(&u[i])?);
             d[i] = (u_t * &a_u)[0][0];
 
             if i + 1 == k {
                 break;
             }
 
-            let v: Matrix =
-                a_u - e_prev * u_prev.to_column_vector() - d[i] * u[i].clone().to_column_vector();
+            let v: Matrix = a_u - e_prev * Matrix::col(u_prev) - d[i] * Matrix::col(u[i].clone());
             e[i] = v
-                .elements
+                .elems
                 .par_iter()
                 .map(|&v_e| v_e.powi(2))
                 .sum::<f64>()
                 .sqrt();
-            u[i + 1] = ((1.0 / e[i]) * v).elements;
+            u[i + 1] = ((1.0 / e[i]) * v).elems;
 
             u_prev = u[i].clone();
             e_prev = e[i];

@@ -5,7 +5,7 @@ impl Matrix {
     /// # Inverse
     /// for positive definite matrix
     pub fn poinv(self) -> Result<Matrix, String> {
-        if self.rows != self.columns {
+        if self.rows != self.cols {
             return Err("dimension mismatch".to_owned());
         }
 
@@ -18,9 +18,9 @@ impl Matrix {
                 'U' as u8,
                 slf.rows as i32,
                 slf.rows as i32,
-                &mut slf.elements,
+                &mut slf.elems,
                 slf.rows as i32,
-                &mut solution_matrix.elements,
+                &mut solution_matrix.elems,
                 slf.rows as i32,
                 &mut info,
             );

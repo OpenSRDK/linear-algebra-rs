@@ -16,7 +16,7 @@ where
     pub fn new(k: Vec<Matrix<T>>) -> Self {
         let (rows_sum, columns_sum) = k
             .iter()
-            .fold((0usize, 0usize), |v, m| (v.0 + m.rows, v.1 + m.columns));
+            .fold((0usize, 0usize), |v, m| (v.0 + m.rows, v.1 + m.cols));
         Self {
             k,
             rows_sum,
@@ -38,17 +38,17 @@ impl KroneckerMatrices {
         }
 
         let k_len = self.k.len();
-        let nu = self.rows_sum / self.k[k_len - 1].get_rows();
+        let nu = self.rows_sum / self.k[k_len - 1].rows();
         let mut u = Matrix::from(nu, v.to_vec()).t();
 
         for p in (1..k_len).rev() {
-            let nu = self.k[p - 1].get_columns();
+            let nu = self.k[p - 1].cols();
             let ku = &self.k[p - 1] * u;
-            u = Matrix::from(nu, ku.get_elements()).t();
+            u = Matrix::from(nu, ku.elems()).t();
         }
 
         let ku = &self.k[0] * u;
 
-        Ok(ku.t().get_elements())
+        Ok(ku.t().elems())
     }
 }

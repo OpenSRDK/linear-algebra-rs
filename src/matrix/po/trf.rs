@@ -11,7 +11,7 @@ impl Matrix {
     /// `A = L * L^T`
     pub fn potrf(self) -> Result<Matrix, String> {
         let n = self.rows;
-        if n != self.columns {
+        if n != self.cols {
             return Err("dimension mismatch".to_owned());
         }
 
@@ -20,7 +20,7 @@ impl Matrix {
         let n = n as i32;
 
         unsafe {
-            dpotrf('U' as u8, n, &mut slf.elements, n, &mut info);
+            dpotrf('U' as u8, n, &mut slf.elems, n, &mut info);
         }
 
         match info {
@@ -39,7 +39,7 @@ impl Matrix<c64> {
     /// `A = L * L^*`
     pub fn potrf(self) -> Result<Matrix<c64>, String> {
         let n = self.rows;
-        if n != self.columns {
+        if n != self.cols {
             return Err("dimension mismatch".to_owned());
         }
 
@@ -48,7 +48,7 @@ impl Matrix<c64> {
         let n = n as i32;
 
         unsafe {
-            zpotrf('U' as u8, n, &mut slf.elements, n, &mut info);
+            zpotrf('U' as u8, n, &mut slf.elems, n, &mut info);
         }
 
         match info {

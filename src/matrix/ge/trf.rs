@@ -7,7 +7,7 @@ impl Matrix {
     /// for f64
     pub fn getrf(self) -> Result<(Matrix, Vec<i32>), String> {
         let m = self.rows;
-        let n = self.columns;
+        let n = self.cols;
         let mut ipiv = vec![0; m.min(n)];
         let mut info = 0;
 
@@ -16,7 +16,7 @@ impl Matrix {
         let n = n as i32;
 
         unsafe {
-            dgetrf(n, m, &mut slf.elements, n, &mut ipiv, &mut info);
+            dgetrf(n, m, &mut slf.elems, n, &mut ipiv, &mut info);
         }
 
         match info {
@@ -31,7 +31,7 @@ impl Matrix<c64> {
     /// for c64
     pub fn getrf(self) -> Result<(Matrix<c64>, Vec<i32>), String> {
         let m = self.rows;
-        let n = self.columns;
+        let n = self.cols;
         let mut ipiv = vec![0; m.min(n)];
         let mut info = 0;
 
@@ -40,7 +40,7 @@ impl Matrix<c64> {
         let n = n as i32;
 
         unsafe {
-            zgetrf(n, m, &mut slf.elements, n, &mut ipiv, &mut info);
+            zgetrf(n, m, &mut slf.elems, n, &mut ipiv, &mut info);
         }
 
         match info {

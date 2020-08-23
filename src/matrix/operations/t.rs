@@ -7,10 +7,10 @@ where
 {
     /// # Transpose
     pub fn t(&self) -> Matrix<T> {
-        let mut new_matrix = Matrix::<T>::new(self.columns, self.rows);
+        let mut new_matrix = Matrix::<T>::new(self.cols, self.rows);
 
         for i in 0..new_matrix.rows {
-            for j in 0..new_matrix.columns {
+            for j in 0..new_matrix.cols {
                 new_matrix[i][j] = self[j][i];
             }
         }

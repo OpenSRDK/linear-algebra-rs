@@ -15,10 +15,10 @@ impl Matrix {
             dgesv(
                 slf.rows as i32,
                 slf.rows as i32,
-                &mut slf.elements,
+                &mut slf.elems,
                 slf.rows as i32,
                 &mut ipiv,
-                &mut solution_matrix.elements,
+                &mut solution_matrix.elems,
                 slf.rows as i32,
                 &mut info,
             );
@@ -44,10 +44,10 @@ impl Matrix<c64> {
             zgesv(
                 slf.rows as i32,
                 slf.rows as i32,
-                &mut slf.elements,
+                &mut slf.elems,
                 slf.rows as i32,
                 &mut ipiv,
-                &mut solution_matrix.elements,
+                &mut solution_matrix.elems,
                 slf.rows as i32,
                 &mut info,
             );

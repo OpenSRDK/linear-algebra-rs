@@ -6,7 +6,7 @@ where
 {
     k: Vec<Matrix<T>>,
     rows_sum: usize,
-    columns_sum: usize,
+    cols_sum: usize,
 }
 
 impl<T> KroneckerMatrices<T>
@@ -14,30 +14,38 @@ where
     T: Number,
 {
     pub fn new(k: Vec<Matrix<T>>) -> Self {
-        let (rows_sum, columns_sum) = k
+        let (rows_sum, cols_sum) = k
             .iter()
             .fold((0usize, 0usize), |v, m| (v.0 + m.rows, v.1 + m.cols));
         Self {
             k,
             rows_sum,
-            columns_sum,
+            cols_sum,
         }
     }
 
     pub fn elems_ref(&self) -> &[Matrix<T>] {
         &self.k
     }
+
+    pub fn rows_sum(&self) -> usize {
+        self.rows_sum
+    }
+
+    pub fn cols_sum(&self) -> usize {
+        self.cols_sum
+    }
 }
 
 impl KroneckerMatrices {
     pub fn vec_mul(&self, v: &[f64]) -> Result<Vec<f64>, String> {
-        if self.k.len() == 0 || self.rows_sum == 0 || self.columns_sum == 0 {
+        if self.k.len() == 0 || self.rows_sum == 0 || self.cols_sum == 0 {
             return Err("empty".to_owned());
         }
 
         let n = v.len();
 
-        if self.columns_sum != n {
+        if self.cols_sum != n {
             return Err("dimension mismatch".to_owned());
         }
 

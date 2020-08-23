@@ -3,7 +3,7 @@ use crate::number::c64;
 
 impl Matrix<c64> {
     pub fn adjoint(&self) -> Matrix<c64> {
-        let mut new_matrix = Matrix::<c64>::zeros(self.columns, self.rows);
+        let mut new_matrix = Matrix::<c64>::new(self.columns, self.rows);
 
         for i in 0..new_matrix.rows {
             for j in 0..new_matrix.columns {

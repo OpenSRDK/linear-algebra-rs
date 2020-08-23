@@ -8,7 +8,7 @@ impl CirculantMatrix<f64> {
     pub fn cigv(&self) -> (Matrix<c64>, Matrix<c64>) {
         let n = self.row.len();
 
-        let mut fourier_matrix: Matrix<c64> = Matrix::<c64>::zeros(n, n);
+        let mut fourier_matrix: Matrix<c64> = Matrix::<c64>::new(n, n);
         let omega = c64::new(0.0, 2.0 * PI / (n as f64)).exp();
 
         for i in 0..n {

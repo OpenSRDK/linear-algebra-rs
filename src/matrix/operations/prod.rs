@@ -35,29 +35,6 @@ where
 
         slf
     }
-
-    /// # Kronecker product
-    pub fn kronecker_prod(&self, rhs: &Matrix<T>) -> Matrix<T> {
-        let sn = self.rows;
-        let sm = self.columns;
-        let rn = rhs.rows;
-        let rm = rhs.columns;
-        let n = sn * rn;
-        let m = sm * rm;
-        let mut matrix = Matrix::<T>::zeros(n, m);
-
-        for si in 0..sn {
-            for sj in 0..sm {
-                for ri in 0..rn {
-                    for rj in 0..rm {
-                        matrix[si * sn + ri][sj * sn + rj] = self[si][sj] * rhs[ri][rj];
-                    }
-                }
-            }
-        }
-
-        matrix
-    }
 }
 
 #[cfg(test)]

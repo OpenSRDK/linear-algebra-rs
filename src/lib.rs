@@ -8,4 +8,7 @@ pub mod macros;
 pub mod matrix;
 pub mod number;
 
-pub use crate::{matrix::*, number::*};
+pub use crate::{
+    matrix::{ci::CirculantMatrix, st::SymmetricTridiagonalMatrix, to::ToeplitzMatrix, *},
+    number::*,
+};

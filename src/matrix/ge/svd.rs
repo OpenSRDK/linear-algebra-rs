@@ -14,9 +14,9 @@ impl Matrix {
         }
 
         let mut info = 0;
-        let mut u = Matrix::zeros(self.rows, self.rows);
-        let mut sigma = Matrix::zeros(self.rows, self.columns);
-        let mut vt = Matrix::zeros(self.columns, self.columns);
+        let mut u = Matrix::new(self.rows, self.rows);
+        let mut sigma = Matrix::new(self.rows, self.columns);
+        let mut vt = Matrix::new(self.columns, self.columns);
         let lwork = 2 * self.rows;
 
         unsafe {

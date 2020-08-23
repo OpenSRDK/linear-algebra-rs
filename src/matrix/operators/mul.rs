@@ -28,7 +28,7 @@ fn mul_f64(lhs: &Matrix, rhs: &Matrix) -> Matrix {
     let k = lhs.columns as i32;
     let n = rhs.columns as i32;
 
-    let mut new_matrix = Matrix::zeros(lhs.rows, rhs.columns);
+    let mut new_matrix = Matrix::new(lhs.rows, rhs.columns);
 
     unsafe {
         dgemm(
@@ -60,7 +60,7 @@ fn mul_c64(lhs: &Matrix<c64>, rhs: &Matrix<c64>) -> Matrix<c64> {
     let k = lhs.columns as i32;
     let n = rhs.columns as i32;
 
-    let mut new_matrix = Matrix::<c64>::zeros(lhs.rows, rhs.columns);
+    let mut new_matrix = Matrix::<c64>::new(lhs.rows, rhs.columns);
 
     unsafe {
         zgemm(

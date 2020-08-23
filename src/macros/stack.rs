@@ -51,7 +51,7 @@ where
 {
     pub fn matrix(&self) -> Matrix<T> {
         let size = self.size();
-        let mut matrix = Matrix::<T>::zeros(size.0, size.1);
+        let mut matrix = Matrix::<T>::new(size.0, size.1);
         self.transcript(&mut matrix, 0, 0);
 
         matrix

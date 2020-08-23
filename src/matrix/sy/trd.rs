@@ -1,11 +1,14 @@
-use crate::matrix::{Matrix, Vector};
+use crate::{
+    matrix::{Matrix, Vector},
+    st::SymmetricTridiagonalMatrix,
+};
 use lapack::{dorgtr, dsytrd};
 use rayon::prelude::*;
 
 impl Matrix {
     /// # Tridiagonalize
     /// for symmetric matrix
-    pub fn sytrd(self) -> Result<(Matrix, Vec<f64>, Vec<f64>), String> {
+    pub fn sytrd(self) -> Result<(Matrix, SymmetricTridiagonalMatrix), String> {
         if self.rows == 0 || self.rows != self.columns {
             return Err("dimension mismatch".to_owned());
         }
@@ -48,8 +51,9 @@ impl Matrix {
         }
 
         let v = slf;
+        let t = SymmetricTridiagonalMatrix::new(d, e);
 
-        Ok((v, d, e))
+        Ok((v, t))
     }
 
     /// # Lanczos algorithm
@@ -59,7 +63,7 @@ impl Matrix {
         &self,
         k: usize,
         probe: Option<Vec<f64>>,
-    ) -> Result<(Vec<f64>, Vec<f64>, Matrix), String> {
+    ) -> Result<(SymmetricTridiagonalMatrix, Matrix), String> {
         let n = self.rows;
         if n == 0 || n != self.columns {
             return Err("dimension mismatch".to_owned());
@@ -107,8 +111,9 @@ impl Matrix {
             u_prev = u_mat;
             e_prev = e[i];
         }
-        let q_t = Matrix::new(k, n, u.concat());
+        let q_t = Matrix::from(k, u.concat());
+        let t = SymmetricTridiagonalMatrix::new(d, e);
 
-        Ok((d, e, q_t))
+        Ok((t, q_t))
     }
 }

@@ -7,7 +7,7 @@ impl Matrix {
         T: Number,
     {
         let n = vec.len();
-        let mut new_matrix = Matrix::<T>::zeros(n, n);
+        let mut new_matrix = Matrix::<T>::new(n, n);
         for i in 0..n {
             new_matrix[i][i] = vec[i];
         }

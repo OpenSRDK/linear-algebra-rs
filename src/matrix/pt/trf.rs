@@ -1,24 +1,24 @@
-use crate::matrix::Matrix;
+use crate::{bd::BidiagonalMatrix, matrix::st::SymmetricTridiagonalMatrix};
 use lapack::dpttrf;
 use rayon::prelude::*;
 
-impl Matrix {
+impl SymmetricTridiagonalMatrix<f64> {
     /// # Cholesky decomposition
     /// for tridiagonal matrix
-    pub fn pttrf(d: Vec<f64>, e: Vec<f64>) -> Result<(Vec<f64>, Vec<f64>), String> {
+    pub fn pttrf(self) -> Result<BidiagonalMatrix, String> {
+        let (mut d, mut e) = self.get_elements();
         let n = d.len() as i32;
-        let mut d_mut = d;
-        let mut e_mut = e;
         let mut info = 0;
 
-        unsafe { dpttrf(n, &mut d_mut, &mut e_mut, &mut info) }
+        unsafe { dpttrf(n, &mut d, &mut e, &mut info) }
 
         if info != 0 {
             return Err(info.to_string());
         }
+        d.par_iter_mut().for_each(|d_e| *d_e = d_e.powf(0.5));
 
-        d_mut.par_iter_mut().for_each(|d_e| *d_e = d_e.powf(0.5));
+        let bd = BidiagonalMatrix::new(d, e);
 
-        Ok((d_mut, e_mut))
+        Ok(bd)
     }
 }

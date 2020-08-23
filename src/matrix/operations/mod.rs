@@ -4,4 +4,3 @@ pub mod identity;
 pub mod prod;
 pub mod t;
 pub mod tr;
-pub mod zeros;

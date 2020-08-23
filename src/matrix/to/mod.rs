@@ -1,6 +1,6 @@
 use crate::matrix::ci::CirculantMatrix;
 use crate::number::Number;
-pub struct ToeplitzMatrix<T>
+pub struct ToeplitzMatrix<T = f64>
 where
     T: Number,
 {
@@ -13,6 +13,7 @@ impl<T> ToeplitzMatrix<T>
 where
     T: Number,
 {
+    /// must be row[0] == column[0]
     pub fn new(row: Vec<T>, column: Vec<T>) -> Self {
         let dim = row.len();
 

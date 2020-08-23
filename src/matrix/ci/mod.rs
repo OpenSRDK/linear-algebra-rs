@@ -2,7 +2,7 @@ pub mod gv;
 
 use crate::number::Number;
 
-pub struct CirculantMatrix<T>
+pub struct CirculantMatrix<T = f64>
 where
     T: Number,
 {

@@ -23,6 +23,10 @@ where
             columns_sum,
         }
     }
+
+    pub fn elems_ref(&self) -> &[Matrix<T>] {
+        &self.k
+    }
 }
 
 impl KroneckerMatrices {

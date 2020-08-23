@@ -9,6 +9,9 @@ pub mod matrix;
 pub mod number;
 
 pub use crate::{
-    matrix::{ci::CirculantMatrix, st::SymmetricTridiagonalMatrix, to::ToeplitzMatrix, *},
+    matrix::{
+        ci::CirculantMatrix, kr::KroneckerMatrices, st::SymmetricTridiagonalMatrix,
+        to::ToeplitzMatrix, *,
+    },
     number::*,
 };

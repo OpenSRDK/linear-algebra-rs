@@ -3,6 +3,33 @@ use crate::number::Number;
 use rayon::prelude::*;
 use std::ops::Sub;
 
+fn sub_scalar<T>(lhs: Matrix<T>, rhs: T) -> Matrix<T>
+where
+    T: Number,
+{
+    let mut lhs = lhs;
+
+    lhs.elems
+        .par_iter_mut()
+        .map(|l| {
+            *l -= rhs;
+        })
+        .collect::<Vec<_>>();
+
+    lhs
+}
+
+impl<T> Sub<T> for Matrix<T>
+where
+    T: Number,
+{
+    type Output = Matrix<T>;
+
+    fn sub(self, rhs: T) -> Self::Output {
+        sub_scalar(self, rhs)
+    }
+}
+
 fn sub<T>(lhs: Matrix<T>, rhs: &Matrix<T>) -> Matrix<T>
 where
     T: Number,
@@ -23,7 +50,10 @@ where
     lhs
 }
 
-impl<T: Number> Sub<Matrix<T>> for Matrix<T> {
+impl<T> Sub<Matrix<T>> for Matrix<T>
+where
+    T: Number,
+{
     type Output = Matrix<T>;
 
     fn sub(self, rhs: Matrix<T>) -> Self::Output {
@@ -31,7 +61,10 @@ impl<T: Number> Sub<Matrix<T>> for Matrix<T> {
     }
 }
 
-impl<T: Number> Sub<&Matrix<T>> for Matrix<T> {
+impl<T> Sub<&Matrix<T>> for Matrix<T>
+where
+    T: Number,
+{
     type Output = Matrix<T>;
 
     fn sub(self, rhs: &Matrix<T>) -> Self::Output {
@@ -39,7 +72,10 @@ impl<T: Number> Sub<&Matrix<T>> for Matrix<T> {
     }
 }
 
-impl<T: Number> Sub<Matrix<T>> for &Matrix<T> {
+impl<T> Sub<Matrix<T>> for &Matrix<T>
+where
+    T: Number,
+{
     type Output = Matrix<T>;
 
     fn sub(self, rhs: Matrix<T>) -> Self::Output {

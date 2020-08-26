@@ -1,5 +1,5 @@
 use crate::matrix::Matrix;
-use crate::number::Number;
+use crate::number::{c64, Number};
 use rayon::prelude::*;
 use std::ops::Add;
 
@@ -27,6 +27,22 @@ where
 
     fn add(self, rhs: T) -> Self::Output {
         add_scalar(self, rhs)
+    }
+}
+
+impl Add<Matrix> for f64 {
+    type Output = Matrix;
+
+    fn add(self, rhs: Matrix) -> Self::Output {
+        add_scalar(rhs, self)
+    }
+}
+
+impl Add<Matrix<c64>> for c64 {
+    type Output = Matrix<c64>;
+
+    fn add(self, rhs: Matrix<c64>) -> Self::Output {
+        add_scalar(rhs, self)
     }
 }
 

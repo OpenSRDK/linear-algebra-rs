@@ -1,5 +1,5 @@
 use crate::matrix::Matrix;
-use crate::number::Number;
+use crate::number::{c64, Number};
 use rayon::prelude::*;
 use std::ops::Sub;
 
@@ -27,6 +27,22 @@ where
 
     fn sub(self, rhs: T) -> Self::Output {
         sub_scalar(self, rhs)
+    }
+}
+
+impl Sub<Matrix> for f64 {
+    type Output = Matrix;
+
+    fn sub(self, rhs: Matrix) -> Self::Output {
+        sub_scalar(rhs, self)
+    }
+}
+
+impl Sub<Matrix<c64>> for c64 {
+    type Output = Matrix<c64>;
+
+    fn sub(self, rhs: Matrix<c64>) -> Self::Output {
+        sub_scalar(rhs, self)
     }
 }
 

@@ -36,7 +36,7 @@ impl Matrix {
         match info {
             0 => Ok(b_t),
             _ => Err(Box::new(MatrixError::LapackRoutineError {
-                routine: "dpotrf".to_owned(),
+                routine: "dgetrs".to_owned(),
                 info,
             })),
         }
@@ -75,7 +75,7 @@ impl Matrix<c64> {
         match info {
             0 => Ok(b_t),
             _ => Err(Box::new(MatrixError::LapackRoutineError {
-                routine: "dpotrf".to_owned(),
+                routine: "zgetrs".to_owned(),
                 info,
             })),
         }

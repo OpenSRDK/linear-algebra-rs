@@ -19,7 +19,7 @@ impl Matrix {
         let mut u = Matrix::new(self.rows, self.rows);
         let mut sigma = Matrix::new(self.rows, self.cols);
         let mut vt = Matrix::new(self.cols, self.cols);
-        let lwork = 2 * self.rows;
+        let lwork = 1usize.max(5usize * self.rows.min(self.cols));
 
         unsafe {
             dgesvd(
@@ -43,7 +43,7 @@ impl Matrix {
         match info {
             0 => Ok((u, sigma, vt)),
             _ => Err(Box::new(MatrixError::LapackRoutineError {
-                routine: "dpotrf".to_owned(),
+                routine: "dgesvd".to_owned(),
                 info,
             })),
         }

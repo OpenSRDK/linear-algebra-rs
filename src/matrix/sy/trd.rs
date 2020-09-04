@@ -1,13 +1,17 @@
-use crate::{matrix::Matrix, st::SymmetricTridiagonalMatrix};
+use crate::{
+    matrix::{Matrix, MatrixError},
+    st::SymmetricTridiagonalMatrix,
+};
 use lapack::{dorgtr, dsytrd};
 use rayon::prelude::*;
+use std::error::Error;
 
 impl Matrix {
     /// # Tridiagonalize
     /// for symmetric matrix
-    pub fn sytrd(self) -> Result<(Matrix, SymmetricTridiagonalMatrix), String> {
+    pub fn sytrd(self) -> Result<(Matrix, SymmetricTridiagonalMatrix), Box<dyn Error>> {
         if self.rows == 0 || self.rows != self.cols {
-            return Err("dimension mismatch".to_owned());
+            return Err(Box::new(MatrixError::DimensionMismatch));
         }
         let n = self.rows as i32;
         let mut slf = self;
@@ -32,7 +36,10 @@ impl Matrix {
                 &mut info,
             );
             if info != 0 {
-                return Err(info.to_string());
+                return Err(Box::new(MatrixError::LapackRoutineError {
+                    routine: "dsytrd".to_owned(),
+                    info,
+                }));
             }
 
             dorgtr(
@@ -59,11 +66,11 @@ impl Matrix {
     pub fn sytrd_k(
         n: usize,
         k: usize,
-        vec_mul: impl Fn(&[f64]) -> Result<Vec<f64>, String>,
+        vec_mul: impl Fn(&[f64]) -> Result<Vec<f64>, Box<dyn Error>>,
         probe: Option<Vec<f64>>,
-    ) -> Result<(SymmetricTridiagonalMatrix, Matrix), String> {
+    ) -> Result<(SymmetricTridiagonalMatrix, Matrix), Box<dyn Error>> {
         if n == 0 {
-            return Err("dimension mismatch".to_owned());
+            return Err(Box::new(MatrixError::Empty));
         }
         let k = k.min(n);
 
@@ -75,7 +82,7 @@ impl Matrix {
         match probe {
             Some(v) => {
                 if v.len() != n {
-                    return Err("dimension mismatch".to_owned());
+                    return Err(Box::new(MatrixError::DimensionMismatch));
                 }
                 let norm = v.par_iter().map(|&v_e| v_e.powi(2)).sum::<f64>().sqrt();
                 u[0] = v.par_iter().map(|&v_e| v_e / norm).collect::<Vec<_>>();

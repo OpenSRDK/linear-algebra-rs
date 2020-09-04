@@ -1,11 +1,13 @@
+use crate::matrix::MatrixError;
 use crate::{bd::BidiagonalMatrix, matrix::st::SymmetricTridiagonalMatrix};
 use lapack::dpttrf;
 use rayon::prelude::*;
+use std::error::Error;
 
 impl SymmetricTridiagonalMatrix<f64> {
     /// # Cholesky decomposition
     /// for tridiagonal matrix
-    pub fn pttrf(self) -> Result<BidiagonalMatrix, String> {
+    pub fn pttrf(self) -> Result<BidiagonalMatrix, Box<dyn Error>> {
         let (mut d, mut e) = self.get_elements();
         let n = d.len() as i32;
         let mut info = 0;
@@ -13,7 +15,10 @@ impl SymmetricTridiagonalMatrix<f64> {
         unsafe { dpttrf(n, &mut d, &mut e, &mut info) }
 
         if info != 0 {
-            return Err(info.to_string());
+            return Err(Box::new(MatrixError::LapackRoutineError {
+                routine: "dpttrf".to_owned(),
+                info,
+            }));
         }
         d.par_iter_mut().for_each(|d_e| *d_e = d_e.powf(0.5));
 

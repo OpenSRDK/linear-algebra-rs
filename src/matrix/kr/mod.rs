@@ -1,4 +1,6 @@
+use crate::matrix::MatrixError;
 use crate::{matrix::Matrix, number::Number};
+use std::error::Error;
 
 pub struct KroneckerMatrices<T = f64>
 where
@@ -38,15 +40,15 @@ where
 }
 
 impl KroneckerMatrices {
-    pub fn vec_mul(&self, v: &[f64]) -> Result<Vec<f64>, String> {
+    pub fn vec_mul(&self, v: &[f64]) -> Result<Vec<f64>, Box<dyn Error>> {
         if self.k.len() == 0 || self.rows_sum == 0 || self.cols_sum == 0 {
-            return Err("empty".to_owned());
+            return Err(Box::new(MatrixError::Empty));
         }
 
         let n = v.len();
 
         if self.cols_sum != n {
-            return Err("dimension mismatch".to_owned());
+            return Err(Box::new(MatrixError::DimensionMismatch));
         }
 
         let k_len = self.k.len();

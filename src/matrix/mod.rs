@@ -26,6 +26,18 @@ where
     elems: Vec<T>,
 }
 
+#[derive(thiserror::Error, Debug)]
+pub enum MatrixError {
+    #[error("empty")]
+    Empty,
+    #[error("dimension mismatch")]
+    DimensionMismatch,
+    #[error("BLAS routine error, routine: {routine}, info: {info}")]
+    BlasRoutineError { routine: String, info: i32 },
+    #[error("LAPACK routine error, routine: {routine}, info: {info}")]
+    LapackRoutineError { routine: String, info: i32 },
+}
+
 impl<T> Matrix<T>
 where
     T: Number,

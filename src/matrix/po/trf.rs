@@ -1,6 +1,8 @@
 use crate::matrix::Matrix;
+use crate::matrix::MatrixError;
 use crate::number::c64;
 use lapack::{dpotrf, zpotrf};
+use std::error::Error;
 
 impl Matrix {
     /// # Cholesky decomposition
@@ -9,10 +11,10 @@ impl Matrix {
     /// https://en.wikipedia.org/wiki/Cholesky_decomposition
     ///
     /// `A = L * L^T`
-    pub fn potrf(self) -> Result<Matrix, String> {
+    pub fn potrf(self) -> Result<Matrix, Box<dyn Error>> {
         let n = self.rows;
         if n != self.cols {
-            return Err("dimension mismatch".to_owned());
+            return Err(Box::new(MatrixError::DimensionMismatch));
         }
 
         let mut info = 0;
@@ -25,7 +27,10 @@ impl Matrix {
 
         match info {
             0 => Ok(slf),
-            i => Err(i.to_string()),
+            _ => Err(Box::new(MatrixError::LapackRoutineError {
+                routine: "dpotrf".to_owned(),
+                info,
+            })),
         }
     }
 }
@@ -37,10 +42,10 @@ impl Matrix<c64> {
     /// https://en.wikipedia.org/wiki/Cholesky_decomposition
     ///
     /// `A = L * L^*`
-    pub fn potrf(self) -> Result<Matrix<c64>, String> {
+    pub fn potrf(self) -> Result<Matrix<c64>, Box<dyn Error>> {
         let n = self.rows;
         if n != self.cols {
-            return Err("dimension mismatch".to_owned());
+            return Err(Box::new(MatrixError::DimensionMismatch));
         }
 
         let mut info = 0;
@@ -53,7 +58,10 @@ impl Matrix<c64> {
 
         match info {
             0 => Ok(slf),
-            i => Err(i.to_string()),
+            _ => Err(Box::new(MatrixError::LapackRoutineError {
+                routine: "zpotrf".to_owned(),
+                info,
+            })),
         }
     }
 }

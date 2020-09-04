@@ -1,13 +1,14 @@
 use crate::matrix::Matrix;
+use std::error::Error;
 
 impl Matrix {
     /// # Solve equations with Conjugate Gradient Method
     /// for positiveDefinite matrix
     pub fn posv_cgm(
-        vec_mul: impl Fn(&[f64]) -> Result<Vec<f64>, String>,
+        vec_mul: impl Fn(&[f64]) -> Result<Vec<f64>, Box<dyn Error>>,
         b: Vec<f64>,
         iterations: usize,
-    ) -> Result<Vec<f64>, String> {
+    ) -> Result<Vec<f64>, Box<dyn Error>> {
         let mut x = Matrix::new(b.len(), 1);
         let mut r = Matrix::row(b);
         let mut p = r.clone();

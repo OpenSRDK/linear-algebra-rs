@@ -1,11 +1,13 @@
 use crate::matrix::Matrix;
+use crate::matrix::MatrixError;
 use crate::number::c64;
 use lapack::{dgetrf, zgetrf};
+use std::error::Error;
 
 impl Matrix {
     /// # LU decomposition
     /// for f64
-    pub fn getrf(self) -> Result<(Matrix, Vec<i32>), String> {
+    pub fn getrf(self) -> Result<(Matrix, Vec<i32>), Box<dyn Error>> {
         let m = self.rows;
         let n = self.cols;
         let mut ipiv = vec![0; m.min(n)];
@@ -21,7 +23,10 @@ impl Matrix {
 
         match info {
             0 => Ok((slf, ipiv)),
-            i => Err(i.to_string()),
+            _ => Err(Box::new(MatrixError::LapackRoutineError {
+                routine: "dpotrf".to_owned(),
+                info,
+            })),
         }
     }
 }
@@ -29,7 +34,7 @@ impl Matrix {
 impl Matrix<c64> {
     /// # LU decomposition
     /// for c64
-    pub fn getrf(self) -> Result<(Matrix<c64>, Vec<i32>), String> {
+    pub fn getrf(self) -> Result<(Matrix<c64>, Vec<i32>), Box<dyn Error>> {
         let m = self.rows;
         let n = self.cols;
         let mut ipiv = vec![0; m.min(n)];
@@ -45,7 +50,10 @@ impl Matrix<c64> {
 
         match info {
             0 => Ok((slf, ipiv)),
-            i => Err(i.to_string()),
+            _ => Err(Box::new(MatrixError::LapackRoutineError {
+                routine: "dpotrf".to_owned(),
+                info,
+            })),
         }
     }
 }

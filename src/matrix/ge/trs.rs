@@ -1,15 +1,17 @@
 use crate::matrix::Matrix;
+use crate::matrix::MatrixError;
 use crate::number::c64;
 use lapack::{dgetrs, zgetrs};
+use std::error::Error;
 
 impl Matrix {
     /// # Solve equation
     /// with matrix decomposed by getrf
     /// `Ax = b`
-    pub fn getrs(&self, ipiv: &[i32], b_t: Matrix) -> Result<Matrix, String> {
+    pub fn getrs(&self, ipiv: &[i32], b_t: Matrix) -> Result<Matrix, Box<dyn Error>> {
         let n = self.rows();
         if n != self.cols() || n != b_t.cols {
-            return Err("dimension mismatch".to_owned());
+            return Err(Box::new(MatrixError::DimensionMismatch));
         }
 
         let mut info = 0;
@@ -33,7 +35,10 @@ impl Matrix {
 
         match info {
             0 => Ok(b_t),
-            i => Err(i.to_string()),
+            _ => Err(Box::new(MatrixError::LapackRoutineError {
+                routine: "dpotrf".to_owned(),
+                info,
+            })),
         }
     }
 }
@@ -42,10 +47,10 @@ impl Matrix<c64> {
     /// # Solve equation
     /// with matrix decomposed by getrf
     /// `Ax = b`
-    pub fn getrs(&self, ipiv: &[i32], b_t: Matrix<c64>) -> Result<Matrix<c64>, String> {
+    pub fn getrs(&self, ipiv: &[i32], b_t: Matrix<c64>) -> Result<Matrix<c64>, Box<dyn Error>> {
         let n = self.rows();
         if n != self.cols() || n != b_t.cols {
-            return Err("dimension mismatch".to_owned());
+            return Err(Box::new(MatrixError::DimensionMismatch));
         }
 
         let mut info = 0;
@@ -69,7 +74,10 @@ impl Matrix<c64> {
 
         match info {
             0 => Ok(b_t),
-            i => Err(i.to_string()),
+            _ => Err(Box::new(MatrixError::LapackRoutineError {
+                routine: "dpotrf".to_owned(),
+                info,
+            })),
         }
     }
 }

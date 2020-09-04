@@ -1,4 +1,3 @@
-pub mod inv;
 pub mod mm;
 pub mod svd;
 pub mod trf;

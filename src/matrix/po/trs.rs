@@ -1,15 +1,17 @@
 use crate::matrix::Matrix;
+use crate::matrix::MatrixError;
 use crate::number::c64;
 use lapack::{dpotrs, zpotrs};
+use std::error::Error;
 
 impl Matrix {
     /// # Solve equation
     /// with matrix decomposed by potrf
     /// `Ax = b`
-    pub fn potrs(&self, b_t: Matrix) -> Result<Matrix, String> {
+    pub fn potrs(&self, b_t: Matrix) -> Result<Matrix, Box<dyn Error>> {
         let n = self.rows();
         if n != self.cols() || n != b_t.cols {
-            return Err("dimension mismatch".to_owned());
+            return Err(Box::new(MatrixError::DimensionMismatch));
         }
 
         let mut info = 0;
@@ -32,7 +34,10 @@ impl Matrix {
 
         match info {
             0 => Ok(b_t),
-            i => Err(i.to_string()),
+            _ => Err(Box::new(MatrixError::LapackRoutineError {
+                routine: "dpotrs".to_owned(),
+                info,
+            })),
         }
     }
 }
@@ -41,10 +46,10 @@ impl Matrix<c64> {
     /// # Solve equation
     /// with matrix decomposed by potrf
     /// `Ax = b`
-    pub fn potrs(&self, b_t: Matrix<c64>) -> Result<Matrix<c64>, String> {
+    pub fn potrs(&self, b_t: Matrix<c64>) -> Result<Matrix<c64>, Box<dyn Error>> {
         let n = self.rows();
         if n != self.cols() || n != b_t.cols {
-            return Err("dimension mismatch".to_owned());
+            return Err(Box::new(MatrixError::DimensionMismatch));
         }
 
         let mut info = 0;
@@ -67,7 +72,10 @@ impl Matrix<c64> {
 
         match info {
             0 => Ok(b_t),
-            i => Err(i.to_string()),
+            _ => Err(Box::new(MatrixError::LapackRoutineError {
+                routine: "zpotrs".to_owned(),
+                info,
+            })),
         }
     }
 }

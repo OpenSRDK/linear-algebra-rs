@@ -1,11 +1,19 @@
+use crate::matrix::MatrixError;
 use crate::{matrix::Matrix, number::c64};
 use blas::dgemm;
 use blas::zgemm;
+use std::error::Error;
 
 impl Matrix {
-    pub fn gemm(self, lhs: &Matrix, rhs: &Matrix, alpha: f64, beta: f64) -> Result<Matrix, String> {
+    pub fn gemm(
+        self,
+        lhs: &Matrix,
+        rhs: &Matrix,
+        alpha: f64,
+        beta: f64,
+    ) -> Result<Matrix, Box<dyn Error>> {
         if self.rows != lhs.rows || self.cols != rhs.cols || lhs.cols != rhs.rows {
-            return Err("dimension mismatch".to_owned());
+            return Err(Box::new(MatrixError::DimensionMismatch));
         }
 
         let m = lhs.rows as i32;
@@ -43,9 +51,9 @@ impl Matrix<c64> {
         rhs: &Matrix<c64>,
         alpha: c64,
         beta: c64,
-    ) -> Result<Matrix<c64>, String> {
+    ) -> Result<Matrix<c64>, Box<dyn Error>> {
         if self.rows != lhs.rows || self.cols != rhs.cols || lhs.cols != rhs.rows {
-            return Err("dimension mismatch".to_owned());
+            return Err(Box::new(MatrixError::DimensionMismatch));
         }
 
         let m = lhs.rows as i32;

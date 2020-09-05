@@ -7,6 +7,7 @@ pub mod operations;
 pub mod operators;
 pub mod po;
 pub mod pt;
+pub mod sp;
 pub mod st;
 pub mod sy;
 pub mod to;
@@ -58,14 +59,6 @@ where
         }
     }
 
-    pub fn row(v: Vec<T>) -> Self {
-        Matrix::<T>::from(1, v)
-    }
-
-    pub fn col(v: Vec<T>) -> Self {
-        Matrix::<T>::from(v.len(), v)
-    }
-
     pub fn same_size(&self, rhs: &Matrix<T>) -> bool {
         self.rows == rhs.rows && self.cols == rhs.cols
     }
@@ -99,5 +92,26 @@ impl Matrix<f64> {
 impl Matrix<c64> {
     pub fn to_real(&self) -> Matrix<f64> {
         Matrix::from(self.rows, self.elems.par_iter().map(|e| e.re).collect())
+    }
+}
+
+pub trait Vector<T>
+where
+    T: Number,
+{
+    fn row_mat(self) -> Matrix<T>;
+    fn col_mat(self) -> Matrix<T>;
+}
+
+impl<T> Vector<T> for Vec<T>
+where
+    T: Number,
+{
+    fn row_mat(self) -> Matrix<T> {
+        Matrix::<T>::from(1, self)
+    }
+
+    fn col_mat(self) -> Matrix<T> {
+        Matrix::<T>::from(self.len(), self)
     }
 }

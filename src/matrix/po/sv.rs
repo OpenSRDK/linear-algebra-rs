@@ -1,4 +1,4 @@
-use crate::matrix::Matrix;
+use crate::{matrix::Matrix, matrix::Vector};
 use std::error::Error;
 
 impl Matrix {
@@ -10,12 +10,12 @@ impl Matrix {
         iterations: usize,
     ) -> Result<Vec<f64>, Box<dyn Error>> {
         let mut x = Matrix::new(b.len(), 1);
-        let mut r = Matrix::row(b);
+        let mut r = b.row_mat();
         let mut p = r.clone();
 
         for _ in 0..iterations {
             let r_t = r.t();
-            let a_p = Matrix::col(vec_mul(p.elems_ref())?);
+            let a_p = vec_mul(p.elems_ref())?.col_mat();
             let alpha = (&r_t * &p)[0][0] / (p.t() * &a_p)[0][0];
 
             let old_r = r.clone();

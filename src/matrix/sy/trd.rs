@@ -1,5 +1,5 @@
 use crate::{
-    matrix::{Matrix, MatrixError},
+    matrix::{Matrix, MatrixError, Vector},
     st::SymmetricTridiagonalMatrix,
 };
 use lapack::{dorgtr, dsytrd};
@@ -96,16 +96,16 @@ impl Matrix {
         let mut e_prev = 0.0;
 
         for i in 0..k {
-            let u_t = Matrix::row(u[i].clone());
+            let u_t = u[i].clone().row_mat();
 
-            let a_u = Matrix::col(vec_mul(&u[i])?);
+            let a_u = vec_mul(&u[i])?.col_mat();
             d[i] = (u_t * &a_u)[0][0];
 
             if i + 1 == k {
                 break;
             }
 
-            let v: Matrix = a_u - e_prev * Matrix::col(u_prev) - d[i] * Matrix::col(u[i].clone());
+            let v: Matrix = a_u - e_prev * u_prev.col_mat() - d[i] * u[i].clone().col_mat();
             e[i] = v
                 .elems
                 .par_iter()

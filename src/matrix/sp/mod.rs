@@ -37,7 +37,7 @@ where
             self.elems.iter().fold(
                 HashMap::<(usize, usize), T>::new(),
                 |mut m: HashMap<(usize, usize), T>, (&(i, j), &value)| {
-                    m.insert((i, j), value);
+                    m.insert((j, i), value);
 
                     m
                 },

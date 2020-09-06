@@ -10,7 +10,7 @@ impl Matrix {
         iterations: usize,
     ) -> Result<Vec<f64>, Box<dyn Error>> {
         let mut x = Matrix::new(b.len(), 1);
-        let mut r = b.row_mat();
+        let mut r = b.col_mat();
         let mut p = r.clone();
 
         for _ in 0..iterations {

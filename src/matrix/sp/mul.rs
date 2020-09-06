@@ -11,23 +11,14 @@ where
     }
     let mut new_matrix = SparseMatrix::new(slf.rows, rhs.cols, HashMap::new());
 
-    for (i, j, s) in slf
-        .elems
-        .iter()
-        .flat_map(|(&i, row)| row.iter().map(move |(&j, &value)| (i, j, value)))
-    {
-        for (&k, &r) in rhs.elems[&j].iter() {
+    for (&(i, j), &s) in slf.elems.iter() {
+        for (&(_, k), &r) in rhs.elems.iter().filter(|&(&(jr, _), _)| j == jr) {
             let sr = s * r;
             if sr == T::default() {
                 continue;
             }
 
-            *new_matrix
-                .elems
-                .entry(i)
-                .or_insert(HashMap::new())
-                .entry(k)
-                .or_insert(T::default()) += sr;
+            *new_matrix.elems.entry((i, k)).or_insert(T::default()) += sr;
         }
     }
 

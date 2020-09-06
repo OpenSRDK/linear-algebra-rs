@@ -12,11 +12,7 @@ where
     let mut new_matrix = Matrix::new(slf.rows, rhs.cols);
 
     for i in 0..slf.rows() {
-        for (j, k, s) in rhs
-            .elems
-            .iter()
-            .flat_map(|(&j, row)| row.iter().map(move |(&k, &value)| (j, k, value)))
-        {
+        for (&(j, k), &s) in rhs.elems.iter() {
             new_matrix[i][k] += s * slf[i][j];
         }
     }

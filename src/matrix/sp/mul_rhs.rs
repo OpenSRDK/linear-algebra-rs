@@ -63,3 +63,25 @@ where
         mul(self, rhs)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::*;
+    use std::collections::HashMap;
+    #[test]
+    fn it_works() {
+        let mut a = SparseMatrix::new(2, 3, HashMap::new());
+        a[(0, 0)] = 1.0;
+        a[(0, 1)] = 2.0;
+        a[(1, 2)] = 3.0;
+        let b = mat![
+            1.0, 3.0;
+            2.0, 4.0;
+            3.0, 6.0
+        ];
+        let c = a * b;
+
+        assert_eq!(c[0][0], 5.0);
+        assert_eq!(c[1][1], 18.0);
+    }
+}

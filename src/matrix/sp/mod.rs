@@ -11,9 +11,9 @@ pub struct SparseMatrix<T = f64>
 where
     T: Number,
 {
-    rows: usize,
-    cols: usize,
-    elems: HashMap<(usize, usize), T>,
+    pub rows: usize,
+    pub cols: usize,
+    pub elems: HashMap<(usize, usize), T>,
     default: T,
 }
 
@@ -43,25 +43,5 @@ where
                 },
             ),
         )
-    }
-
-    pub fn rows(&self) -> usize {
-        self.rows
-    }
-
-    pub fn cols(&self) -> usize {
-        self.cols
-    }
-
-    pub fn elems(self) -> HashMap<(usize, usize), T> {
-        self.elems
-    }
-
-    pub fn elems_ref(&self) -> &HashMap<(usize, usize), T> {
-        &self.elems
-    }
-
-    pub fn elems_mut(&mut self) -> &mut HashMap<(usize, usize), T> {
-        &mut self.elems
     }
 }

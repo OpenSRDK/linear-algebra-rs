@@ -1,5 +1,6 @@
 use crate::number::Number;
 
+#[derive(Clone, Debug)]
 pub struct SymmetricTridiagonalMatrix<T = f64>
 where
     T: Number,

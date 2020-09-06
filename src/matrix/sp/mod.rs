@@ -6,7 +6,7 @@ pub mod mul;
 pub mod mul_lhs;
 pub mod mul_rhs;
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct SparseMatrix<T = f64>
 where
     T: Number,

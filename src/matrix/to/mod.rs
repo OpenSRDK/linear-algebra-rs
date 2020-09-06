@@ -1,5 +1,7 @@
 use crate::matrix::ci::CirculantMatrix;
 use crate::number::Number;
+
+#[derive(Clone, Debug)]
 pub struct ToeplitzMatrix<T = f64>
 where
     T: Number,

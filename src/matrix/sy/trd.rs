@@ -66,7 +66,7 @@ impl Matrix {
     pub fn sytrd_k(
         n: usize,
         k: usize,
-        vec_mul: impl Fn(&[f64]) -> Result<Vec<f64>, Box<dyn Error>>,
+        vec_mul: &dyn Fn(&[f64]) -> Result<Vec<f64>, Box<dyn Error>>,
         probe: Option<Vec<f64>>,
     ) -> Result<(SymmetricTridiagonalMatrix, Matrix), Box<dyn Error>> {
         if n == 0 {

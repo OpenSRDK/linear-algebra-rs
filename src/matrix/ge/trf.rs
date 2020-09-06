@@ -23,10 +23,11 @@ impl Matrix {
 
         match info {
             0 => Ok((slf, ipiv)),
-            _ => Err(Box::new(MatrixError::LapackRoutineError {
+            _ => Err(MatrixError::LapackRoutineError {
                 routine: "dgetrf".to_owned(),
                 info,
-            })),
+            }
+            .into()),
         }
     }
 }
@@ -50,10 +51,11 @@ impl Matrix<c64> {
 
         match info {
             0 => Ok((slf, ipiv)),
-            _ => Err(Box::new(MatrixError::LapackRoutineError {
+            _ => Err(MatrixError::LapackRoutineError {
                 routine: "zgetrf".to_owned(),
                 info,
-            })),
+            }
+            .into()),
         }
     }
 }

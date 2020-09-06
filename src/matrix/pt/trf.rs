@@ -15,10 +15,11 @@ impl SymmetricTridiagonalMatrix<f64> {
         unsafe { dpttrf(n, &mut d, &mut e, &mut info) }
 
         if info != 0 {
-            return Err(Box::new(MatrixError::LapackRoutineError {
+            return Err(MatrixError::LapackRoutineError {
                 routine: "dpttrf".to_owned(),
                 info,
-            }));
+            }
+            .into());
         }
         d.par_iter_mut().for_each(|d_e| *d_e = d_e.powf(0.5));
 

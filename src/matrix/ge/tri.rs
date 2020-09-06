@@ -10,7 +10,7 @@ impl Matrix {
     pub fn getri(self, ipiv: &[i32]) -> Result<Matrix, Box<dyn Error>> {
         let n = self.rows();
         if n != self.cols() {
-            return Err(Box::new(MatrixError::DimensionMismatch));
+            return Err(MatrixError::DimensionMismatch.into());
         }
 
         let mut work = vec![f64::default(); n];
@@ -25,10 +25,11 @@ impl Matrix {
 
         match info {
             0 => Ok(slf),
-            _ => Err(Box::new(MatrixError::LapackRoutineError {
+            _ => Err(MatrixError::LapackRoutineError {
                 routine: "dgetri".to_owned(),
                 info,
-            })),
+            }
+            .into()),
         }
     }
 }
@@ -39,7 +40,7 @@ impl Matrix<c64> {
     pub fn getri(self, ipiv: &[i32]) -> Result<Matrix<c64>, Box<dyn Error>> {
         let n = self.rows();
         if n != self.cols() {
-            return Err(Box::new(MatrixError::DimensionMismatch));
+            return Err(MatrixError::DimensionMismatch.into());
         }
 
         let mut work = vec![c64::default(); n];
@@ -54,10 +55,11 @@ impl Matrix<c64> {
 
         match info {
             0 => Ok(slf),
-            _ => Err(Box::new(MatrixError::LapackRoutineError {
+            _ => Err(MatrixError::LapackRoutineError {
                 routine: "zgetri".to_owned(),
                 info,
-            })),
+            }
+            .into()),
         }
     }
 }

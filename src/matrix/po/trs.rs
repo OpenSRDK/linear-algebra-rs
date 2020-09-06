@@ -11,7 +11,7 @@ impl Matrix {
     pub fn potrs(&self, b_t: Matrix) -> Result<Matrix, Box<dyn Error>> {
         let n = self.rows();
         if n != self.cols() || n != b_t.cols {
-            return Err(Box::new(MatrixError::DimensionMismatch));
+            return Err(MatrixError::DimensionMismatch.into());
         }
 
         let mut info = 0;
@@ -34,10 +34,11 @@ impl Matrix {
 
         match info {
             0 => Ok(b_t),
-            _ => Err(Box::new(MatrixError::LapackRoutineError {
+            _ => Err(MatrixError::LapackRoutineError {
                 routine: "dpotrs".to_owned(),
                 info,
-            })),
+            }
+            .into()),
         }
     }
 }
@@ -49,7 +50,7 @@ impl Matrix<c64> {
     pub fn potrs(&self, b_t: Matrix<c64>) -> Result<Matrix<c64>, Box<dyn Error>> {
         let n = self.rows();
         if n != self.cols() || n != b_t.cols {
-            return Err(Box::new(MatrixError::DimensionMismatch));
+            return Err(MatrixError::DimensionMismatch.into());
         }
 
         let mut info = 0;
@@ -72,10 +73,11 @@ impl Matrix<c64> {
 
         match info {
             0 => Ok(b_t),
-            _ => Err(Box::new(MatrixError::LapackRoutineError {
+            _ => Err(MatrixError::LapackRoutineError {
                 routine: "zpotrs".to_owned(),
                 info,
-            })),
+            }
+            .into()),
         }
     }
 }

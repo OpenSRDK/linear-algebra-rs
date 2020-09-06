@@ -12,7 +12,7 @@ impl Matrix {
     /// `(u, sigma, vt)`
     pub fn gesvd(&self) -> Result<(Matrix, Matrix, Matrix), Box<dyn Error>> {
         if self.rows != self.cols {
-            return Err(Box::new(MatrixError::DimensionMismatch));
+            return Err(MatrixError::DimensionMismatch.into());
         }
 
         let mut info = 0;
@@ -42,10 +42,11 @@ impl Matrix {
 
         match info {
             0 => Ok((u, sigma, vt)),
-            _ => Err(Box::new(MatrixError::LapackRoutineError {
+            _ => Err(MatrixError::LapackRoutineError {
                 routine: "dgesvd".to_owned(),
                 info,
-            })),
+            }
+            .into()),
         }
     }
 }

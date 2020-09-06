@@ -11,7 +11,7 @@ impl Matrix {
     /// for symmetric matrix
     pub fn sytrd(self) -> Result<(Matrix, SymmetricTridiagonalMatrix), Box<dyn Error>> {
         if self.rows == 0 || self.rows != self.cols {
-            return Err(Box::new(MatrixError::DimensionMismatch));
+            return Err(MatrixError::DimensionMismatch.into());
         }
         let n = self.rows as i32;
         let mut slf = self;
@@ -36,10 +36,11 @@ impl Matrix {
                 &mut info,
             );
             if info != 0 {
-                return Err(Box::new(MatrixError::LapackRoutineError {
+                return Err(MatrixError::LapackRoutineError {
                     routine: "dsytrd".to_owned(),
                     info,
-                }));
+                }
+                .into());
             }
 
             dorgtr(
@@ -70,7 +71,7 @@ impl Matrix {
         probe: Option<Vec<f64>>,
     ) -> Result<(SymmetricTridiagonalMatrix, Matrix), Box<dyn Error>> {
         if n == 0 {
-            return Err(Box::new(MatrixError::Empty));
+            return Err(MatrixError::Empty.into());
         }
         let k = k.min(n);
 
@@ -82,7 +83,7 @@ impl Matrix {
         match probe {
             Some(v) => {
                 if v.len() != n {
-                    return Err(Box::new(MatrixError::DimensionMismatch));
+                    return Err(MatrixError::DimensionMismatch.into());
                 }
                 let norm = v.par_iter().map(|&v_e| v_e.powi(2)).sum::<f64>().sqrt();
                 u[0] = v.par_iter().map(|&v_e| v_e / norm).collect::<Vec<_>>();

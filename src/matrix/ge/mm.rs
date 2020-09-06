@@ -13,7 +13,7 @@ impl Matrix {
         beta: f64,
     ) -> Result<Matrix, Box<dyn Error>> {
         if self.rows != lhs.rows || self.cols != rhs.cols || lhs.cols != rhs.rows {
-            return Err(Box::new(MatrixError::DimensionMismatch));
+            return Err(MatrixError::DimensionMismatch.into());
         }
 
         let m = lhs.rows as i32;
@@ -53,7 +53,7 @@ impl Matrix<c64> {
         beta: c64,
     ) -> Result<Matrix<c64>, Box<dyn Error>> {
         if self.rows != lhs.rows || self.cols != rhs.cols || lhs.cols != rhs.rows {
-            return Err(Box::new(MatrixError::DimensionMismatch));
+            return Err(MatrixError::DimensionMismatch.into());
         }
 
         let m = lhs.rows as i32;

@@ -42,13 +42,13 @@ where
 impl KroneckerMatrices {
     pub fn vec_mul(&self, v: &[f64]) -> Result<Vec<f64>, Box<dyn Error>> {
         if self.k.len() == 0 || self.rows_sum == 0 || self.cols_sum == 0 {
-            return Err(Box::new(MatrixError::Empty));
+            return Err(MatrixError::Empty.into());
         }
 
         let n = v.len();
 
         if self.cols_sum != n {
-            return Err(Box::new(MatrixError::DimensionMismatch));
+            return Err(MatrixError::DimensionMismatch.into());
         }
 
         let k_len = self.k.len();

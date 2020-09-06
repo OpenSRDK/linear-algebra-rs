@@ -12,8 +12,8 @@ where
     let mut new_matrix = Matrix::new(slf.rows, rhs.cols);
 
     for (&(i, j), &s) in slf.elems.iter() {
-        for (k, &r) in rhs[j].iter().enumerate() {
-            new_matrix[i][k] += s * r;
+        for k in 0..rhs.cols {
+            new_matrix[i][k] += s * rhs[j][k];
         }
     }
 

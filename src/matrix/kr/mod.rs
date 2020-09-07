@@ -34,6 +34,28 @@ where
     pub fn cols(&self) -> usize {
         self.cols
     }
+
+    pub fn prod(&self) -> Matrix<T> {
+        let mut new_matrix = Matrix::from(self.rows, vec![T::one(); self.rows * self.cols]);
+        let k_len = self.k.len();
+
+        let mut row_block = 1;
+        let mut col_block = 1;
+
+        for p in (0..k_len).rev() {
+            for i in 0..self.rows {
+                for j in 0..self.cols {
+                    new_matrix[i][j] *=
+                        self.k[p][i / row_block % self.k[p].rows][j / col_block % self.k[p].cols];
+                }
+            }
+
+            row_block *= self.k[p].rows;
+            col_block *= self.k[p].cols;
+        }
+
+        new_matrix
+    }
 }
 
 impl KroneckerMatrices {

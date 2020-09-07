@@ -7,14 +7,18 @@ pub struct CirculantMatrix<T = f64>
 where
     T: Number,
 {
-    row: Vec<T>,
+    row_elems: Vec<T>,
 }
 
 impl<T> CirculantMatrix<T>
 where
     T: Number,
 {
-    pub fn new(row: Vec<T>) -> Self {
-        Self { row }
+    pub fn new(row_elems: Vec<T>) -> Self {
+        Self { row_elems }
+    }
+
+    pub fn row_elems(&self) -> &[T] {
+        &self.row_elems
     }
 }

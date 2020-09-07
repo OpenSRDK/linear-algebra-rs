@@ -1,5 +1,6 @@
 use crate::matrix::ci::CirculantMatrix;
-use crate::number::Number;
+use crate::{matrix::MatrixError, number::Number};
+use std::error::Error;
 
 #[derive(Clone, Debug)]
 pub struct ToeplitzMatrix<T = f64>
@@ -7,45 +8,46 @@ where
     T: Number,
 {
     dim: usize,
-    row: Vec<T>,
-    column: Vec<T>,
+    row_elems: Vec<T>,
+    col_elems: Vec<T>,
 }
 
 impl<T> ToeplitzMatrix<T>
 where
     T: Number,
 {
-    /// must be row[0] == column[0]
-    pub fn new(row: Vec<T>, column: Vec<T>) -> Self {
-        let dim = row.len();
+    /// must be row.len() - 1 = col.len()
+    pub fn new(row_elems: Vec<T>, col_elems: Vec<T>) -> Result<Self, Box<dyn Error>> {
+        let dim = row_elems.len();
 
-        if column.len() != dim {
-            panic!("dimension mismatch")
-        }
-        if row[0] != column[0] {
-            panic!("first element mismatch")
+        if col_elems.len() != dim - 1 {
+            return Err(MatrixError::DimensionMismatch.into());
         }
 
-        Self { dim, row, column }
+        Ok(Self {
+            dim,
+            row_elems,
+            col_elems,
+        })
     }
 
-    pub fn get_dim(&self) -> usize {
+    pub fn dim(&self) -> usize {
         self.dim
     }
 
-    pub fn get_row(&self) -> &[T] {
-        &self.row
+    pub fn row_elems(&self) -> &[T] {
+        &self.row_elems
     }
 
-    pub fn get_column(&self) -> &[T] {
-        &self.column
+    pub fn col_elems(&self) -> &[T] {
+        &self.col_elems
     }
 
     pub fn embedded_circulant(&self) -> CirculantMatrix<T> {
         let row = (0..self.dim)
             .into_iter()
             .chain((1..self.dim - 1).rev().into_iter())
-            .map(|i| self.row[i])
+            .map(|i| self.row_elems[i])
             .collect();
 
         CirculantMatrix::<T>::new(row)

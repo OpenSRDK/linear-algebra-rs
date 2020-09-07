@@ -8,7 +8,7 @@ where
     /// # Linear product
     pub fn linear_prod(&self, rhs: &Matrix<T>) -> T {
         if !self.same_size(rhs) {
-            panic!("dimension mismatch")
+            panic!("Dimension mismatch.")
         } else {
             self.elems
                 .par_iter()
@@ -21,7 +21,7 @@ where
     /// # Hamadard product
     pub fn hadamard_prod(self, rhs: &Matrix<T>) -> Matrix<T> {
         if !self.same_size(rhs) {
-            panic!("dimension mismatch")
+            panic!("Dimension mismatch.")
         }
         let mut slf = self;
 

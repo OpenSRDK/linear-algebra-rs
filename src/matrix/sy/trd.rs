@@ -10,14 +10,14 @@ impl Matrix {
     /// # Tridiagonalize
     /// for symmetric matrix
     pub fn sytrd(self) -> Result<(Matrix, SymmetricTridiagonalMatrix), Box<dyn Error>> {
-        if self.rows == 0 || self.rows != self.cols {
+        if self.rows != self.cols {
             return Err(MatrixError::DimensionMismatch.into());
         }
         let n = self.rows as i32;
         let mut slf = self;
         let mut d = vec![0.0; slf.rows];
-        let mut e = vec![0.0; slf.rows - 1];
-        let mut tau = vec![0.0; slf.rows - 1];
+        let mut e = vec![0.0; slf.rows.min(1) - 1];
+        let mut tau = vec![0.0; slf.rows.min(1) - 1];
         let lwork = 2 * slf.rows;
         let mut work = vec![0.0; lwork];
         let mut info = 0;
@@ -70,13 +70,10 @@ impl Matrix {
         vec_mul: &dyn Fn(&[f64]) -> Result<Vec<f64>, Box<dyn Error>>,
         probe: Option<&[f64]>,
     ) -> Result<(SymmetricTridiagonalMatrix, Matrix), Box<dyn Error>> {
-        if n == 0 {
-            return Err(MatrixError::Empty.into());
-        }
         let k = k.min(n);
 
         let mut d = vec![0.0; k];
-        let mut e = vec![0.0; k - 1];
+        let mut e = vec![0.0; k.min(1) - 1];
 
         let mut u = vec![vec![0.0; n]; k];
 

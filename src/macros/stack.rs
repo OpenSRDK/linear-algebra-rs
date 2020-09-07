@@ -70,7 +70,7 @@ where
                     if rows == 0 {
                         rows = size.0;
                     } else if rows != size.0 {
-                        panic!("dimension mismatch")
+                        panic!("Dimension mismatch.")
                     }
 
                     columns += size.1;
@@ -88,7 +88,7 @@ where
                     if columns == 0 {
                         columns = size.1;
                     } else if columns != size.1 {
-                        panic!("dimension mismatch")
+                        panic!("Dimension mismatch.")
                     }
 
                     rows += size.0;

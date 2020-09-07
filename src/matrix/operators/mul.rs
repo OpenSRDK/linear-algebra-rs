@@ -21,7 +21,7 @@ where
 
 fn mul_f64(lhs: &Matrix, rhs: &Matrix) -> Matrix {
     if lhs.cols != rhs.rows {
-        panic!("dimension mismatch")
+        panic!("Dimension mismatch.")
     }
 
     let m = lhs.rows as i32;
@@ -53,7 +53,7 @@ fn mul_f64(lhs: &Matrix, rhs: &Matrix) -> Matrix {
 
 fn mul_c64(lhs: &Matrix<c64>, rhs: &Matrix<c64>) -> Matrix<c64> {
     if lhs.cols != rhs.rows {
-        panic!("dimension mismatch")
+        panic!("Dimension mismatch.")
     }
 
     let m = lhs.rows as i32;

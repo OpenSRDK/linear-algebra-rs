@@ -51,7 +51,7 @@ where
     T: Number,
 {
     if !lhs.same_size(rhs) {
-        panic!("dimension mismatch")
+        panic!("Dimension mismatch.")
     }
     let mut lhs = lhs;
 

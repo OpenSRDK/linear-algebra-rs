@@ -60,10 +60,6 @@ where
 
 impl KroneckerMatrices {
     pub fn vec_mul(&self, v: &[f64]) -> Result<Vec<f64>, Box<dyn Error>> {
-        if self.k.len() == 0 || self.rows == 0 || self.cols == 0 {
-            return Err(MatrixError::Empty.into());
-        }
-
         let n = v.len();
 
         if self.cols != n {

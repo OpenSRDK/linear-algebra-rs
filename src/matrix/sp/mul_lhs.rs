@@ -7,7 +7,7 @@ where
     T: Number,
 {
     if slf.cols != rhs.rows {
-        panic!("dimension mismatch");
+        panic!("Dimension mismatch.");
     }
     let mut new_matrix = Matrix::new(slf.rows, rhs.cols);
 

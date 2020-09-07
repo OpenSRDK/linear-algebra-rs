@@ -23,7 +23,7 @@ impl SymmetricTridiagonalMatrix<f64> {
         }
         d.par_iter_mut().for_each(|d_e| *d_e = d_e.powf(0.5));
 
-        let bd = BidiagonalMatrix::new(d, e);
+        let bd = BidiagonalMatrix::new(d, e)?;
 
         Ok(bd)
     }

@@ -56,7 +56,7 @@ impl Matrix {
         }
 
         let v = slf;
-        let t = SymmetricTridiagonalMatrix::new(d, e);
+        let t = SymmetricTridiagonalMatrix::new(d, e)?;
 
         Ok((v, t))
     }
@@ -118,7 +118,7 @@ impl Matrix {
             e_prev = e[i];
         }
         let q_t = Matrix::from(k, u.concat());
-        let t = SymmetricTridiagonalMatrix::new(d, e);
+        let t = SymmetricTridiagonalMatrix::new(d, e)?;
 
         Ok((t, q_t))
     }

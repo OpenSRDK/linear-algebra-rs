@@ -1,4 +1,6 @@
-use crate::{matrix::Matrix, number::Number};
+use std::error::Error;
+
+use crate::{matrix::*, number::Number};
 
 #[derive(Clone, Debug, Default, Hash)]
 pub struct BidiagonalMatrix<T = f64>
@@ -13,8 +15,12 @@ impl<T> BidiagonalMatrix<T>
 where
     T: Number,
 {
-    pub fn new(d: Vec<T>, e: Vec<T>) -> Self {
-        Self { d, e }
+    pub fn new(d: Vec<T>, e: Vec<T>) -> Result<Self, Box<dyn Error>> {
+        if d.len().min(1) - 1 != e.len() {
+            return Err(MatrixError::DimensionMismatch.into());
+        }
+
+        Ok(Self { d, e })
     }
 
     pub fn elems(self) -> (Vec<T>, Vec<T>) {

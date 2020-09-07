@@ -91,7 +91,7 @@ impl Matrix {
                     .for_each(|(m, &vi)| *m = vi / norm);
             }
             None => {
-                u[0] = vec![1.0 / n as f64; n];
+                u[0][0] = 1.0;
             }
         }
 

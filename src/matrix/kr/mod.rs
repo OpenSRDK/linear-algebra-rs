@@ -1,5 +1,5 @@
 use crate::matrix::MatrixError;
-use crate::{matrix::Matrix, number::Number};
+use crate::{matrix::*, number::Number};
 use std::error::Error;
 
 #[derive(Clone, Debug)]
@@ -71,17 +71,45 @@ impl KroneckerMatrices {
         }
 
         let k_len = self.k.len();
-        let nu = self.rows / self.k[k_len - 1].rows();
-        let mut u = Matrix::from(nu, v.to_vec()).t();
+        let mut u = v.to_vec().col_mat();
+        for p in (0..k_len).rev() {
+            let bigu_rows = self.k[p].cols;
+            let bigu_cols = u.rows() / bigu_rows;
+            // reshape(u, bigu_rows, bigu_cols)
+            let bigut = Matrix::from(bigu_cols, u.elems);
+            let bigut_kt = bigut * self.k[p].t();
 
-        for p in (1..k_len).rev() {
-            let nu = self.k[p - 1].cols();
-            let ku = &self.k[p - 1] * u;
-            u = Matrix::from(nu, ku.elems()).t();
+            u = bigut_kt.elems().col_mat();
         }
 
-        let ku = &self.k[0] * u;
+        Ok(u.elems())
+    }
+}
 
-        Ok(ku.t().elems())
+#[cfg(test)]
+mod tests {
+    use crate::*;
+    #[test]
+    fn it_works() {
+        let a = mat![
+            1.0, 2.0;
+            3.0, 4.0
+        ];
+        let b = mat![
+            1.0, 2.0;
+            3.0, 4.0
+        ];
+        let ab = KroneckerMatrices::new(vec![a, b]);
+        let c = ab.prod();
+
+        assert_eq!(c[0][0], 1.0);
+        assert_eq!(c[0][3], 4.0);
+        assert_eq!(c[2][1], 6.0);
+
+        let ab1 = ab.vec_mul(&[1.0; 4]).unwrap().col_mat();
+        let c1 = &c * vec![1.0; 4].col_mat();
+
+        assert_eq!(ab1[0][0], c1[0][0]);
+        assert_eq!(ab1[1][0], c1[1][0]);
     }
 }

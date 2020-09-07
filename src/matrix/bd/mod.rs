@@ -1,6 +1,6 @@
 use crate::{matrix::Matrix, number::Number};
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default, Hash)]
 pub struct BidiagonalMatrix<T = f64>
 where
     T: Number,

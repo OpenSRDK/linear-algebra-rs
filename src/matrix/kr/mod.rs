@@ -2,7 +2,7 @@ use crate::matrix::MatrixError;
 use crate::{matrix::*, number::Number};
 use std::error::Error;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default, Hash)]
 pub struct KroneckerMatrices<T = f64>
 where
     T: Number,

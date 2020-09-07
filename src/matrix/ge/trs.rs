@@ -9,33 +9,33 @@ impl Matrix {
     /// with matrix decomposed by getrf
     /// `Ax = b`
     /// return x_t
-    pub fn getrs(&self, ipiv: &[i32], b_t: Matrix) -> Result<Matrix, Box<dyn Error>> {
+    pub fn getrs(&self, ipiv: &[i32], bt: Matrix) -> Result<Matrix, Box<dyn Error>> {
         let n = self.rows();
-        if n != self.cols() || n != b_t.cols {
+        if n != self.cols() || n != bt.cols {
             return Err(MatrixError::DimensionMismatch.into());
         }
 
         let mut info = 0;
 
         let n = n as i32;
-        let mut b_t = b_t;
+        let mut bt = bt;
 
         unsafe {
             dgetrs(
                 'T' as u8,
                 n,
-                b_t.rows as i32,
+                bt.rows as i32,
                 &self.elems,
                 n,
                 ipiv,
-                &mut b_t.elems,
+                &mut bt.elems,
                 n,
                 &mut info,
             );
         }
 
         match info {
-            0 => Ok(b_t),
+            0 => Ok(bt),
             _ => Err(MatrixError::LapackRoutineError {
                 routine: "dgetrs".to_owned(),
                 info,
@@ -49,34 +49,34 @@ impl Matrix<c64> {
     /// # Solve equation
     /// with matrix decomposed by getrf
     /// `Ax = b`
-    /// return x_t
-    pub fn getrs(&self, ipiv: &[i32], b_t: Matrix<c64>) -> Result<Matrix<c64>, Box<dyn Error>> {
+    /// return xt
+    pub fn getrs(&self, ipiv: &[i32], bt: Matrix<c64>) -> Result<Matrix<c64>, Box<dyn Error>> {
         let n = self.rows();
-        if n != self.cols() || n != b_t.cols {
+        if n != self.cols() || n != bt.cols {
             return Err(MatrixError::DimensionMismatch.into());
         }
 
         let mut info = 0;
 
         let n = n as i32;
-        let mut b_t = b_t;
+        let mut bt = bt;
 
         unsafe {
             zgetrs(
                 'T' as u8,
                 n,
-                b_t.rows as i32,
+                bt.rows as i32,
                 &self.elems,
                 n,
                 ipiv,
-                &mut b_t.elems,
+                &mut bt.elems,
                 n,
                 &mut info,
             );
         }
 
         match info {
-            0 => Ok(b_t),
+            0 => Ok(bt),
             _ => Err(MatrixError::LapackRoutineError {
                 routine: "zgetrs".to_owned(),
                 info,

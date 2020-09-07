@@ -8,33 +8,33 @@ impl Matrix {
     /// # Solve equation
     /// with matrix decomposed by potrf
     /// `Ax = b`
-    /// return x_t
-    pub fn potrs(&self, b_t: Matrix) -> Result<Matrix, Box<dyn Error>> {
+    /// return xt
+    pub fn potrs(&self, bt: Matrix) -> Result<Matrix, Box<dyn Error>> {
         let n = self.rows();
-        if n != self.cols() || n != b_t.cols {
+        if n != self.cols() || n != bt.cols {
             return Err(MatrixError::DimensionMismatch.into());
         }
 
         let mut info = 0;
 
         let n = n as i32;
-        let mut b_t = b_t;
+        let mut bt = bt;
 
         unsafe {
             dpotrs(
                 'U' as u8,
                 n,
-                b_t.rows as i32,
+                bt.rows as i32,
                 &self.elems,
                 n,
-                &mut b_t.elems,
+                &mut bt.elems,
                 n,
                 &mut info,
             );
         }
 
         match info {
-            0 => Ok(b_t),
+            0 => Ok(bt),
             _ => Err(MatrixError::LapackRoutineError {
                 routine: "dpotrs".to_owned(),
                 info,
@@ -49,32 +49,32 @@ impl Matrix<c64> {
     /// with matrix decomposed by potrf
     /// `Ax = b`
     /// return x_t
-    pub fn potrs(&self, b_t: Matrix<c64>) -> Result<Matrix<c64>, Box<dyn Error>> {
+    pub fn potrs(&self, bt: Matrix<c64>) -> Result<Matrix<c64>, Box<dyn Error>> {
         let n = self.rows();
-        if n != self.cols() || n != b_t.cols {
+        if n != self.cols() || n != bt.cols {
             return Err(MatrixError::DimensionMismatch.into());
         }
 
         let mut info = 0;
 
         let n = n as i32;
-        let mut b_t = b_t;
+        let mut bt = bt;
 
         unsafe {
             zpotrs(
                 'U' as u8,
                 n,
-                b_t.rows as i32,
+                bt.rows as i32,
                 &self.elems,
                 n,
-                &mut b_t.elems,
+                &mut bt.elems,
                 n,
                 &mut info,
             );
         }
 
         match info {
-            0 => Ok(b_t),
+            0 => Ok(bt),
             _ => Err(MatrixError::LapackRoutineError {
                 routine: "zpotrs".to_owned(),
                 info,
@@ -93,12 +93,12 @@ mod tests {
             2.0, 1.0;
             1.0, 2.0
         ];
-        let b_t = mat![
+        let bt = mat![
             1.0, 2.0;
             3.0, 4.0
         ];
         let l = a.potrf().unwrap();
-        let x_t = l.potrs(b_t).unwrap();
+        let x_t = l.potrs(bt).unwrap();
 
         println!("{:#?}", x_t);
         // assert_eq!(x_t[0][0], 0.0);

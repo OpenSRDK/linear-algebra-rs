@@ -16,8 +16,8 @@ impl Matrix {
         let n = self.rows as i32;
         let mut slf = self;
         let mut d = vec![0.0; slf.rows];
-        let mut e = vec![0.0; slf.rows.min(1) - 1];
-        let mut tau = vec![0.0; slf.rows.min(1) - 1];
+        let mut e = vec![0.0; slf.rows.max(1) - 1];
+        let mut tau = vec![0.0; slf.rows.max(1) - 1];
         let lwork = 2 * slf.rows;
         let mut work = vec![0.0; lwork];
         let mut info = 0;
@@ -73,7 +73,7 @@ impl Matrix {
         let k = k.min(n);
 
         let mut d = vec![0.0; k];
-        let mut e = vec![0.0; k.min(1) - 1];
+        let mut e = vec![0.0; k.max(1) - 1];
 
         let mut u = vec![vec![0.0; n]; k];
 

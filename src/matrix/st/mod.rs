@@ -17,7 +17,7 @@ where
     T: Number,
 {
     pub fn new(d: Vec<T>, e: Vec<T>) -> Result<Self, Box<dyn Error>> {
-        if d.len().min(1) - 1 != e.len() {
+        if d.len().max(1) - 1 != e.len() {
             return Err(MatrixError::DimensionMismatch.into());
         }
 

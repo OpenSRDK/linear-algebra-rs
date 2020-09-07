@@ -81,3 +81,27 @@ impl Matrix<c64> {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::*;
+    #[test]
+    fn it_works() {
+        let a = mat![
+            2.0, 1.0;
+            1.0, 2.0
+        ];
+        let b_t = mat![
+            1.0, 2.0;
+            3.0, 4.0
+        ];
+        let l = a.potrf().unwrap();
+        let x_t = l.potrs(b_t).unwrap();
+
+        println!("{:#?}", x_t);
+        // assert_eq!(x_t[0][0], 0.0);
+        // assert_eq!(x_t[0][1], 1.0);
+        // assert_eq!(x_t[1][0], 5.0 / 3.0 - 1.0);
+        // assert_eq!(x_t[1][1], 5.0 / 3.0);
+    }
+}

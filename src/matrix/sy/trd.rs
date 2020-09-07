@@ -68,7 +68,7 @@ impl Matrix {
         n: usize,
         k: usize,
         vec_mul: &dyn Fn(&[f64]) -> Result<Vec<f64>, Box<dyn Error>>,
-        probe: Option<Vec<f64>>,
+        probe: Option<&[f64]>,
     ) -> Result<(SymmetricTridiagonalMatrix, Matrix), Box<dyn Error>> {
         if n == 0 {
             return Err(MatrixError::Empty.into());
@@ -85,10 +85,10 @@ impl Matrix {
                 if v.len() != n {
                     return Err(MatrixError::DimensionMismatch.into());
                 }
-                let norm = v.par_iter().map(|&v_e| v_e.powi(2)).sum::<f64>().sqrt();
+                let norm = v.par_iter().map(|&vi| vi.powi(2)).sum::<f64>().sqrt();
                 u[0].par_iter_mut()
                     .zip(v.par_iter())
-                    .for_each(|(m, &v_e)| *m = v_e / norm);
+                    .for_each(|(m, &vi)| *m = vi / norm);
             }
             None => {
                 u[0] = vec![1.0 / n as f64; n];

@@ -8,6 +8,7 @@ impl Matrix {
     /// # Solve equation
     /// with matrix decomposed by getrf
     /// `Ax = b`
+    /// return x_t
     pub fn getrs(&self, ipiv: &[i32], b_t: Matrix) -> Result<Matrix, Box<dyn Error>> {
         let n = self.rows();
         if n != self.cols() || n != b_t.cols {
@@ -48,6 +49,7 @@ impl Matrix<c64> {
     /// # Solve equation
     /// with matrix decomposed by getrf
     /// `Ax = b`
+    /// return x_t
     pub fn getrs(&self, ipiv: &[i32], b_t: Matrix<c64>) -> Result<Matrix<c64>, Box<dyn Error>> {
         let n = self.rows();
         if n != self.cols() || n != b_t.cols {

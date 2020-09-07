@@ -86,10 +86,12 @@ impl Matrix {
                     return Err(MatrixError::DimensionMismatch.into());
                 }
                 let norm = v.par_iter().map(|&v_e| v_e.powi(2)).sum::<f64>().sqrt();
-                u[0] = v.par_iter().map(|&v_e| v_e / norm).collect::<Vec<_>>();
+                u[0].par_iter_mut()
+                    .zip(v.par_iter())
+                    .for_each(|(m, &v_e)| *m = v_e / norm);
             }
             None => {
-                u[0][0] = 1.0;
+                u[0] = vec![1.0 / n as f64; n];
             }
         }
 

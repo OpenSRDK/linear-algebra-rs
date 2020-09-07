@@ -17,7 +17,7 @@ where
         Self { d, e }
     }
 
-    pub fn get_elements(self) -> (Vec<T>, Vec<T>) {
+    pub fn elems(self) -> (Vec<T>, Vec<T>) {
         (self.d, self.e)
     }
 }

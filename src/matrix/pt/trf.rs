@@ -8,7 +8,7 @@ impl SymmetricTridiagonalMatrix<f64> {
     /// # Cholesky decomposition
     /// for tridiagonal matrix
     pub fn pttrf(self) -> Result<BidiagonalMatrix, Box<dyn Error>> {
-        let (mut d, mut e) = self.get_elements();
+        let (mut d, mut e) = self.elems();
         let n = d.len() as i32;
         let mut info = 0;
 

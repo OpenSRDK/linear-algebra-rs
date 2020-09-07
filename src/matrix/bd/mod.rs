@@ -17,11 +17,11 @@ where
         Self { d, e }
     }
 
-    pub fn get_elements(self) -> (Vec<T>, Vec<T>) {
+    pub fn elems(self) -> (Vec<T>, Vec<T>) {
         (self.d, self.e)
     }
 
-    pub fn get_matrix(&self, upper: bool) -> Matrix<T> {
+    pub fn mat(&self, upper: bool) -> Matrix<T> {
         let n = self.d.len();
         let mut mat = Matrix::diag(&self.d);
 

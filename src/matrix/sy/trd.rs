@@ -3,7 +3,6 @@ use crate::{
     st::SymmetricTridiagonalMatrix,
 };
 use lapack::{dorgtr, dsytrd};
-use rayon::prelude::*;
 use std::error::Error;
 
 impl Matrix {
@@ -75,51 +74,73 @@ impl Matrix {
         let mut d = vec![0.0; k];
         let mut e = vec![0.0; k.max(1) - 1];
 
-        let mut u = vec![vec![0.0; n]; k];
+        let mut v = vec![vec![0.0; n]; k];
 
         match probe {
-            Some(v) => {
-                if v.len() != n {
+            Some(vec) => {
+                if vec.len() != n {
                     return Err(MatrixError::DimensionMismatch.into());
                 }
-                let norm = v.par_iter().map(|&vi| vi.powi(2)).sum::<f64>().sqrt();
-                u[0].par_iter_mut()
-                    .zip(v.par_iter())
-                    .for_each(|(m, &vi)| *m = vi / norm);
+                v[0].clone_from_slice(vec);
             }
             None => {
-                u[0][0] = 1.0;
+                v[0][0] = 1.0;
             }
         }
 
-        let mut u_prev = vec![0.0; n];
-        let mut e_prev = 0.0;
+        if 0 < k {
+            let a_v = vec_mul(&v[0])?.col_mat();
+            let v_mat = v[0].clone().col_mat();
 
-        for i in 0..k {
-            let u_t = u[i].clone().row_mat();
+            d[0] = (a_v.t() * &v_mat)[0][0];
+            let mut w_prev = a_v - d[0] * v_mat;
 
-            let a_u = vec_mul(&u[i])?.col_mat();
-            d[i] = (u_t * &a_u)[0][0];
+            for i in 1..k {
+                e[i - 1] = w_prev
+                    .elems_ref()
+                    .iter()
+                    .map(|wi| wi.powi(2))
+                    .sum::<f64>()
+                    .sqrt();
 
-            if i + 1 == k {
-                break;
+                v[i].clone_from_slice((w_prev * (1.0 / e[i - 1])).elems_ref());
+
+                let a_v = vec_mul(&v[i])?.col_mat();
+                let v_mat = v[i].clone().col_mat();
+
+                d[i] = (a_v.t() * &v_mat)[0][0];
+                w_prev = a_v - d[i] * v_mat - e[i - 1] * v[i - 1].clone().col_mat();
             }
-
-            let v: Matrix = a_u - e_prev * u_prev.col_mat() - d[i] * u[i].clone().col_mat();
-            e[i] = v
-                .elems
-                .par_iter()
-                .map(|&v_e| v_e.powi(2))
-                .sum::<f64>()
-                .sqrt();
-            u[i + 1] = ((1.0 / e[i]) * v).elems;
-
-            u_prev = u[i].clone();
-            e_prev = e[i];
         }
-        let q_t = Matrix::from(k, u.concat());
+
+        let q_t = Matrix::from(k, v.concat());
         let t = SymmetricTridiagonalMatrix::new(d, e)?;
 
         Ok((t, q_t))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::*;
+    #[test]
+    fn it_works() {
+        let a = mat![
+            1.0, 3.0, 6.0;
+            2.0, 4.0, 8.0;
+            3.0, 6.0, 12.0
+        ];
+        let (t, qt) = Matrix::sytrd_k(
+            3,
+            2,
+            &|v: &[f64]| Ok((&a * v.to_vec().col_mat()).elems()),
+            None,
+        )
+        .unwrap();
+
+        let aback = qt.t() * t.mat() * &qt;
+
+        println!("{:#?}", aback);
+        println!("{:#?}", qt.t() * qt);
     }
 }

@@ -1,5 +1,6 @@
 use crate::matrix::Matrix;
 use crate::number::Number;
+use rayon::prelude::*;
 
 impl<T> Matrix<T>
 where
@@ -7,14 +8,29 @@ where
 {
     /// # Transpose
     pub fn t(&self) -> Matrix<T> {
-        let mut new_matrix = Matrix::<T>::new(self.cols, self.rows);
+        let elems = (0..self.cols)
+            .into_par_iter()
+            .flat_map(|i| (0..self.rows).into_par_iter().map(move |j| (i, j)))
+            .map(|(i, j)| self[j][i])
+            .collect();
 
-        for i in 0..new_matrix.rows {
-            for j in 0..new_matrix.cols {
-                new_matrix[i][j] = self[j][i];
-            }
-        }
+        Matrix::from(self.cols, elems)
+    }
+}
 
-        new_matrix
+#[cfg(test)]
+mod tests {
+    use crate::*;
+    #[test]
+    fn it_works() {
+        let a = mat![
+            1.0, 3.0;
+            2.0, 4.0;
+            3.0, 6.0
+        ];
+        let at = a.t();
+
+        assert_eq!(at[1][0], 3.0);
+        assert_eq!(at[1][2], 6.0)
     }
 }

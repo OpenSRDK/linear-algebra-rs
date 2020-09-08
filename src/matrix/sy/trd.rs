@@ -81,7 +81,8 @@ impl Matrix {
                 if vec.len() != n {
                     return Err(MatrixError::DimensionMismatch.into());
                 }
-                v[0].clone_from_slice(vec);
+                let norm = vec.iter().map(|wi| wi.powi(2)).sum::<f64>().sqrt();
+                v[0] = vec.iter().map(|vi| vi / norm).collect();
             }
             None => {
                 v[0][0] = 1.0;

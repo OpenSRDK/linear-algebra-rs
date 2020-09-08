@@ -10,7 +10,7 @@ impl BidiagonalMatrix<f64> {
     /// return xt
     pub fn pttrs(&self, d: &[f64], bt: Matrix) -> Result<Matrix, Box<dyn Error>> {
         let e = self.e();
-        let n = d.len() as i32;
+        let n = self.d().len() as i32;
         let mut bt = bt;
         let mut info = 0;
 

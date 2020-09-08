@@ -10,6 +10,8 @@ pub mod matrix;
 pub mod number;
 
 pub use crate::{
-    matrix::{bd::*, ci::*, di::*, ge::*, kr::*, po::*, pt::*, sp::*, st::*, to::*, tr::*, *},
+    matrix::{
+        bd::*, ci::*, di::*, ge::*, gt::*, kr::*, po::*, pt::*, sp::*, st::*, to::*, tr::*, *,
+    },
     number::*,
 };

@@ -1,7 +1,9 @@
 extern crate blas;
 extern crate lapack;
 #[cfg(test)]
-extern crate openblas_src;
+extern crate blas_src;
+#[cfg(test)]
+extern crate lapack_src;
 extern crate rayon;
 extern crate thiserror;
 

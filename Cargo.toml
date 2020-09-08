@@ -19,4 +19,5 @@ rustfft = "3.0.1"
 thiserror = "1.0.20"
 
 [dev-dependencies]
-openblas-src = "0.9"
+blas-src = { version = "0.6", features = ["intel-mkl"] } 
+lapack-src = { version = "0.6", features = ["intel-mkl"] }

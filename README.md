@@ -5,12 +5,14 @@
 ```toml
 [dependencies]
 opensrdk-linear-algebra = "0.1.0"
-openblas-src = "0.9"
+blas-src = { version = "0.6", features = ["openblas"] }
+lapack-src = { version = "0.6", features = ["openblas"] }
 ```
 
 ```rs
 extern crate opensrdk_linear_algebra;
-extern crate openblas_src;
+extern crate blas_src;
+extern crate lapack_src;
 ```
 
 You can also use accelerate, intel-mkl, or netlib instead.

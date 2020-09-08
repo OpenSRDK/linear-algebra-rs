@@ -85,7 +85,7 @@ impl Matrix {
                 v[0] = vec.iter().map(|vi| vi / norm).collect();
             }
             None => {
-                v[0][0] = 1.0;
+                v[0] = vec![1.0 / (n as f64).sqrt(); n];
             }
         }
 

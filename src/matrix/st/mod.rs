@@ -3,6 +3,7 @@ use std::error::Error;
 use crate::matrix::*;
 use crate::number::Number;
 
+pub mod evd;
 pub mod ev;
 
 #[derive(Clone, Debug, Default, Hash)]

@@ -3,6 +3,8 @@ use std::error::Error;
 use crate::matrix::*;
 use crate::number::Number;
 
+pub mod ev;
+
 #[derive(Clone, Debug, Default, Hash)]
 pub struct SymmetricTridiagonalMatrix<T = f64>
 where

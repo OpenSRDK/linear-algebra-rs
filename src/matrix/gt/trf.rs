@@ -20,7 +20,7 @@ impl TridiagonalMatrix<f64> {
 
         if info != 0 {
             return Err(MatrixError::LapackRoutineError {
-                routine: "dpttrf".to_owned(),
+                routine: "dgttrf".to_owned(),
                 info,
             }
             .into());

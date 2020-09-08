@@ -38,7 +38,7 @@ impl BidiagonalMatrix<f64> {
         match info {
             0 => Ok(bt),
             _ => Err(MatrixError::LapackRoutineError {
-                routine: "dpttrs".to_owned(),
+                routine: "dgttrs".to_owned(),
                 info,
             }
             .into()),

@@ -76,20 +76,20 @@ impl Matrix {
 
         let mut v = vec![vec![0.0; n]; k];
 
-        match probe {
-            Some(vec) => {
-                if vec.len() != n {
-                    return Err(MatrixError::DimensionMismatch.into());
-                }
-                let norm = vec.iter().map(|wi| wi.powi(2)).sum::<f64>().sqrt();
-                v[0] = vec.iter().map(|vi| vi / norm).collect();
-            }
-            None => {
-                v[0] = vec![1.0 / (n as f64).sqrt(); n];
-            }
-        }
-
         if 0 < k {
+            match probe {
+                Some(vec) => {
+                    if vec.len() != n {
+                        return Err(MatrixError::DimensionMismatch.into());
+                    }
+                    let norm = vec.iter().map(|wi| wi.powi(2)).sum::<f64>().sqrt();
+                    v[0] = vec.iter().map(|vi| vi / norm).collect();
+                }
+                None => {
+                    v[0][0] = 1.0;
+                }
+            }
+
             let a_v = vec_mul(&v[0])?.col_mat();
             let v_mat = v[0].clone().col_mat();
 
@@ -127,21 +127,22 @@ mod tests {
     #[test]
     fn it_works() {
         let a = mat![
-            1.0, 3.0, 6.0;
-            2.0, 4.0, 8.0;
-            3.0, 6.0, 12.0
+            1.0, 3.0, 6.0, 12.0;
+            2.0, 4.0, 8.0, 16.0;
+            3.0, 6.0, 12.0, 24.0;
+            4.0, 8.0, 16.0, 30.0
         ];
         let (t, qt) = Matrix::sytrd_k(
+            4,
             3,
-            2,
             &|v: &[f64]| Ok((&a * v.to_vec().col_mat()).elems()),
             None,
         )
         .unwrap();
 
-        let aback = qt.t() * t.mat() * &qt;
+        let aback = &qt.t() * t.mat() * &qt;
 
         println!("{:#?}", aback);
-        println!("{:#?}", qt.t() * qt);
+        println!("{:#?}", &qt * qt.t());
     }
 }

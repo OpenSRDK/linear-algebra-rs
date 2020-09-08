@@ -17,7 +17,7 @@ impl SymmetricTridiagonalMatrix<f64> {
 
         unsafe {
             dstev(
-                'Z' as u8,
+                'V' as u8,
                 n,
                 &mut d,
                 &mut e,

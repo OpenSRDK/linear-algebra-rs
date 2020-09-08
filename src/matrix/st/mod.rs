@@ -24,6 +24,14 @@ where
         Ok(Self { d, e })
     }
 
+    pub fn d(&self) -> &[T] {
+        &self.d
+    }
+
+    pub fn e(&self) -> &[T] {
+        &self.e
+    }
+
     pub fn elems(self) -> (Vec<T>, Vec<T>) {
         (self.d, self.e)
     }

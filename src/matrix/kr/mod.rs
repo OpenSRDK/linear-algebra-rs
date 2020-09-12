@@ -59,7 +59,7 @@ where
 }
 
 impl KroneckerMatrices {
-    pub fn vec_mul(&self, v: &[f64]) -> Result<Vec<f64>, Box<dyn Error>> {
+    pub fn vec_mul(&self, v: Vec<f64>) -> Result<Vec<f64>, Box<dyn Error>> {
         let n = v.len();
 
         if self.cols != n {
@@ -67,7 +67,7 @@ impl KroneckerMatrices {
         }
 
         let k_len = self.k.len();
-        let mut u = v.to_vec().col_mat();
+        let mut u = v.col_mat();
         for p in (0..k_len).rev() {
             let bigu_rows = self.k[p].cols;
             let bigu_cols = u.rows() / bigu_rows;
@@ -102,7 +102,7 @@ mod tests {
         assert_eq!(c[0][3], 4.0);
         assert_eq!(c[2][1], 6.0);
 
-        let ab1 = ab.vec_mul(&[1.0; 4]).unwrap().col_mat();
+        let ab1 = ab.vec_mul(vec![1.0; 4]).unwrap().col_mat();
         let c1 = &c * vec![1.0; 4].col_mat();
 
         assert_eq!(ab1[0][0], c1[0][0]);

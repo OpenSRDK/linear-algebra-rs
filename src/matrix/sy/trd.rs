@@ -66,7 +66,7 @@ impl Matrix {
     pub fn sytrd_k(
         n: usize,
         k: usize,
-        vec_mul: &dyn Fn(&[f64]) -> Result<Vec<f64>, Box<dyn Error>>,
+        vec_mul: &dyn Fn(Vec<f64>) -> Result<Vec<f64>, Box<dyn Error>>,
         probe: Option<&[f64]>,
     ) -> Result<(SymmetricTridiagonalMatrix, Matrix), Box<dyn Error>> {
         let k = k.min(n);
@@ -90,7 +90,7 @@ impl Matrix {
                 }
             }
 
-            let a_v = vec_mul(&v[0])?.col_mat();
+            let a_v = vec_mul(v[0].clone())?.col_mat();
             let v_mat = v[0].clone().col_mat();
 
             d[0] = (a_v.t() * &v_mat)[0][0];
@@ -106,7 +106,7 @@ impl Matrix {
 
                 v[i].clone_from_slice((w_prev * (1.0 / e[i - 1])).elems_ref());
 
-                let a_v = vec_mul(&v[i])?.col_mat();
+                let a_v = vec_mul(v[i].clone())?.col_mat();
                 let v_mat = v[i].clone().col_mat();
 
                 d[i] = (a_v.t() * &v_mat)[0][0];
@@ -132,13 +132,8 @@ mod tests {
             3.0, 6.0, 12.0, 24.0;
             4.0, 8.0, 16.0, 30.0
         ];
-        let (t, qt) = Matrix::sytrd_k(
-            4,
-            3,
-            &|v: &[f64]| Ok((&a * v.to_vec().col_mat()).elems()),
-            None,
-        )
-        .unwrap();
+        let (t, qt) =
+            Matrix::sytrd_k(4, 3, &|v: Vec<f64>| Ok((&a * v.col_mat()).elems()), None).unwrap();
 
         let aback = &qt.t() * t.mat() * &qt;
 

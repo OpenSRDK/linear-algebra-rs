@@ -29,19 +29,19 @@ mod tests {
             1.0, 0.0;
             0.0, 1.0
         );
-        assert_eq!(a[0][0], 1.0);
-        assert_eq!(a[0][1], 0.0);
-        assert_eq!(a[1][0], 0.0);
-        assert_eq!(a[1][1], 1.0);
+        assert_eq!(a[(0, 0)], 1.0);
+        assert_eq!(a[(0, 1)], 0.0);
+        assert_eq!(a[(1, 0)], 0.0);
+        assert_eq!(a[(1, 1)], 1.0);
 
         let b = mat!(
             &a, zeros!(2, 2);
             zeros!(2, 2), &a
         );
 
-        assert_eq!(b[0][0], 1.0);
-        assert_eq!(b[0][1], 0.0);
-        assert_eq!(b[3][0], 0.0);
-        assert_eq!(b[3][3], 1.0);
+        assert_eq!(b[(0, 0)], 1.0);
+        assert_eq!(b[(0, 1)], 0.0);
+        assert_eq!(b[(3, 0)], 0.0);
+        assert_eq!(b[(3, 3)], 1.0);
     }
 }

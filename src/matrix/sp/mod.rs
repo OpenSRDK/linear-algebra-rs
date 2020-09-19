@@ -21,7 +21,16 @@ impl<T> SparseMatrix<T>
 where
     T: Number,
 {
-    pub fn new(rows: usize, cols: usize, elems: HashMap<(usize, usize), T>) -> Self {
+    pub fn new(rows: usize, cols: usize) -> Self {
+        Self {
+            rows,
+            cols,
+            elems: HashMap::new(),
+            default: T::default(),
+        }
+    }
+
+    pub fn from(rows: usize, cols: usize, elems: HashMap<(usize, usize), T>) -> Self {
         Self {
             rows,
             cols,
@@ -31,7 +40,7 @@ where
     }
 
     pub fn t(&self) -> Self {
-        Self::new(
+        Self::from(
             self.cols,
             self.rows,
             self.elems.iter().fold(

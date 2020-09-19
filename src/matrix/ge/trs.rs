@@ -8,34 +8,34 @@ impl Matrix {
     /// # Solve equation
     /// with matrix decomposed by getrf
     /// `Ax = b`
-    /// return x_t
-    pub fn getrs(&self, ipiv: &[i32], bt: Matrix) -> Result<Matrix, Box<dyn Error>> {
+    /// return x
+    pub fn getrs(&self, ipiv: &[i32], b: Matrix) -> Result<Matrix, Box<dyn Error>> {
         let n = self.rows();
-        if n != self.cols() || n != bt.cols {
+        if n != self.cols() || n != b.rows {
             return Err(MatrixError::DimensionMismatch.into());
         }
 
         let mut info = 0;
 
         let n = n as i32;
-        let mut bt = bt;
+        let mut b = b;
 
         unsafe {
             dgetrs(
-                'T' as u8,
+                'N' as u8,
                 n,
-                bt.rows as i32,
+                b.cols as i32,
                 &self.elems,
                 n,
                 ipiv,
-                &mut bt.elems,
+                &mut b.elems,
                 n,
                 &mut info,
             );
         }
 
         match info {
-            0 => Ok(bt),
+            0 => Ok(b),
             _ => Err(MatrixError::LapackRoutineError {
                 routine: "dgetrs".to_owned(),
                 info,

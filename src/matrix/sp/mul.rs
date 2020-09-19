@@ -1,6 +1,6 @@
 use super::SparseMatrix;
 use crate::number::Number;
-use std::{collections::HashMap, ops::Mul};
+use std::ops::Mul;
 
 fn mul<T>(slf: &SparseMatrix<T>, rhs: &SparseMatrix<T>) -> SparseMatrix<T>
 where
@@ -9,7 +9,7 @@ where
     if slf.cols != rhs.rows {
         panic!("Dimension mismatch.");
     }
-    let mut new_matrix = SparseMatrix::new(slf.rows, rhs.cols, HashMap::new());
+    let mut new_matrix = SparseMatrix::new(slf.rows, rhs.cols);
 
     for (&(i, j), &s) in slf.elems.iter() {
         for (&(_, k), &r) in rhs.elems.iter().filter(|&(&(jr, _), _)| j == jr) {

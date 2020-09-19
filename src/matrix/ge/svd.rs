@@ -10,7 +10,7 @@ impl Matrix {
     ///
     /// `M = U * Sigma * V^T`
     /// `(u, sigma, vt)`
-    pub fn gesvd(&self) -> Result<(Matrix, Matrix, Matrix), Box<dyn Error>> {
+    pub fn gesvd(mut self) -> Result<(Matrix, Matrix, Matrix), Box<dyn Error>> {
         if self.rows != self.cols {
             return Err(MatrixError::DimensionMismatch.into());
         }
@@ -27,7 +27,7 @@ impl Matrix {
                 'A' as u8,
                 self.rows as i32,
                 self.cols as i32,
-                &mut self.t().elems,
+                &mut self.elems,
                 self.rows as i32,
                 &mut sigma.elems,
                 &mut u.elems,

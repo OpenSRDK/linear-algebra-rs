@@ -6,7 +6,8 @@ use std::f64::consts::PI;
 
 impl CirculantMatrix<f64> {
     pub fn cigv(&self) -> (Matrix<c64>, Vec<c64>) {
-        let n = self.row_elems.len();
+        let row_elems = self.row_elems();
+        let n = row_elems.len();
 
         let mut fourier_matrix: Matrix<c64> = Matrix::<c64>::new(n, n);
         let omega = c64::new(0.0, 2.0 * PI / (n as f64)).exp();
@@ -20,8 +21,7 @@ impl CirculantMatrix<f64> {
             }
         }
 
-        let mut input = self
-            .row_elems
+        let mut input = row_elems
             .par_iter()
             .map(|&e| c64::new(e, 0.0))
             .collect::<Vec<c64>>();

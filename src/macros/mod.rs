@@ -32,9 +32,9 @@ mod tests {
             0.0, 1.0, 0.0
         );
 
-        assert_eq!(a[0][0], 1.0);
-        assert_eq!(a[0][1], 0.0);
-        assert_eq!(a[1][0], 0.0);
-        assert_eq!(a[1][2], 0.0);
+        assert_eq!(a[(0, 0)], 1.0);
+        assert_eq!(a[(0, 1)], 0.0);
+        assert_eq!(a[(1, 0)], 0.0);
+        assert_eq!(a[(1, 2)], 0.0);
     }
 }

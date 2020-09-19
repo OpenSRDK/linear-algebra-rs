@@ -70,12 +70,19 @@ where
         self.cols
     }
 
-    pub fn elems(self) -> Vec<T> {
+    pub fn vec(self) -> Vec<T> {
         self.elems
     }
 
-    pub fn elems_ref(&self) -> &[T] {
+    pub fn slice(&self) -> &[T] {
         &self.elems
+    }
+
+    pub fn reshape(mut self, rows: usize) -> Self {
+        self.rows = rows;
+        self.cols = self.elems.len() / rows;
+
+        self
     }
 }
 

@@ -18,7 +18,7 @@ impl Matrix {
         let n = n as i32;
 
         unsafe {
-            dpotri('U' as u8, n, &mut slf.elems, n, &mut info);
+            dpotri('L' as u8, n, &mut slf.elems, n, &mut info);
         }
 
         match info {
@@ -46,7 +46,7 @@ impl Matrix<c64> {
         let n = n as i32;
 
         unsafe {
-            zpotri('U' as u8, n, &mut slf.elems, n, &mut info);
+            zpotri('L' as u8, n, &mut slf.elems, n, &mut info);
         }
 
         match info {

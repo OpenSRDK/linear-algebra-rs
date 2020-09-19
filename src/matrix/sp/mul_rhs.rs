@@ -67,10 +67,9 @@ where
 #[cfg(test)]
 mod tests {
     use crate::*;
-    use std::collections::HashMap;
     #[test]
     fn it_works() {
-        let mut a = SparseMatrix::new(2, 3, HashMap::new());
+        let mut a = SparseMatrix::new(2, 3);
         a[(0, 0)] = 1.0;
         a[(0, 1)] = 2.0;
         a[(1, 2)] = 3.0;

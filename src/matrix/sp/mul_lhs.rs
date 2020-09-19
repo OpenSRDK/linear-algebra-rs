@@ -73,7 +73,7 @@ mod tests {
             1.0, 2.0;
             3.0, 4.0
         ];
-        let b = SparseMatrix::new(
+        let b = SparseMatrix::from(
             2,
             2,
             vec![

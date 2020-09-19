@@ -15,7 +15,7 @@ impl Matrix {
 
         for _ in 0..iterations {
             let r_t = r.t();
-            let a_p = vec_mul(p.clone().elems())?.col_mat();
+            let a_p = vec_mul(p.clone().vec())?.col_mat();
             let alpha = (&r_t * &p)[0][0] / (p.t() * &a_p)[0][0];
 
             let old_r = r.clone();
@@ -26,6 +26,6 @@ impl Matrix {
             p = r.clone() + p * beta;
         }
 
-        Ok(x.elems())
+        Ok(x.vec())
     }
 }

@@ -22,7 +22,7 @@ impl Matrix {
         let n = n as i32;
 
         unsafe {
-            dpotrf('U' as u8, n, &mut slf.elems, n, &mut info);
+            dpotrf('L' as u8, n, &mut slf.elems, n, &mut info);
         }
 
         match info {
@@ -54,7 +54,7 @@ impl Matrix<c64> {
         let n = n as i32;
 
         unsafe {
-            zpotrf('U' as u8, n, &mut slf.elems, n, &mut info);
+            zpotrf('L' as u8, n, &mut slf.elems, n, &mut info);
         }
 
         match info {

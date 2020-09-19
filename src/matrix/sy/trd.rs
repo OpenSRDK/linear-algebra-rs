@@ -23,7 +23,7 @@ impl Matrix {
 
         unsafe {
             dsytrd(
-                'U' as u8,
+                'L' as u8,
                 n,
                 &mut slf.elems,
                 n,
@@ -43,7 +43,7 @@ impl Matrix {
             }
 
             dorgtr(
-                'U' as u8,
+                'L' as u8,
                 n,
                 &mut slf.elems,
                 n,
@@ -68,7 +68,7 @@ impl Matrix {
         k: usize,
         vec_mul: &dyn Fn(Vec<f64>) -> Result<Vec<f64>, Box<dyn Error>>,
         probe: Option<&[f64]>,
-    ) -> Result<(SymmetricTridiagonalMatrix, Matrix), Box<dyn Error>> {
+    ) -> Result<(Matrix, SymmetricTridiagonalMatrix), Box<dyn Error>> {
         let k = k.min(n);
 
         let mut d = vec![0.0; k];
@@ -98,13 +98,13 @@ impl Matrix {
 
             for i in 1..k {
                 e[i - 1] = w_prev
-                    .elems_ref()
+                    .slice()
                     .iter()
                     .map(|wi| wi.powi(2))
                     .sum::<f64>()
                     .sqrt();
 
-                v[i].clone_from_slice((w_prev * (1.0 / e[i - 1])).elems_ref());
+                v[i].clone_from_slice((w_prev * (1.0 / e[i - 1])).slice());
 
                 let a_v = vec_mul(v[i].clone())?.col_mat();
                 let v_mat = v[i].clone().col_mat();
@@ -114,10 +114,10 @@ impl Matrix {
             }
         }
 
-        let q_t = Matrix::from(k, v.concat());
+        let q = Matrix::from(n, v.concat());
         let t = SymmetricTridiagonalMatrix::new(d, e)?;
 
-        Ok((t, q_t))
+        Ok((q, t))
     }
 }
 
@@ -132,12 +132,12 @@ mod tests {
             3.0, 6.0, 12.0, 24.0;
             4.0, 8.0, 16.0, 30.0
         ];
-        let (t, qt) =
-            Matrix::sytrd_k(4, 3, &|v: Vec<f64>| Ok((&a * v.col_mat()).elems()), None).unwrap();
+        let (q, t) =
+            Matrix::sytrd_k(4, 3, &|v: Vec<f64>| Ok((&a * v.col_mat()).vec()), None).unwrap();
 
-        let aback = &qt.t() * t.mat() * &qt;
+        let aback = &q * &t.mat() * &q.t();
 
         println!("{:#?}", aback);
-        println!("{:#?}", &qt * qt.t());
+        println!("{:#?}", &q * &q.t());
     }
 }

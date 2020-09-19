@@ -37,16 +37,16 @@ where
 
     pub fn prod(&self) -> Matrix<T> {
         let mut new_matrix = Matrix::from(self.rows, vec![T::one(); self.rows * self.cols]);
-        let k_len = self.k.len();
+        let bigp = self.k.len();
 
         let mut row_block = 1;
         let mut col_block = 1;
 
-        for p in (0..k_len).rev() {
-            for i in 0..self.rows {
-                for j in 0..self.cols {
-                    new_matrix[i][j] *=
-                        self.k[p][i / row_block % self.k[p].rows][j / col_block % self.k[p].cols];
+        for p in (0..bigp).rev() {
+            for j in 0..self.cols {
+                for i in 0..self.rows {
+                    new_matrix[j][i] *=
+                        self.k[p][j / col_block % self.k[p].cols][i / row_block % self.k[p].rows];
                 }
             }
 
@@ -66,19 +66,18 @@ impl KroneckerMatrices {
             return Err(MatrixError::DimensionMismatch.into());
         }
 
-        let k_len = self.k.len();
+        let bigp = self.k.len();
         let mut u = v.col_mat();
-        for p in (0..k_len).rev() {
-            let bigu_rows = self.k[p].cols;
-            let bigu_cols = u.rows() / bigu_rows;
-            // reshape(u, bigu_rows, bigu_cols)
-            let bigut = Matrix::from(bigu_cols, u.elems);
-            let bigut_kt = bigut * self.k[p].t();
 
-            u = bigut_kt.elems().col_mat();
+        for p in (0..bigp).rev() {
+            let bigu_rows = self.k[p].cols;
+            let bigu = u.reshape(bigu_rows);
+            let k_bigu = &self.k[p] * bigu;
+
+            u = k_bigu.t().vec().col_mat();
         }
 
-        Ok(u.elems())
+        Ok(u.vec())
     }
 }
 
@@ -98,14 +97,16 @@ mod tests {
         let ab = KroneckerMatrices::new(vec![a, b]);
         let c = ab.prod();
 
-        assert_eq!(c[0][0], 1.0);
-        assert_eq!(c[0][3], 4.0);
-        assert_eq!(c[2][1], 6.0);
+        println!("c {:#?}", c);
+
+        assert_eq!(c[(0, 0)], 1.0);
+        assert_eq!(c[(0, 3)], 4.0);
+        assert_eq!(c[(2, 1)], 6.0);
 
         let ab1 = ab.vec_mul(vec![1.0; 4]).unwrap().col_mat();
         let c1 = &c * vec![1.0; 4].col_mat();
 
-        assert_eq!(ab1[0][0], c1[0][0]);
-        assert_eq!(ab1[1][0], c1[1][0]);
+        assert_eq!(ab1[(0, 0)], c1[(0, 0)]);
+        assert_eq!(ab1[(1, 0)], c1[(1, 0)]);
     }
 }

@@ -104,9 +104,9 @@ where
             Stack::Only(sub_matrix) => {
                 let size = sub_matrix.size();
 
-                for k in 0..size.0 {
-                    for l in 0..size.1 {
-                        matrix[i + k][j + l] = sub_matrix.index(k, l);
+                for l in 0..size.1 {
+                    for k in 0..size.0 {
+                        matrix[j + l][i + k] = sub_matrix.index(k, l);
                     }
                 }
 

@@ -32,16 +32,16 @@ fn mul_f64(lhs: &Matrix, rhs: &Matrix) -> Matrix {
 
     unsafe {
         dgemm(
-            'T' as u8,
-            'T' as u8,
+            'N' as u8,
+            'N' as u8,
             m,
             n,
             k,
             1.0,
             lhs.elems.as_slice(),
-            k,
+            m,
             rhs.elems.as_slice(),
-            n,
+            k,
             0.0,
             &mut new_matrix.elems,
             m,
@@ -64,16 +64,16 @@ fn mul_c64(lhs: &Matrix<c64>, rhs: &Matrix<c64>) -> Matrix<c64> {
 
     unsafe {
         zgemm(
-            'T' as u8,
-            'T' as u8,
+            'N' as u8,
+            'N' as u8,
             m,
             n,
             k,
             blas::c64::new(1.0, 0.0),
             &lhs.elems,
-            k,
+            m,
             &rhs.elems,
-            n,
+            k,
             blas::c64::new(0.0, 0.0),
             &mut new_matrix.elems,
             m,

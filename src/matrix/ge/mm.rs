@@ -24,16 +24,16 @@ impl Matrix {
 
         unsafe {
             dgemm(
-                'T' as u8,
-                'T' as u8,
+                'N' as u8,
+                'M' as u8,
                 m,
                 n,
                 k,
                 alpha,
                 lhs.elems.as_slice(),
-                k,
+                m,
                 rhs.elems.as_slice(),
-                n,
+                k,
                 beta,
                 &mut slf.elems,
                 m,
@@ -64,16 +64,16 @@ impl Matrix<c64> {
 
         unsafe {
             zgemm(
-                'T' as u8,
-                'T' as u8,
+                'N' as u8,
+                'N' as u8,
                 m,
                 n,
                 k,
                 alpha,
                 rhs.elems.as_slice(),
-                k,
+                m,
                 lhs.elems.as_slice(),
-                n,
+                k,
                 beta,
                 &mut slf.elems,
                 m,

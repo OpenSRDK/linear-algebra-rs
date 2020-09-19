@@ -41,11 +41,11 @@ where
 
         if upper {
             for i in 0..n - 1 {
-                mat[i][i + 1] = self.e[i];
+                mat[i + 1][i] = self.e[i];
             }
         } else {
             for i in 0..n - 1 {
-                mat[i + 1][i] = self.e[i];
+                mat[i][i + 1] = self.e[i];
             }
         }
 

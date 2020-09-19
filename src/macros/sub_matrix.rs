@@ -27,7 +27,7 @@ where
     }
 
     fn index(&self, i: usize, j: usize) -> T {
-        self[i][j]
+        self[(i, j)]
     }
 }
 
@@ -40,6 +40,6 @@ where
     }
 
     fn index(&self, i: usize, j: usize) -> T {
-        self[i][j]
+        self[(i, j)]
     }
 }

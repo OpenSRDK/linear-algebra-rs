@@ -18,7 +18,7 @@ use crate::number::{c64, Number};
 use rayon::prelude::*;
 
 /// # Matrix
-#[derive(Clone, Debug, Default, Hash)]
+#[derive(Clone, Debug, Default, Hash, PartialEq)]
 pub struct Matrix<T = f64>
 where
     T: Number,

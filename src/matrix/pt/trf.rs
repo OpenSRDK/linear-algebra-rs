@@ -6,6 +6,7 @@ use std::error::Error;
 impl SymmetricTridiagonalMatrix<f64> {
     /// # Cholesky decomposition
     /// for tridiagonal matrix
+    /// `T = L * D * L^T`
     pub fn pttrf(self) -> Result<(BidiagonalMatrix, Vec<f64>), Box<dyn Error>> {
         let (mut d, mut e) = self.elems();
         let n = d.len() as i32;

@@ -1,7 +1,7 @@
 use crate::matrix::ci::CirculantMatrix;
 use crate::{matrix::Matrix, number::c64};
 use rayon::prelude::*;
-use rustfft::FFTplanner;
+use rustfft::FftPlanner;
 use std::f64::consts::PI;
 
 impl CirculantMatrix<f64> {
@@ -21,18 +21,16 @@ impl CirculantMatrix<f64> {
             }
         }
 
-        let mut input = row_elems
+        let mut buffer = row_elems
             .par_iter()
             .map(|&e| c64::new(e, 0.0))
             .collect::<Vec<c64>>();
 
-        let mut output = vec![c64::default(); n];
+        let mut planner = FftPlanner::new();
+        let fft = planner.plan_fft_forward(n);
+        fft.process(&mut buffer);
 
-        let mut planner = FFTplanner::new(false);
-        let fft = planner.plan_fft(n);
-        fft.process(&mut input, &mut output);
-
-        (fourier_matrix, output)
+        (fourier_matrix, buffer)
     }
 }
 

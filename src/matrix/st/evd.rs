@@ -7,7 +7,7 @@ impl SymmetricTridiagonalMatrix<f64> {
     /// # Eigen decomposition
     /// return (lambda, pt)
     pub fn stevd(self) -> Result<(Vec<f64>, Matrix), Box<dyn Error>> {
-        let (mut d, mut e) = self.elems();
+        let (mut d, mut e) = self.eject();
         let n = d.len();
         let mut z = Matrix::new(n, n);
         let lwork = 1.max(1 + 4 * n + n.pow(2));

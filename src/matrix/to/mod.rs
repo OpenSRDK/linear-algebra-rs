@@ -43,6 +43,10 @@ where
         &self.col_elems
     }
 
+    pub fn eject(self) -> (Vec<T>, Vec<T>) {
+        (self.row_elems, self.col_elems)
+    }
+
     pub fn embedded_circulant(&self) -> CirculantMatrix<T> {
         let row = (0..self.dim)
             .into_iter()

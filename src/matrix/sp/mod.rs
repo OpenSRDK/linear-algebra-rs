@@ -39,6 +39,10 @@ where
         }
     }
 
+    pub fn eject(self) -> HashMap<(usize, usize), T> {
+        self.elems
+    }
+
     pub fn t(&self) -> Self {
         Self::from(
             self.cols,

@@ -3,8 +3,8 @@ use std::error::Error;
 use crate::matrix::*;
 use crate::number::Number;
 
-pub mod evd;
 pub mod ev;
+pub mod evd;
 
 #[derive(Clone, Debug, Default, Hash)]
 pub struct SymmetricTridiagonalMatrix<T = f64>
@@ -35,7 +35,7 @@ where
         &self.e
     }
 
-    pub fn elems(self) -> (Vec<T>, Vec<T>) {
+    pub fn eject(self) -> (Vec<T>, Vec<T>) {
         (self.d, self.e)
     }
 

@@ -31,7 +31,7 @@ where
         &self.e
     }
 
-    pub fn elems(self) -> (Vec<T>, Vec<T>) {
+    pub fn eject(self) -> (Vec<T>, Vec<T>) {
         (self.d, self.e)
     }
 

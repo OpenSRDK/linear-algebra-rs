@@ -8,7 +8,7 @@ impl SymmetricTridiagonalMatrix<f64> {
     /// for tridiagonal matrix
     /// `T = L * D * L^T`
     pub fn pttrf(self) -> Result<(BidiagonalMatrix, Vec<f64>), Box<dyn Error>> {
-        let (mut d, mut e) = self.elems();
+        let (mut d, mut e) = self.eject();
         let n = d.len() as i32;
         let mut info = 0;
 

@@ -7,7 +7,7 @@ pub struct KroneckerMatrices<T = f64>
 where
     T: Number,
 {
-    k: Vec<Matrix<T>>,
+    matrices: Vec<Matrix<T>>,
     rows: usize,
     cols: usize,
 }
@@ -16,15 +16,19 @@ impl<T> KroneckerMatrices<T>
 where
     T: Number,
 {
-    pub fn new(k: Vec<Matrix<T>>) -> Self {
-        let (rows, cols) = k
+    pub fn new(matrices: Vec<Matrix<T>>) -> Self {
+        let (rows, cols) = matrices
             .iter()
             .fold((1usize, 1usize), |v, m| (v.0 * m.rows, v.1 * m.cols));
-        Self { k, rows, cols }
+        Self {
+            matrices,
+            rows,
+            cols,
+        }
     }
 
-    pub fn elems_ref(&self) -> &[Matrix<T>] {
-        &self.k
+    pub fn matrices(&self) -> &[Matrix<T>] {
+        &self.matrices
     }
 
     pub fn rows(&self) -> usize {
@@ -35,9 +39,13 @@ where
         self.cols
     }
 
+    pub fn eject(self) -> Vec<Matrix<T>> {
+        self.matrices
+    }
+
     pub fn prod(&self) -> Matrix<T> {
         let mut new_matrix = Matrix::from(self.rows, vec![T::one(); self.rows * self.cols]);
-        let bigp = self.k.len();
+        let bigp = self.matrices.len();
 
         let mut row_block = 1;
         let mut col_block = 1;
@@ -45,13 +53,13 @@ where
         for p in (0..bigp).rev() {
             for j in 0..self.cols {
                 for i in 0..self.rows {
-                    new_matrix[j][i] *=
-                        self.k[p][j / col_block % self.k[p].cols][i / row_block % self.k[p].rows];
+                    new_matrix[j][i] *= self.matrices[p][j / col_block % self.matrices[p].cols]
+                        [i / row_block % self.matrices[p].rows];
                 }
             }
 
-            row_block *= self.k[p].rows;
-            col_block *= self.k[p].cols;
+            row_block *= self.matrices[p].rows;
+            col_block *= self.matrices[p].cols;
         }
 
         new_matrix
@@ -66,13 +74,13 @@ impl KroneckerMatrices {
             return Err(MatrixError::DimensionMismatch.into());
         }
 
-        let bigp = self.k.len();
+        let bigp = self.matrices.len();
         let mut u = v.col_mat();
 
         for p in (0..bigp).rev() {
-            let bigu_rows = self.k[p].cols;
+            let bigu_rows = self.matrices[p].cols;
             let bigu = u.reshape(bigu_rows);
-            let k_bigu = &self.k[p] * bigu;
+            let k_bigu = &self.matrices[p] * bigu;
 
             u = k_bigu.t().vec().col_mat();
         }

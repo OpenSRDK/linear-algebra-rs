@@ -150,14 +150,13 @@ mod tests {
     use crate::*;
     #[test]
     fn it_works() {
-        let a = mat![1.0, 2.0, 3.0];
-        let b = mat![
-            1.0, 3.0;
-            2.0, 4.0;
-            3.0, 6.0
-        ];
-        let c = a * b;
-
-        assert_eq!(c[0][0], 14.0)
+        let a = mat!(
+            1.0, 2.0;
+            3.0, 4.0
+        ) * mat!(
+            5.0, 6.0;
+            7.0, 8.0
+        );
+        assert_eq!(a[(0, 0)], 19.0);
     }
 }

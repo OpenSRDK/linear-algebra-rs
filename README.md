@@ -9,7 +9,7 @@ blas-src = { version = "0.7", features = ["openblas"] }
 lapack-src = { version = "0.6", features = ["openblas"] }
 ```
 
-```rs
+```rust
 extern crate opensrdk_linear_algebra;
 extern crate blas_src;
 extern crate lapack_src;
@@ -18,53 +18,14 @@ extern crate lapack_src;
 You can also use accelerate, intel-mkl and so on.
 See
 
-- [https://github.com/blas-lapack-rs/blas-src]
-- [https://github.com/blas-lapack-rs/lapack-src]
+- [blas-src](https://github.com/blas-lapack-rs/blas-src)
+- [lapack-src](https://github.com/blas-lapack-rs/lapack-src)
 
-## Macro
-
-```rs
-#[cfg(test)]
-mod tests {
-    use opensrdk_linear_algebra::*;
-    #[test]
-    fn it_works() {
-        let a = mat!(
-            1.0, 0.0;
-            0.0, 1.0
-        );
-        assert_eq!(a[(0,0)], 1.0);
-        assert_eq!(a[(0,1)], 0.0);
-        assert_eq!(a[(1,0)], 0.0);
-        assert_eq!(a[(1,1)], 1.0);
-
-        let b = mat!(
-            &a, zeros!(2, 2);
-            zeros!(2, 2), &a
-        );
-
-        assert_eq!(b[(0,0)], 1.0);
-        assert_eq!(b[(0,1)], 0.0);
-        assert_eq!(b[(3,0)], 0.0);
-        assert_eq!(b[(3,3)], 1.0);
-    }
-}
+```rust
+use opensrdk_linear_algebra::*;
 ```
 
-```rs
-#[cfg(test)]
-mod tests {
-    use opensrdk_linear_algebra::*;
-    #[test]
-    fn it_works() {
-        let a = mat!(
-            1.0, 2.0;
-            3.0, 4.0
-        ) * mat!(
-            5.0, 6.0;
-            7.0, 8.0
-        );
-        assert_eq!(a[(0,0)], 19.0)
-    }
-}
-```
+## Examples
+
+- [macros test code](src/macros/mod.rs)
+- [operators test code](src/matrix/operators/mul.rs)

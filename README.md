@@ -4,8 +4,8 @@
 
 ```toml
 [dependencies]
-opensrdk-linear-algebra = "0.1.0"
-blas-src = { version = "0.6", features = ["openblas"] }
+opensrdk-linear-algebra = "0.6.3"
+blas-src = { version = "0.7", features = ["openblas"] }
 lapack-src = { version = "0.6", features = ["openblas"] }
 ```
 
@@ -15,8 +15,11 @@ extern crate blas_src;
 extern crate lapack_src;
 ```
 
-You can also use accelerate, intel-mkl, or netlib instead.
-See [here](https://github.com/blas-lapack-rs/blas-lapack-rs.github.io/wiki).
+You can also use accelerate, intel-mkl and so on.
+See
+
+- [https://github.com/blas-lapack-rs/blas-src]
+- [https://github.com/blas-lapack-rs/lapack-src]
 
 ## Macro
 

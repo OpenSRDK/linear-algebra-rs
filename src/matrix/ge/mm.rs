@@ -25,7 +25,7 @@ impl Matrix {
         unsafe {
             dgemm(
                 'N' as u8,
-                'M' as u8,
+                'N' as u8,
                 m,
                 n,
                 k,

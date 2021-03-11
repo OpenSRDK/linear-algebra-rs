@@ -4,7 +4,7 @@
 
 ```toml
 [dependencies]
-opensrdk-linear-algebra = "0.6.3"
+opensrdk-linear-algebra = "0.6.4"
 blas-src = { version = "0.7", features = ["openblas"] }
 lapack-src = { version = "0.6", features = ["openblas"] }
 ```
@@ -26,7 +26,7 @@ See
 ```rs
 #[cfg(test)]
 mod tests {
-    use crate::prelude::*;
+    use opensrdk_linear_algebra::*;
     #[test]
     fn it_works() {
         let a = mat!(
@@ -54,7 +54,7 @@ mod tests {
 ```rs
 #[cfg(test)]
 mod tests {
-    use crate::prelude::*;
+    use opensrdk_linear_algebra::*;
     #[test]
     fn it_works() {
         let a = mat!(

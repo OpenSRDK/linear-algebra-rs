@@ -1,7 +1,7 @@
 extern crate blas;
-extern crate lapack;
 #[cfg(test)]
 extern crate blas_src;
+extern crate lapack;
 #[cfg(test)]
 extern crate lapack_src;
 extern crate rayon;
@@ -12,8 +12,6 @@ pub mod matrix;
 pub mod number;
 
 pub use crate::{
-    matrix::{
-        bd::*, ci::*, di::*, ge::*, gt::*, kr::*, po::*, pt::*, sp::*, st::*, to::*, tr::*, *,
-    },
-    number::*,
+  matrix::{bd::*, ci::*, di::*, ge::*, gt::*, kr::*, po::*, pt::*, sp::*, st::*, to::*, tr::*, *},
+  number::*,
 };

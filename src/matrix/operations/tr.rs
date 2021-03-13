@@ -3,10 +3,10 @@ use rayon::prelude::*;
 
 impl<T> Matrix<T>
 where
-    T: Number,
+  T: Number,
 {
-    /// # Trace
-    pub fn tr(&self) -> T {
-        (0..self.rows).into_par_iter().map(|i| self[i][i]).sum()
-    }
+  /// # Trace
+  pub fn tr(&self) -> T {
+    (0..self.rows).into_par_iter().map(|i| self[i][i]).sum()
+  }
 }

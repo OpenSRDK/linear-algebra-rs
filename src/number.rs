@@ -1,42 +1,41 @@
 pub use blas::c64;
 use std::{
-    fmt::Debug,
-    iter::Product,
-    iter::Sum,
-    ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign},
+  fmt::Debug,
+  iter::Product,
+  iter::Sum,
+  ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign},
 };
 
 pub trait Number:
-    Clone
-    + Copy
-    + Debug
-    + Default
-    + PartialEq
-    + Send
-    + Sized
-    + Sync
-    + Add<Output = Self>
-    + AddAssign
-    + Sub<Output = Self>
-    + SubAssign
-    + Mul<Output = Self>
-    + MulAssign
-    + Div
-    + DivAssign
-    + Sum
-    + Product
+  Clone
+  + Copy
+  + Debug
+  + Default
+  + PartialEq
+  + Send
+  + Sized
+  + Sync
+  + Add<Output = Self>
+  + AddAssign
+  + Sub<Output = Self>
+  + SubAssign
+  + Mul<Output = Self>
+  + MulAssign
+  + Div
+  + DivAssign
+  + Sum
+  + Product
 {
-    fn one() -> Self;
+  fn one() -> Self;
 }
-
 impl Number for f64 {
-    fn one() -> Self {
-        1.0
-    }
+  fn one() -> Self {
+    1.0
+  }
 }
 
 impl Number for c64 {
-    fn one() -> Self {
-        Self::new(1.0, 0.0)
-    }
+  fn one() -> Self {
+    Self::new(1.0, 0.0)
+  }
 }

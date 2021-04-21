@@ -2,15 +2,14 @@ use crate::matrix::Matrix;
 use crate::matrix::MatrixError;
 use crate::number::c64;
 use lapack::{dpotri, zpotri};
-use std::error::Error;
 
 impl Matrix {
   /// # Inverse
   /// with matrix decomposed by potrf
-  pub fn potri(self) -> Result<Matrix, Box<dyn Error>> {
+  pub fn potri(self) -> Result<Matrix, MatrixError> {
     let n = self.rows();
     if n != self.cols() {
-      return Err(MatrixError::DimensionMismatch.into());
+      return Err(MatrixError::DimensionMismatch);
     }
 
     let mut info = 0;
@@ -23,13 +22,10 @@ impl Matrix {
 
     match info {
       0 => Ok(slf),
-      _ => Err(
-        MatrixError::LapackRoutineError {
-          routine: "dpotri".to_owned(),
-          info,
-        }
-        .into(),
-      ),
+      _ => Err(MatrixError::LapackRoutineError {
+        routine: "dpotri".to_owned(),
+        info,
+      }),
     }
   }
 }
@@ -37,10 +33,10 @@ impl Matrix {
 impl Matrix<c64> {
   /// # Inverse
   /// with matrix decomposed by potrf
-  pub fn potri(self) -> Result<Matrix<c64>, Box<dyn Error>> {
+  pub fn potri(self) -> Result<Matrix<c64>, MatrixError> {
     let n = self.rows();
     if n != self.cols() {
-      return Err(MatrixError::DimensionMismatch.into());
+      return Err(MatrixError::DimensionMismatch);
     }
 
     let mut info = 0;
@@ -53,13 +49,10 @@ impl Matrix<c64> {
 
     match info {
       0 => Ok(slf),
-      _ => Err(
-        MatrixError::LapackRoutineError {
-          routine: "zpotri".to_owned(),
-          info,
-        }
-        .into(),
-      ),
+      _ => Err(MatrixError::LapackRoutineError {
+        routine: "zpotri".to_owned(),
+        info,
+      }),
     }
   }
 }

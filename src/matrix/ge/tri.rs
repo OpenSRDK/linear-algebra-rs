@@ -2,15 +2,14 @@ use crate::matrix::Matrix;
 use crate::matrix::MatrixError;
 use crate::number::c64;
 use lapack::{dgetri, zgetri};
-use std::error::Error;
 
 impl Matrix {
   /// # Inverse
   /// with matrix decomposed by getrf
-  pub fn getri(self, ipiv: &[i32]) -> Result<Matrix, Box<dyn Error>> {
+  pub fn getri(self, ipiv: &[i32]) -> Result<Matrix, MatrixError> {
     let n = self.rows();
     if n != self.cols() {
-      return Err(MatrixError::DimensionMismatch.into());
+      return Err(MatrixError::DimensionMismatch);
     }
 
     let mut work = vec![f64::default(); n];
@@ -25,13 +24,10 @@ impl Matrix {
 
     match info {
       0 => Ok(slf),
-      _ => Err(
-        MatrixError::LapackRoutineError {
-          routine: "dgetri".to_owned(),
-          info,
-        }
-        .into(),
-      ),
+      _ => Err(MatrixError::LapackRoutineError {
+        routine: "dgetri".to_owned(),
+        info,
+      }),
     }
   }
 }
@@ -39,10 +35,10 @@ impl Matrix {
 impl Matrix<c64> {
   /// # Inverse
   /// with matrix decomposed by getrf
-  pub fn getri(self, ipiv: &[i32]) -> Result<Matrix<c64>, Box<dyn Error>> {
+  pub fn getri(self, ipiv: &[i32]) -> Result<Matrix<c64>, MatrixError> {
     let n = self.rows();
     if n != self.cols() {
-      return Err(MatrixError::DimensionMismatch.into());
+      return Err(MatrixError::DimensionMismatch);
     }
 
     let mut work = vec![c64::default(); n];
@@ -57,13 +53,10 @@ impl Matrix<c64> {
 
     match info {
       0 => Ok(slf),
-      _ => Err(
-        MatrixError::LapackRoutineError {
-          routine: "zgetri".to_owned(),
-          info,
-        }
-        .into(),
-      ),
+      _ => Err(MatrixError::LapackRoutineError {
+        routine: "zgetri".to_owned(),
+        info,
+      }),
     }
   }
 }

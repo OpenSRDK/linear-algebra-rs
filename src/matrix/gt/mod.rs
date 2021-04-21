@@ -1,5 +1,3 @@
-use std::error::Error;
-
 use crate::matrix::*;
 use crate::number::Number;
 
@@ -20,10 +18,10 @@ impl<T> TridiagonalMatrix<T>
 where
   T: Number,
 {
-  pub fn new(dl: Vec<T>, d: Vec<T>, du: Vec<T>) -> Result<Self, Box<dyn Error>> {
+  pub fn new(dl: Vec<T>, d: Vec<T>, du: Vec<T>) -> Result<Self, MatrixError> {
     let n_1 = d.len().max(1) - 1;
     if n_1 != dl.len() || n_1 != du.len() {
-      return Err(MatrixError::DimensionMismatch.into());
+      return Err(MatrixError::DimensionMismatch);
     }
 
     Ok(Self { dl, d, du })

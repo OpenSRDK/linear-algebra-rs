@@ -1,18 +1,12 @@
 use crate::{matrix::*, BidiagonalMatrix};
 use lapack::dgttrs;
-use std::error::Error;
 
 impl BidiagonalMatrix<f64> {
   /// # Solve equation
   /// with matrix decomposed by gttrf
   /// `Ax = b`
   /// return x
-  pub fn gttrs(
-    &self,
-    u: &[Vec<f64>; 3],
-    ipiv: &[i32],
-    b: Matrix,
-  ) -> Result<Matrix, Box<dyn Error>> {
+  pub fn gttrs(&self, u: &[Vec<f64>; 3], ipiv: &[i32], b: Matrix) -> Result<Matrix, MatrixError> {
     let e = self.e();
     let n = self.d().len() as i32;
     let mut b = b;
@@ -36,13 +30,10 @@ impl BidiagonalMatrix<f64> {
 
     match info {
       0 => Ok(b),
-      _ => Err(
-        MatrixError::LapackRoutineError {
-          routine: "dgttrs".to_owned(),
-          info,
-        }
-        .into(),
-      ),
+      _ => Err(MatrixError::LapackRoutineError {
+        routine: "dgttrs".to_owned(),
+        info,
+      }),
     }
   }
 }

@@ -1,5 +1,3 @@
-use std::error::Error;
-
 use crate::matrix::*;
 use crate::number::Number;
 
@@ -19,9 +17,9 @@ impl<T> SymmetricTridiagonalMatrix<T>
 where
   T: Number,
 {
-  pub fn new(d: Vec<T>, e: Vec<T>) -> Result<Self, Box<dyn Error>> {
+  pub fn new(d: Vec<T>, e: Vec<T>) -> Result<Self, MatrixError> {
     if d.len().max(1) - 1 != e.len() {
-      return Err(MatrixError::DimensionMismatch.into());
+      return Err(MatrixError::DimensionMismatch);
     }
 
     Ok(Self { d, e })

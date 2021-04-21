@@ -1,6 +1,5 @@
 use crate::matrix::MatrixError;
 use crate::{matrix::*, number::Number};
-use std::error::Error;
 
 #[derive(Clone, Debug, Default, Hash)]
 pub struct KroneckerMatrices<T = f64>
@@ -67,11 +66,11 @@ where
 }
 
 impl KroneckerMatrices {
-  pub fn vec_mul(&self, v: Vec<f64>) -> Result<Vec<f64>, Box<dyn Error>> {
+  pub fn vec_mul(&self, v: Vec<f64>) -> Result<Vec<f64>, MatrixError> {
     let n = v.len();
 
     if self.cols != n {
-      return Err(MatrixError::DimensionMismatch.into());
+      return Err(MatrixError::DimensionMismatch);
     }
 
     let bigp = self.matrices.len();

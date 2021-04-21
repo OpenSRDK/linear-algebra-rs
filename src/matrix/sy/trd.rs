@@ -8,9 +8,9 @@ use std::error::Error;
 impl Matrix {
   /// # Tridiagonalize
   /// for symmetric matrix
-  pub fn sytrd(self) -> Result<(Matrix, SymmetricTridiagonalMatrix), Box<dyn Error>> {
+  pub fn sytrd(self) -> Result<(Matrix, SymmetricTridiagonalMatrix), MatrixError> {
     if self.rows != self.cols {
-      return Err(MatrixError::DimensionMismatch.into());
+      return Err(MatrixError::DimensionMismatch);
     }
     let n = self.rows as i32;
     let mut slf = self;
@@ -35,13 +35,10 @@ impl Matrix {
         &mut info,
       );
       if info != 0 {
-        return Err(
-          MatrixError::LapackRoutineError {
-            routine: "dsytrd".to_owned(),
-            info,
-          }
-          .into(),
-        );
+        return Err(MatrixError::LapackRoutineError {
+          routine: "dsytrd".to_owned(),
+          info,
+        });
       }
 
       dorgtr(
@@ -70,7 +67,7 @@ impl Matrix {
     k: usize,
     vec_mul: &dyn Fn(Vec<f64>) -> Result<Vec<f64>, Box<dyn Error>>,
     probe: Option<&[f64]>,
-  ) -> Result<(Matrix, SymmetricTridiagonalMatrix), Box<dyn Error>> {
+  ) -> Result<(Matrix, SymmetricTridiagonalMatrix), MatrixError> {
     let k = k.min(n);
 
     let mut d = vec![0.0; k];
@@ -82,7 +79,7 @@ impl Matrix {
       match probe {
         Some(vec) => {
           if vec.len() != n {
-            return Err(MatrixError::DimensionMismatch.into());
+            return Err(MatrixError::DimensionMismatch);
           }
           let norm = vec.iter().map(|wi| wi.powi(2)).sum::<f64>().sqrt();
           v[0] = vec.iter().map(|vi| vi / norm).collect();

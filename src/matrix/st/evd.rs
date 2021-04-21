@@ -1,12 +1,11 @@
 use super::SymmetricTridiagonalMatrix;
 use crate::matrix::*;
 use lapack::dstevd;
-use std::error::Error;
 
 impl SymmetricTridiagonalMatrix<f64> {
   /// # Eigen decomposition
   /// return (lambda, pt)
-  pub fn stevd(self) -> Result<(Vec<f64>, Matrix), Box<dyn Error>> {
+  pub fn stevd(self) -> Result<(Vec<f64>, Matrix), MatrixError> {
     let (mut d, mut e) = self.eject();
     let n = d.len();
     let mut z = Matrix::new(n, n);
@@ -36,13 +35,10 @@ impl SymmetricTridiagonalMatrix<f64> {
 
     match info {
       0 => Ok((d, z)),
-      _ => Err(
-        MatrixError::LapackRoutineError {
-          routine: "dstev".to_owned(),
-          info,
-        }
-        .into(),
-      ),
+      _ => Err(MatrixError::LapackRoutineError {
+        routine: "dstev".to_owned(),
+        info,
+      }),
     }
   }
 }

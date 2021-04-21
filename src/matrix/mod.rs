@@ -16,6 +16,7 @@ pub mod tr;
 
 use crate::number::{c64, Number};
 use rayon::prelude::*;
+use std::error::Error;
 
 /// # Matrix
 #[derive(Clone, Debug, Default, Hash, PartialEq)]
@@ -36,6 +37,14 @@ pub enum MatrixError {
   BlasRoutineError { routine: String, info: i32 },
   #[error("LAPACK routine error. routine: {routine}, info: {info}")]
   LapackRoutineError { routine: String, info: i32 },
+  #[error("Others")]
+  Others(Box<dyn Error>),
+}
+
+impl From<Box<dyn Error>> for MatrixError {
+  fn from(e: Box<dyn Error>) -> Self {
+    MatrixError::Others(e)
+  }
 }
 
 impl<T> Matrix<T>

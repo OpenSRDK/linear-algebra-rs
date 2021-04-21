@@ -2,17 +2,16 @@ use crate::matrix::Matrix;
 use crate::matrix::MatrixError;
 use crate::number::c64;
 use lapack::{dgetrs, zgetrs};
-use std::error::Error;
 
 impl Matrix {
   /// # Solve equation
   /// with matrix decomposed by getrf
   /// `Ax = b`
   /// return x
-  pub fn getrs(&self, ipiv: &[i32], b: Matrix) -> Result<Matrix, Box<dyn Error>> {
+  pub fn getrs(&self, ipiv: &[i32], b: Matrix) -> Result<Matrix, MatrixError> {
     let n = self.rows();
     if n != self.cols() || n != b.rows {
-      return Err(MatrixError::DimensionMismatch.into());
+      return Err(MatrixError::DimensionMismatch);
     }
 
     let mut info = 0;
@@ -36,13 +35,10 @@ impl Matrix {
 
     match info {
       0 => Ok(b),
-      _ => Err(
-        MatrixError::LapackRoutineError {
-          routine: "dgetrs".to_owned(),
-          info,
-        }
-        .into(),
-      ),
+      _ => Err(MatrixError::LapackRoutineError {
+        routine: "dgetrs".to_owned(),
+        info,
+      }),
     }
   }
 }
@@ -52,10 +48,10 @@ impl Matrix<c64> {
   /// with matrix decomposed by getrf
   /// `Ax = b`
   /// return xt
-  pub fn getrs(&self, ipiv: &[i32], bt: Matrix<c64>) -> Result<Matrix<c64>, Box<dyn Error>> {
+  pub fn getrs(&self, ipiv: &[i32], bt: Matrix<c64>) -> Result<Matrix<c64>, MatrixError> {
     let n = self.rows();
     if n != self.cols() || n != bt.cols {
-      return Err(MatrixError::DimensionMismatch.into());
+      return Err(MatrixError::DimensionMismatch);
     }
 
     let mut info = 0;
@@ -79,13 +75,10 @@ impl Matrix<c64> {
 
     match info {
       0 => Ok(bt),
-      _ => Err(
-        MatrixError::LapackRoutineError {
-          routine: "zgetrs".to_owned(),
-          info,
-        }
-        .into(),
-      ),
+      _ => Err(MatrixError::LapackRoutineError {
+        routine: "zgetrs".to_owned(),
+        info,
+      }),
     }
   }
 }

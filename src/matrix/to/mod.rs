@@ -1,6 +1,5 @@
 use crate::matrix::ci::CirculantMatrix;
 use crate::{matrix::MatrixError, number::Number};
-use std::error::Error;
 
 #[derive(Clone, Debug, Default, Hash)]
 pub struct ToeplitzMatrix<T = f64>
@@ -17,11 +16,11 @@ where
   T: Number,
 {
   /// must be row.len() - 1 = col.len()
-  pub fn new(row_elems: Vec<T>, col_elems: Vec<T>) -> Result<Self, Box<dyn Error>> {
+  pub fn new(row_elems: Vec<T>, col_elems: Vec<T>) -> Result<Self, MatrixError> {
     let dim = row_elems.len();
 
     if col_elems.len() != dim.max(1) - 1 {
-      return Err(MatrixError::DimensionMismatch.into());
+      return Err(MatrixError::DimensionMismatch);
     }
 
     Ok(Self {

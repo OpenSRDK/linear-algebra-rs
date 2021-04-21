@@ -1,7 +1,6 @@
 use crate::matrix::Matrix;
 use crate::matrix::MatrixError;
 use lapack::dgesvd;
-use std::error::Error;
 
 impl Matrix {
   /// # Singular Value Decomposition
@@ -10,9 +9,9 @@ impl Matrix {
   ///
   /// `M = U * Sigma * V^T`
   /// `(u, sigma, vt)`
-  pub fn gesvd(mut self) -> Result<(Matrix, Matrix, Matrix), Box<dyn Error>> {
+  pub fn gesvd(mut self) -> Result<(Matrix, Matrix, Matrix), MatrixError> {
     if self.rows != self.cols {
-      return Err(MatrixError::DimensionMismatch.into());
+      return Err(MatrixError::DimensionMismatch);
     }
 
     let mut info = 0;
@@ -42,13 +41,10 @@ impl Matrix {
 
     match info {
       0 => Ok((u, sigma, vt)),
-      _ => Err(
-        MatrixError::LapackRoutineError {
-          routine: "dgesvd".to_owned(),
-          info,
-        }
-        .into(),
-      ),
+      _ => Err(MatrixError::LapackRoutineError {
+        routine: "dgesvd".to_owned(),
+        info,
+      }),
     }
   }
 }

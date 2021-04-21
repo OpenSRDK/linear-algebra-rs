@@ -1,14 +1,13 @@
 use crate::bd::BidiagonalMatrix;
 use crate::matrix::*;
 use lapack::dpttrs;
-use std::error::Error;
 
 impl BidiagonalMatrix<f64> {
   /// # Solve equation
   /// with matrix decomposed by pttrf
   /// `Ax = b`
   /// return x
-  pub fn pttrs(&self, d: &[f64], b: Matrix) -> Result<Matrix, Box<dyn Error>> {
+  pub fn pttrs(&self, d: &[f64], b: Matrix) -> Result<Matrix, MatrixError> {
     let e = self.e();
     let n = self.d().len() as i32;
     let mut b = b;
@@ -18,13 +17,10 @@ impl BidiagonalMatrix<f64> {
 
     match info {
       0 => Ok(b),
-      _ => Err(
-        MatrixError::LapackRoutineError {
-          routine: "dpttrs".to_owned(),
-          info,
-        }
-        .into(),
-      ),
+      _ => Err(MatrixError::LapackRoutineError {
+        routine: "dpttrs".to_owned(),
+        info,
+      }),
     }
   }
 }

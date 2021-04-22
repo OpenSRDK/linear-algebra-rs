@@ -38,11 +38,11 @@ pub enum MatrixError {
   #[error("LAPACK routine error. routine: {routine}, info: {info}")]
   LapackRoutineError { routine: String, info: i32 },
   #[error("Others")]
-  Others(Box<dyn Error>),
+  Others(Box<dyn Error + Send + Sync>),
 }
 
-impl From<Box<dyn Error>> for MatrixError {
-  fn from(e: Box<dyn Error>) -> Self {
+impl From<Box<dyn Error + Send + Sync>> for MatrixError {
+  fn from(e: Box<dyn Error + Send + Sync>) -> Self {
     MatrixError::Others(e)
   }
 }

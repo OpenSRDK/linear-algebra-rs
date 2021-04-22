@@ -6,7 +6,7 @@ impl Matrix {
   /// # Solve equations with Conjugate Gradient Method
   /// for positiveDefinite matrix
   pub fn posv_cgm(
-    vec_mul: &dyn Fn(Vec<f64>) -> Result<Vec<f64>, Box<dyn Error>>,
+    vec_mul: &dyn Fn(Vec<f64>) -> Result<Vec<f64>, Box<dyn Error + Send + Sync>>,
     b: Vec<f64>,
     iterations: usize,
   ) -> Result<Vec<f64>, MatrixError> {

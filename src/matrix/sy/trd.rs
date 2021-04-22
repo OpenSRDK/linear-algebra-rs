@@ -65,7 +65,7 @@ impl Matrix {
   pub fn sytrd_k(
     n: usize,
     k: usize,
-    vec_mul: &dyn Fn(Vec<f64>) -> Result<Vec<f64>, Box<dyn Error>>,
+    vec_mul: &dyn Fn(Vec<f64>) -> Result<Vec<f64>, Box<dyn Error + Send + Sync>>,
     probe: Option<&[f64]>,
   ) -> Result<(Matrix, SymmetricTridiagonalMatrix), MatrixError> {
     let k = k.min(n);

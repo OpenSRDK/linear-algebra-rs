@@ -17,7 +17,8 @@ lapack = "0.17.0"
 rayon = "1.5.0"
 rustfft = "5.0.1"
 thiserror = "1.0.24"
+katexit = "0.1.0"
 
 [dev-dependencies]
-blas-src = { version = "0.7", features = ["openblas"] } 
-lapack-src = { version = "0.6", features = ["openblas"] }
+blas-src = { version = "0.8", features = ["openblas"] } 
+lapack-src = { version = "0.8", features = ["openblas"] }

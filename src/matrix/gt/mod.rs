@@ -45,7 +45,11 @@ where
 
     pub fn mat(&self) -> Matrix<T> {
         let n = self.d.len();
-        let mut mat = Matrix::diag(&self.d);
+        let mut mat = Matrix::new(n, n);
+
+        for i in 0..n {
+            mat[i][i] = self.d[i];
+        }
 
         for i in 0..n - 1 {
             mat[i][i + 1] = self.du[i];

@@ -4,84 +4,83 @@ use blas::{dgemm, zgemm};
 use rayon::prelude::*;
 use std::ops::Mul;
 
-fn mul<T>(slf: T, rhs: Matrix<T>) -> Matrix<T>
+fn mul_scalar<T>(slf: T, rhs: Matrix<T>) -> Matrix<T>
 where
-  T: Number,
+    T: Number,
 {
-  let mut rhs = rhs;
-  rhs
-    .elems
-    .par_iter_mut()
-    .map(|r| {
-      *r *= slf;
-    })
-    .collect::<Vec<_>>();
+    let mut rhs = rhs;
+    rhs.elems
+        .par_iter_mut()
+        .map(|r| {
+            *r *= slf;
+        })
+        .collect::<Vec<_>>();
 
-  rhs
+    rhs
 }
 
 fn mul_f64(lhs: &Matrix, rhs: &Matrix) -> Matrix {
-  if lhs.cols != rhs.rows {
-    panic!("Dimension mismatch.")
-  }
+    if lhs.cols != rhs.rows {
+        panic!("Dimension mismatch.")
+    }
 
-  let m = lhs.rows as i32;
-  let k = lhs.cols as i32;
-  let n = rhs.cols as i32;
+    let m = lhs.rows as i32;
+    let k = lhs.cols as i32;
+    let n = rhs.cols as i32;
 
-  let mut new_matrix = Matrix::new(lhs.rows, rhs.cols);
+    let mut new_matrix = Matrix::new(lhs.rows, rhs.cols);
 
-  unsafe {
-    dgemm(
-      'N' as u8,
-      'N' as u8,
-      m,
-      n,
-      k,
-      1.0,
-      lhs.elems.as_slice(),
-      m,
-      rhs.elems.as_slice(),
-      k,
-      0.0,
-      &mut new_matrix.elems,
-      m,
-    );
-  }
+    unsafe {
+        dgemm(
+            'N' as u8,
+            'N' as u8,
+            m,
+            n,
+            k,
+            1.0,
+            lhs.elems.as_slice(),
+            m,
+            rhs.elems.as_slice(),
+            k,
+            0.0,
+            &mut new_matrix.elems,
+            m,
+        );
+    }
 
-  new_matrix
+    new_matrix
 }
 
 fn mul_c64(lhs: &Matrix<c64>, rhs: &Matrix<c64>) -> Matrix<c64> {
-  if lhs.cols != rhs.rows {
-    panic!("Dimension mismatch.")
-  }
+    if lhs.cols != rhs.rows {
+        panic!("Dimension mismatch.")
+    }
 
-  let m = lhs.rows as i32;
-  let k = lhs.cols as i32;
-  let n = rhs.cols as i32;
+    let m = lhs.rows as i32;
+    let k = lhs.cols as i32;
+    let n = rhs.cols as i32;
 
-  let mut new_matrix = Matrix::<c64>::new(lhs.rows, rhs.cols);
+    let mut new_matrix = Matrix::<c64>::new(lhs.rows, rhs.cols);
 
-  unsafe {
-    zgemm(
-      'N' as u8,
-      'N' as u8,
-      m,
-      n,
-      k,
-      blas::c64::new(1.0, 0.0),
-      &lhs.elems,
-      m,
-      &rhs.elems,
-      k,
-      blas::c64::new(0.0, 0.0),
-      &mut new_matrix.elems,
-      m,
-    );
-  }
+    unsafe {
+        zgemm(
+            'N' as u8,
+            'N' as u8,
+            m,
+            n,
+            k,
+            blas::c64::new(1.0, 0.0),
+            &lhs.elems,
+            m,
+            &rhs.elems,
+            k,
+            blas::c64::new(0.0, 0.0),
+            &mut new_matrix.elems,
+            m,
+        );
+    }
 
-  new_matrix
+    new_matrix
 }
 
 macro_rules! impl_mul_scalar {
@@ -90,7 +89,7 @@ macro_rules! impl_mul_scalar {
             type Output = Matrix<$t>;
 
             fn mul(self, rhs: Matrix<$t>) -> Self::Output {
-                mul(self, rhs)
+                mul_scalar(self, rhs)
             }
         }
 
@@ -98,7 +97,7 @@ macro_rules! impl_mul_scalar {
             type Output = Matrix<$t>;
 
             fn mul(self, rhs: $t) -> Self::Output {
-                mul(rhs, self)
+                mul_scalar(rhs, self)
             }
         }
     };
@@ -148,16 +147,16 @@ impl_mul! {c64, mul_c64}
 
 #[cfg(test)]
 mod tests {
-  use crate::*;
-  #[test]
-  fn it_works() {
-    let a = mat!(
-        1.0, 2.0;
-        3.0, 4.0
-    ) * mat!(
-        5.0, 6.0;
-        7.0, 8.0
-    );
-    assert_eq!(a[(0, 0)], 19.0);
-  }
+    use crate::*;
+    #[test]
+    fn it_works() {
+        let a = mat!(
+            1.0, 2.0;
+            3.0, 4.0
+        ) * mat!(
+            5.0, 6.0;
+            7.0, 8.0
+        );
+        assert_eq!(a[(0, 0)], 19.0);
+    }
 }

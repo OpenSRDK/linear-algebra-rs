@@ -1,6 +1,6 @@
 [package]
 name = "opensrdk-linear-algebra"
-version = "0.6.7"
+version = "0.6.8"
 authors = ["Kimura Yu <33382781+KimuraYu45z@users.noreply.github.com>"]
 edition = "2018"
 description = "Standard linear algebra library using blas and lapack for OpenSRDK toolchain."
@@ -17,7 +17,6 @@ lapack = "0.17.0"
 rayon = "1.5.0"
 rustfft = "5.0.1"
 thiserror = "1.0.24"
-katexit = "0.1.0"
 
 [dev-dependencies]
 blas-src = { version = "0.8", features = ["openblas"] } 

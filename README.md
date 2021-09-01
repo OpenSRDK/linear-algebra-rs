@@ -4,7 +4,7 @@
 
 ```toml
 [dependencies]
-opensrdk-linear-algebra = "0.6.4"
+opensrdk-linear-algebra = "0.6.8"
 blas-src = { version = "0.7", features = ["openblas"] }
 lapack-src = { version = "0.6", features = ["openblas"] }
 ```

@@ -4,7 +4,6 @@ use crate::number::c64;
 use lapack::{dgetrs, zgetrs};
 
 impl Matrix {
-    #[cfg_attr(doc, katexit::katexit)]
     /// # Solve equation
     ///
     /// with matrix decomposed by getrf
@@ -52,7 +51,6 @@ impl Matrix {
 }
 
 impl Matrix<c64> {
-    #[cfg_attr(doc, katexit::katexit)]
     /// # Solve equation
     ///
     /// with matrix decomposed by getrf

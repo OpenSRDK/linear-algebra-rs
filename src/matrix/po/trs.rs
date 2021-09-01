@@ -4,7 +4,6 @@ use crate::number::c64;
 use lapack::{dpotrs, zpotrs};
 
 impl Matrix {
-    #[cfg_attr(doc, katexit::katexit)]
     /// # Solve equation
     ///
     /// with matrix decomposed by potrf
@@ -51,7 +50,6 @@ impl Matrix {
 }
 
 impl Matrix<c64> {
-    #[cfg_attr(doc, katexit::katexit)]
     /// # Solve equation
     ///
     /// with matrix decomposed by potrf

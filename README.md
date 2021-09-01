@@ -5,8 +5,8 @@
 ```toml
 [dependencies]
 opensrdk-linear-algebra = "0.6.8"
-blas-src = { version = "0.7", features = ["openblas"] }
-lapack-src = { version = "0.6", features = ["openblas"] }
+blas-src = { version = "0.8", features = ["openblas"] }
+lapack-src = { version = "0.8", features = ["openblas"] }
 ```
 
 ```rust

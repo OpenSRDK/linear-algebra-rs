@@ -14,9 +14,9 @@ categories = ["mathematics", "science"]
 [dependencies]
 blas = "0.21.0"
 lapack = "0.17.0"
-rayon = "1.5.0"
+rayon = "1.5.1"
 rustfft = "5.0.1"
-thiserror = "1.0.24"
+thiserror = "1.0.28"
 
 [dev-dependencies]
 blas-src = { version = "0.8", features = ["openblas"] } 

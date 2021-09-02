@@ -3,7 +3,7 @@ use crate::DiagonalMatrix;
 use rayon::prelude::*;
 use std::ops::Mul;
 
-fn mul_scalar<T>(slf: T, rhs: DiagonalMatrix<T>) -> DiagonalMatrix<T>
+pub(crate) fn mul_scalar<T>(slf: T, rhs: DiagonalMatrix<T>) -> DiagonalMatrix<T>
 where
     T: Number,
 {
@@ -26,7 +26,7 @@ where
         panic!("Dimension mismatch.")
     }
 
-    DiagonalMatrix::new(mul_vec(lhs.d, rhs.d()))
+    DiagonalMatrix::from(mul_vec(lhs.d, rhs.d()))
 }
 
 fn mul_vec<T>(lhs: Vec<T>, rhs: &[T]) -> Vec<T>
@@ -133,14 +133,14 @@ impl_mul_vec! {c64, mul_vec}
 mod tests {
     use crate::*;
     #[test]
-    fn it_works() {
-        let a = mat!(
-            1.0, 2.0;
-            3.0, 4.0
-        ) * mat!(
-            5.0, 6.0;
-            7.0, 8.0
-        );
-        assert_eq!(a[(0, 0)], 19.0);
+    fn mul() {
+        let a = DiagonalMatrix::from(vec![2.0, 3.0]) * DiagonalMatrix::from(vec![4.0, 5.0]);
+        assert_eq!(a[0], 8.0);
+    }
+
+    #[test]
+    fn mul_vec() {
+        let a = DiagonalMatrix::from(vec![2.0, 3.0]) * vec![4.0, 5.0];
+        assert_eq!(a[0], 8.0);
     }
 }

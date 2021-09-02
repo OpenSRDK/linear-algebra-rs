@@ -4,7 +4,7 @@ use blas::{dgemm, zgemm};
 use rayon::prelude::*;
 use std::ops::Mul;
 
-fn mul_scalar<T>(slf: T, rhs: Matrix<T>) -> Matrix<T>
+pub(crate) fn mul_scalar<T>(slf: T, rhs: Matrix<T>) -> Matrix<T>
 where
     T: Number,
 {

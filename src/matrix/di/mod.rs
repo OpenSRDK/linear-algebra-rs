@@ -17,16 +17,12 @@ impl<T> DiagonalMatrix<T>
 where
     T: Number,
 {
-    pub fn new(n: usize) -> Self {
-        Self::from(vec![T::default(); n])
-    }
-
-    pub fn from(d: Vec<T>) -> Self {
+    pub fn new(d: Vec<T>) -> Self {
         Self { d }
     }
 
     pub fn identity(n: usize) -> Self {
-        Self::from(vec![T::one(); n])
+        Self::new(vec![T::one(); n])
     }
 
     pub fn n(&self) -> usize {

@@ -26,7 +26,7 @@ where
         panic!("Dimension mismatch.")
     }
 
-    DiagonalMatrix::from(mul_vec(lhs.d, rhs.d()))
+    DiagonalMatrix::new(mul_vec(lhs.d, rhs.d()))
 }
 
 fn mul_vec<T>(lhs: Vec<T>, rhs: &[T]) -> Vec<T>
@@ -134,13 +134,13 @@ mod tests {
     use crate::*;
     #[test]
     fn mul() {
-        let a = DiagonalMatrix::from(vec![2.0, 3.0]) * DiagonalMatrix::from(vec![4.0, 5.0]);
+        let a = DiagonalMatrix::new(vec![2.0, 3.0]) * DiagonalMatrix::new(vec![4.0, 5.0]);
         assert_eq!(a[0], 8.0);
     }
 
     #[test]
     fn mul_vec() {
-        let a = DiagonalMatrix::from(vec![2.0, 3.0]) * vec![4.0, 5.0];
+        let a = DiagonalMatrix::new(vec![2.0, 3.0]) * vec![4.0, 5.0];
         assert_eq!(a[0], 8.0);
     }
 }

@@ -22,7 +22,7 @@ impl SymmetricTridiagonalMatrix<f64> {
         }
 
         let bd = BidiagonalMatrix::new(vec![1.0; n as usize], e)?;
-        let d = DiagonalMatrix::from(d);
+        let d = DiagonalMatrix::new(d);
 
         Ok((bd, d))
     }

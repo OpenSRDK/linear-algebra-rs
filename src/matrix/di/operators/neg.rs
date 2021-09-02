@@ -18,7 +18,7 @@ mod tests {
     use crate::*;
     #[test]
     fn it_works() {
-        let a = -DiagonalMatrix::from(vec![1.0, 2.0]);
+        let a = -DiagonalMatrix::new(vec![1.0, 2.0]);
         assert_eq!(a[0], -1.0);
     }
 }

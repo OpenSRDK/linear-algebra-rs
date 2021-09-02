@@ -163,13 +163,13 @@ mod tests {
     use crate::*;
     #[test]
     fn add() {
-        let a = DiagonalMatrix::from(vec![2.0, 3.0]) + DiagonalMatrix::from(vec![4.0, 5.0]);
+        let a = DiagonalMatrix::new(vec![2.0, 3.0]) + DiagonalMatrix::new(vec![4.0, 5.0]);
         assert_eq!(a[0], 6.0);
     }
 
     #[test]
     fn add_mat() {
-        let a = DiagonalMatrix::from(vec![2.0, 3.0])
+        let a = DiagonalMatrix::new(vec![2.0, 3.0])
             + mat!(
               4.0, 5.0;
               6.0, 7.0

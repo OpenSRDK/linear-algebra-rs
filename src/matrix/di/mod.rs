@@ -47,3 +47,19 @@ where
         mat
     }
 }
+
+pub trait VectorDiag<T>
+where
+    T: Number,
+{
+    fn diag(self) -> DiagonalMatrix<T>;
+}
+
+impl<T> VectorDiag<T> for Vec<T>
+where
+    T: Number,
+{
+    fn diag(self) -> DiagonalMatrix<T> {
+        DiagonalMatrix::<T>::new(self)
+    }
+}

@@ -1,6 +1,5 @@
 use crate::{Matrix, Number};
 
-pub mod inv;
 pub mod operators;
 pub mod powf;
 pub mod powi;

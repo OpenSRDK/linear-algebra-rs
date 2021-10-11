@@ -100,3 +100,22 @@ where
     add(rhs, self)
   }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::*;
+    #[test]
+    fn it_works() {
+        let a = mat!(
+            1.0, 2.0;
+            3.0, 4.0
+        ) + mat!(
+            5.0, 6.0;
+            7.0, 8.0
+        );
+        assert_eq!(a[(0, 0)], 6.0);
+        assert_eq!(a[(0, 1)], 8.0);
+        assert_eq!(a[(1, 0)], 10.0);
+        assert_eq!(a[(1, 1)], 12.0);
+    }
+}

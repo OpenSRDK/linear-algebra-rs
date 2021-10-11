@@ -41,3 +41,28 @@ where
     &mut self.elems[index.0 + index.1 * self.rows]
   }
 }
+
+mod tests {
+  use crate::*;
+  #[test]
+  fn it_works() {
+      let a = mat!(
+          1.0, 2.0;
+          3.0, 4.0
+      );
+      assert_eq!(a[0], [1.0, 3.0]);
+      assert_eq!(a[1], [2.0, 4.0]);
+  }
+
+  #[test]
+  fn it_works2() {
+      let a = mat!(
+          1.0, 2.0;
+          3.0, 4.0
+      );
+      assert_eq!(a[(0, 0)], 1.0);
+      assert_eq!(a[(0, 1)], 2.0);
+      assert_eq!(a[(1, 0)], 3.0);
+      assert_eq!(a[(1, 1)], 4.0);
+  }
+}

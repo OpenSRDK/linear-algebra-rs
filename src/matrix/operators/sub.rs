@@ -98,3 +98,22 @@ where
         -sub(rhs, self)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::*;
+    #[test]
+    fn it_works() {
+        let a = mat!(
+            5.0, 6.0;
+            7.0, 8.0
+        ) - mat!(
+            1.0, 3.0;
+            5.0, 7.0
+        );
+        assert_eq!(a[(0, 0)], 4.0);
+        assert_eq!(a[(0, 1)], 3.0);
+        assert_eq!(a[(1, 0)], 2.0);
+        assert_eq!(a[(1, 1)], 1.0);
+    }
+}

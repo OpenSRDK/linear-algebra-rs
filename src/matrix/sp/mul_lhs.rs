@@ -13,7 +13,7 @@ where
 
   for i in 0..slf.rows() {
     for (&(j, k), &r) in rhs.elems.iter() {
-      new_matrix[i][k] += slf[i][j] * r;
+      new_matrix[i][k] += slf[j][i] * r;
     }
   }
 

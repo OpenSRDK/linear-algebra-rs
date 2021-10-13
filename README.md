@@ -32,7 +32,7 @@ use opensrdk_linear_algebra::*;
 
 ## Routine Naming
 
-- `bd`: **Bi**diagonal
+- `bd`: **B**i**d**iagonal
 - `ci`: **Ci**rculant
 - `di`: **Di**agonal
 - `ge`: **Ge**neral

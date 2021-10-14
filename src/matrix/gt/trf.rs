@@ -30,3 +30,4 @@ impl TridiagonalMatrix<f64> {
     Ok((l, u, ipiv))
   }
 }
+

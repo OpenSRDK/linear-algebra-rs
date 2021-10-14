@@ -1,17 +1,16 @@
 use crate::matrix::Matrix;
 use crate::number::c64;
+use rayon::prelude::*;
 
 impl Matrix<c64> {
     pub fn adjoint(&self) -> Matrix<c64> {
-        let mut new_matrix = Matrix::<c64>::new(self.cols, self.rows);
+        let elems = (0..self.rows)
+            .into_par_iter()
+            .flat_map(|i| (0..self.cols).into_par_iter().map(move |j| (i, j)))
+            .map(|(i, j)| self[(i, j)].conj())
+            .collect();
 
-        for j in 0..new_matrix.cols {
-            for i in 0..new_matrix.rows {
-                new_matrix[j][i] = c64::new(self[i][j].re, -1.0 * self[i][j].im);
-            }
-        }
-
-        new_matrix
+        Matrix::<c64>::from(self.cols, elems)
     }
 }
 

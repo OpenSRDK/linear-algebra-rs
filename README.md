@@ -32,6 +32,8 @@ use opensrdk_linear_algebra::*;
 
 ## Routine Naming
 
+### Prefix
+
 - `bd`: **B**i**d**iagonal
 - `ci`: **Ci**rculant
 - `di`: **Di**agonal
@@ -45,6 +47,8 @@ use opensrdk_linear_algebra::*;
 - `sy`: **Sy**mmetric
 - `to`: **To**eplitz
 - `tr`: **Tr**iangle
+
+### Suffix
 
 - `sv`: **S**ol**v**e
 - `trf`: **Tr**iangle **f**actorization

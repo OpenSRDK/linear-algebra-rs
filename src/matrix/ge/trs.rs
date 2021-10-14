@@ -96,3 +96,26 @@ impl Matrix<c64> {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::*;
+    #[test]
+    fn it_works() {
+        let a = mat!(
+            2.0, 1.0;
+            1.0, 1.0
+        );
+        let b = mat!(
+            3.0;
+            2.0
+        );
+        let result = a.clone().getrf().unwrap();
+        let x = result.0.getrs(&result.1, b).unwrap();
+        let ans = mat!(
+            1.0;
+            1.0
+        );
+        assert_eq!(x, ans);
+    }
+}

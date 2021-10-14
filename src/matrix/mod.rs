@@ -105,8 +105,11 @@ impl Matrix<f64> {
 }
 
 impl Matrix<c64> {
-    pub fn to_real(&self) -> Matrix<f64> {
-        Matrix::from(self.rows, self.elems.par_iter().map(|e| e.re).collect())
+    pub fn to_real(&self) -> (Matrix<f64>, Matrix<f64>) {
+        (
+            Matrix::from(self.rows, self.elems.par_iter().map(|e| e.re).collect()),
+            Matrix::from(self.rows, self.elems.par_iter().map(|e| e.im).collect()),
+        )
     }
 }
 

@@ -29,6 +29,7 @@ pub trait Number:
 {
     fn one() -> Self;
 }
+
 impl Number for f64 {
     fn one() -> Self {
         1.0

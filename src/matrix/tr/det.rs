@@ -9,7 +9,10 @@ where
     /// for triangle matrix
     /// To apply this method to none triangle matrix, use LU decomposition or Cholesky decomposition.
     pub fn trdet(&self) -> T {
-        (0..self.rows).into_par_iter().map(|i| self[i][i]).product()
+        (0..self.rows)
+            .into_par_iter()
+            .map(|i| self[(i, i)])
+            .product()
     }
 }
 

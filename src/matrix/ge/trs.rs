@@ -17,8 +17,7 @@ impl GETRF {
     /// \mathbf{x} = \mathbf{A}^{-1} \mathbf{b}
     /// $$
     pub fn getrs(&self, b: Matrix) -> Result<Matrix, MatrixError> {
-        let mat = &self.0;
-        let ipiv = &self.1;
+        let GETRF(mat, ipiv) = self;
 
         let n = mat.rows();
         if n != mat.cols() || n != b.rows {
@@ -67,8 +66,7 @@ impl GETRF<c64> {
     /// \mathbf{x} = \mathbf{A}^{-1} \mathbf{b}
     /// $$
     pub fn getrs(&self, bt: Matrix<c64>) -> Result<Matrix<c64>, MatrixError> {
-        let mat = &self.0;
-        let ipiv = &self.1;
+        let GETRF::<c64>(mat, ipiv) = self;
 
         let n = mat.rows();
         if n != mat.cols() || n != bt.cols {

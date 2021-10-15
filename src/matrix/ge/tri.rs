@@ -8,8 +8,7 @@ impl GETRF {
     /// # Inverse
     /// with matrix decomposed by getrf
     pub fn getri(self) -> Result<Matrix, MatrixError> {
-        let mut mat = self.0;
-        let ipiv = self.1;
+        let GETRF(mut mat, ipiv) = self;
 
         let n = mat.rows();
         if n != mat.cols() {
@@ -39,8 +38,7 @@ impl GETRF<c64> {
     /// # Inverse
     /// with matrix decomposed by getrf
     pub fn getri(self) -> Result<Matrix<c64>, MatrixError> {
-        let mut mat = self.0;
-        let ipiv = self.1;
+        let GETRF::<c64>(mut mat, ipiv) = self;
 
         let n = mat.rows();
         if n != mat.cols() {

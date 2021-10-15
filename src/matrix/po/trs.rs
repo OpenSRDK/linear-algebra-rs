@@ -1,9 +1,10 @@
+use super::trf::POTRF;
 use crate::matrix::Matrix;
 use crate::matrix::MatrixError;
 use crate::number::c64;
 use lapack::{dpotrs, zpotrs};
 
-impl Matrix {
+impl POTRF {
     /// # Solve equation
     ///
     /// with matrix decomposed by potrf
@@ -16,8 +17,9 @@ impl Matrix {
     /// \mathbf{x} = \mathbf{A}^{-1} \mathbf{b}
     /// $$
     pub fn potrs(&self, b: Matrix) -> Result<Matrix, MatrixError> {
-        let n = self.rows();
-        if n != self.cols() || n != b.rows {
+        let POTRF(mat) = self;
+        let n = mat.rows();
+        if n != mat.cols() {
             return Err(MatrixError::DimensionMismatch);
         }
 
@@ -31,7 +33,7 @@ impl Matrix {
                 'L' as u8,
                 n,
                 b.cols as i32,
-                &self.elems,
+                &mat.elems,
                 n,
                 &mut b.elems,
                 n,
@@ -49,7 +51,7 @@ impl Matrix {
     }
 }
 
-impl Matrix<c64> {
+impl POTRF<c64> {
     /// # Solve equation
     ///
     /// with matrix decomposed by potrf
@@ -62,8 +64,9 @@ impl Matrix<c64> {
     /// \mathbf{x} = \mathbf{A}^{-1} \mathbf{b}
     /// $$
     pub fn potrs(&self, b: Matrix<c64>) -> Result<Matrix<c64>, MatrixError> {
-        let n = self.rows();
-        if n != self.cols() || n != b.rows {
+        let POTRF::<c64>(mat) = self;
+        let n = mat.rows();
+        if n != mat.cols() {
             return Err(MatrixError::DimensionMismatch);
         }
 
@@ -77,7 +80,7 @@ impl Matrix<c64> {
                 'L' as u8,
                 n,
                 b.cols as i32,
-                &self.elems,
+                &mat.elems,
                 n,
                 &mut b.elems,
                 n,

@@ -1,12 +1,17 @@
 use crate::matrix::Matrix;
 use crate::matrix::MatrixError;
 use crate::number::c64;
+use crate::Number;
 use lapack::{dgetrf, zgetrf};
+
+pub struct GETRF<T = f64>(pub Matrix<T>, pub Vec<i32>)
+where
+    T: Number;
 
 impl Matrix {
     /// # LU decomposition
     /// for f64
-    pub fn getrf(self) -> Result<(Matrix, Vec<i32>), MatrixError> {
+    pub fn getrf(self) -> Result<GETRF, MatrixError> {
         let m = self.rows;
         let n = self.cols;
         let mut ipiv = vec![0; m.min(n)];
@@ -21,7 +26,7 @@ impl Matrix {
         }
 
         match info {
-            0 => Ok((slf, ipiv)),
+            0 => Ok(GETRF(slf, ipiv)),
             _ => Err(MatrixError::LapackRoutineError {
                 routine: "dgetrf".to_owned(),
                 info,
@@ -33,7 +38,7 @@ impl Matrix {
 impl Matrix<c64> {
     /// # LU decomposition
     /// for c64
-    pub fn getrf(self) -> Result<(Matrix<c64>, Vec<i32>), MatrixError> {
+    pub fn getrf(self) -> Result<GETRF<c64>, MatrixError> {
         let m = self.rows;
         let n = self.cols;
         let mut ipiv = vec![0; m.min(n)];
@@ -48,7 +53,7 @@ impl Matrix<c64> {
         }
 
         match info {
-            0 => Ok((slf, ipiv)),
+            0 => Ok(GETRF::<c64>(slf, ipiv)),
             _ => Err(MatrixError::LapackRoutineError {
                 routine: "zgetrf".to_owned(),
                 info,

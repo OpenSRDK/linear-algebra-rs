@@ -1,9 +1,10 @@
+use super::trf::GETRF;
 use crate::matrix::Matrix;
 use crate::matrix::MatrixError;
 use crate::number::c64;
 use lapack::{dgetrs, zgetrs};
 
-impl Matrix {
+impl GETRF {
     /// # Solve equation
     ///
     /// with matrix decomposed by getrf
@@ -15,9 +16,12 @@ impl Matrix {
     /// $$
     /// \mathbf{x} = \mathbf{A}^{-1} \mathbf{b}
     /// $$
-    pub fn getrs(&self, ipiv: &[i32], b: Matrix) -> Result<Matrix, MatrixError> {
-        let n = self.rows();
-        if n != self.cols() || n != b.rows {
+    pub fn getrs(&self, b: Matrix) -> Result<Matrix, MatrixError> {
+        let mat = &self.0;
+        let ipiv = &self.1;
+
+        let n = mat.rows();
+        if n != mat.cols() || n != b.rows {
             return Err(MatrixError::DimensionMismatch);
         }
 
@@ -31,7 +35,7 @@ impl Matrix {
                 'N' as u8,
                 n,
                 b.cols as i32,
-                &self.elems,
+                &mat.elems,
                 n,
                 ipiv,
                 &mut b.elems,
@@ -50,7 +54,7 @@ impl Matrix {
     }
 }
 
-impl Matrix<c64> {
+impl GETRF<c64> {
     /// # Solve equation
     ///
     /// with matrix decomposed by getrf
@@ -62,9 +66,12 @@ impl Matrix<c64> {
     /// $$
     /// \mathbf{x} = \mathbf{A}^{-1} \mathbf{b}
     /// $$
-    pub fn getrs(&self, ipiv: &[i32], bt: Matrix<c64>) -> Result<Matrix<c64>, MatrixError> {
-        let n = self.rows();
-        if n != self.cols() || n != bt.cols {
+    pub fn getrs(&self, bt: Matrix<c64>) -> Result<Matrix<c64>, MatrixError> {
+        let mat = &self.0;
+        let ipiv = &self.1;
+
+        let n = mat.rows();
+        if n != mat.cols() || n != bt.cols {
             return Err(MatrixError::DimensionMismatch);
         }
 
@@ -78,7 +85,7 @@ impl Matrix<c64> {
                 'T' as u8,
                 n,
                 bt.rows as i32,
-                &self.elems,
+                &mat.elems,
                 n,
                 ipiv,
                 &mut bt.elems,
@@ -111,7 +118,7 @@ mod tests {
             2.0
         );
         let result = a.clone().getrf().unwrap();
-        let x = result.0.getrs(&result.1, b).unwrap();
+        let x = result.getrs(b).unwrap();
         let ans = mat!(
             1.0;
             1.0

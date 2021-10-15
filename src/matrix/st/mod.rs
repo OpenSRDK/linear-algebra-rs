@@ -1,5 +1,6 @@
 use crate::matrix::*;
 use crate::number::Number;
+use rayon::prelude::*;
 
 pub mod ev;
 pub mod evd;
@@ -45,14 +46,23 @@ where
         let n = self.d.len();
         let mut mat = Matrix::new(n, n);
 
-        for i in 0..n {
-            mat[i][i] = self.d[i];
-        }
+        // for i in 0..n {
+        //     mat[i][i] = self.d[i];
+        // }
 
-        for i in 0..n - 1 {
+        // for i in 0..n - 1 {
+        //     mat[i][i + 1] = self.e[i];
+        //     mat[i + 1][i] = self.e[i];
+        // }
+
+        (0..n).into_par_iter().for_each(|i| {
+            mat[i][i] = self.d[i];
+        });
+
+        (0..n - 1).into_par_iter().for_each(|i| {
             mat[i][i + 1] = self.e[i];
             mat[i + 1][i] = self.e[i];
-        }
+        });
 
         mat
     }

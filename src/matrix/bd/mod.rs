@@ -1,5 +1,4 @@
 use crate::{matrix::*, number::Number};
-use rayon::prelude::*;
 
 #[derive(Clone, Debug, Default, Hash)]
 pub struct BidiagonalMatrix<T = f64>
@@ -41,17 +40,20 @@ where
     pub fn mat(&self, upper: bool) -> Matrix<T> {
         let n = self.d.len();
         let mut mat = Matrix::new(n, n);
-        (0..n).into_par_iter().for_each(|i| mat[i][i] = self.d[i]);
 
-        if upper {
-            (0..n - 1)
-                .into_par_iter()
-                .for_each(|i| mat[i + 1][i] = self.e[i]);
-        } else {
-            (0..n - 1)
-                .into_par_iter()
-                .for_each(|i| mat[i][i + 1] = self.e[i]);
-        }
+        mat.elems
+            .par_iter_mut()
+            .enumerate()
+            .map(|(k, elem)| ((k / n, k % n), elem))
+            .for_each(|((i, j), elem)| {
+                if i == j {
+                    *elem = self.d[i];
+                } else if i + 1 == j && upper {
+                    *elem = self.e[i];
+                } else if i == j + 1 && !upper {
+                    *elem = self.e[j];
+                }
+            });
 
         mat
     }

@@ -13,6 +13,8 @@ impl<T> BidiagonalMatrix<T>
 where
     T: Number,
 {
+    /// `d`: diagonal elements
+    /// `e`: first superdiagonal or subdiagonal elements
     pub fn new(d: Vec<T>, e: Vec<T>) -> Result<Self, MatrixError> {
         if d.len().max(1) - 1 != e.len() {
             return Err(MatrixError::DimensionMismatch);
@@ -25,10 +27,12 @@ where
         self.d.len()
     }
 
+    /// diagonal elements
     pub fn d(&self) -> &[T] {
         &self.d
     }
 
+    /// first superdiagonal or subdiagonal elements
     pub fn e(&self) -> &[T] {
         &self.e
     }

@@ -2,22 +2,24 @@ use crate::{
     matrix::{Matrix, MatrixError, Vector},
     st::SymmetricTridiagonalMatrix,
 };
-use lapack::{dorgtr, dsytrd};
+use lapack::dsytrd;
 use std::error::Error;
+
+pub struct SYTRD(pub Matrix, pub Vec<f64>, pub SymmetricTridiagonalMatrix);
 
 impl Matrix {
     /// # Tridiagonalize
     /// for symmetric matrix
-    pub fn sytrd(self) -> Result<(Matrix, SymmetricTridiagonalMatrix), MatrixError> {
+    pub fn sytrd(self) -> Result<SYTRD, MatrixError> {
         if self.rows != self.cols {
             return Err(MatrixError::DimensionMismatch);
         }
-        let n = self.rows as i32;
-        let mut slf = self;
-        let mut d = vec![0.0; slf.rows];
-        let mut e = vec![0.0; slf.rows.max(1) - 1];
-        let mut tau = vec![0.0; slf.rows.max(1) - 1];
-        let lwork = 2 * slf.rows;
+        let mut mat = self;
+        let n = mat.rows as i32;
+        let mut d = vec![0.0; mat.rows];
+        let mut e = vec![0.0; mat.rows.max(1) - 1];
+        let mut tau = vec![0.0; mat.rows.max(1) - 1];
+        let lwork = 2 * mat.rows;
         let mut work = vec![0.0; lwork];
         let mut info = 0;
 
@@ -25,7 +27,7 @@ impl Matrix {
             dsytrd(
                 'L' as u8,
                 n,
-                &mut slf.elems,
+                &mut mat.elems,
                 n,
                 &mut d,
                 &mut e,
@@ -40,23 +42,11 @@ impl Matrix {
                     info,
                 });
             }
-
-            dorgtr(
-                'L' as u8,
-                n,
-                &mut slf.elems,
-                n,
-                &tau,
-                &mut work,
-                lwork as i32,
-                &mut info,
-            )
         }
 
-        let v = slf;
         let t = SymmetricTridiagonalMatrix::new(d, e)?;
 
-        Ok((v, t))
+        Ok(SYTRD(mat, tau, t))
     }
 
     /// # Lanczos algorithm

@@ -10,6 +10,7 @@ pub mod gt;
 pub mod kr;
 pub mod operations;
 pub mod operators;
+pub mod or;
 pub mod po;
 pub mod pt;
 pub mod sp;

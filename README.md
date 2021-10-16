@@ -40,6 +40,7 @@ use opensrdk_linear_algebra::*;
 - `ge`: **Ge**neral
 - `gt`: **G**eneral **t**ridiagonal
 - `kr`: **Kr**onecker
+- `or`: **Or**thogonal
 - `po`: **Po**sitive definite
 - `pt`: **P**ositive definite **t**ridiagonal
 - `sp`: **Sp**arse

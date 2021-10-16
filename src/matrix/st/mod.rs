@@ -18,7 +18,7 @@ where
     T: Number,
 {
     /// `d`: diagonal elements
-    /// `e`: both upper and lower diagonal elements
+    /// `e`: first both superdiagonal and subdiagonal elements
     pub fn new(d: Vec<T>, e: Vec<T>) -> Result<Self, MatrixError> {
         if d.len().max(1) - 1 != e.len() {
             return Err(MatrixError::DimensionMismatch);
@@ -36,7 +36,7 @@ where
         &self.d
     }
 
-    /// both upper and lower diagonal elements
+    /// first both superdiagonal and subdiagonal elements
     pub fn e(&self) -> &[T] {
         &self.e
     }

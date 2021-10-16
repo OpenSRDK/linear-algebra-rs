@@ -1,5 +1,6 @@
 use crate::matrix::ci::CirculantMatrix;
 use crate::{matrix::MatrixError, number::Number};
+use rayon::prelude::*;
 
 #[derive(Clone, Debug, Default, Hash)]
 pub struct ToeplitzMatrix<T = f64>
@@ -48,8 +49,8 @@ where
 
     pub fn embedded_circulant(&self) -> CirculantMatrix<T> {
         let row = (0..self.dim)
-            .into_iter()
-            .chain((1..self.dim - 1).rev().into_iter())
+            .into_par_iter()
+            .chain((1..self.dim - 1).into_par_iter().rev())
             .map(|i| self.row_elems[i])
             .collect();
 

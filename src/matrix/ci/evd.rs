@@ -12,14 +12,23 @@ impl CirculantMatrix<f64> {
         let mut fourier_matrix: Matrix<c64> = Matrix::<c64>::new(n, n);
         let omega = c64::new(0.0, 2.0 * PI / (n as f64)).exp();
 
-        for i in 0..n {
-            for j in 0..i {
-                fourier_matrix[i][j] = fourier_matrix[j][i];
-            }
-            for j in i..n {
-                fourier_matrix[i][j] = omega.powi((i * j) as i32);
-            }
-        }
+        // for i in 0..n {
+        //     for j in 0..i {
+        //         fourier_matrix[i][j] = fourier_matrix[j][i];
+        //     }
+        //     for j in i..n {
+        //         fourier_matrix[i][j] = omega.powi((i * j) as i32);
+        //     }
+        // }
+
+        fourier_matrix
+            .elems
+            .par_iter_mut()
+            .enumerate()
+            .map(|(k, elem)| ((k / n, k % n), elem))
+            .for_each(|((i, j), elem)| {
+                *elem = omega.powi((i * j) as i32);
+            });
 
         let mut buffer = row_elems
             .par_iter()

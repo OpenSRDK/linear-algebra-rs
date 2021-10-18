@@ -10,7 +10,7 @@ impl Matrix<c64> {
             .map(|(i, j)| self[(i, j)].conj())
             .collect();
 
-        Matrix::<c64>::from(self.cols, elems)
+        Matrix::<c64>::from(self.cols, elems).unwrap()
     }
 }
 

@@ -8,15 +8,10 @@ pub mod di;
 pub mod ge;
 pub mod gt;
 pub mod kr;
-pub mod operations;
-pub mod operators;
-pub mod or;
-pub mod po;
 pub mod pt;
-pub mod sp;
+pub mod sp_hp;
 pub mod ss;
-pub mod st;
-pub mod sy;
+pub mod st_ht;
 pub mod to;
 pub mod tr;
 

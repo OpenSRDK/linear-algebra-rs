@@ -47,15 +47,29 @@ where
         let n = self.d.len();
         let mut mat = Matrix::new(n, n);
 
-        for i in 0..n {
-            mat[i][i] = self.d[i];
-        }
+        // for i in 0..n {
+        //     mat[i][i] = self.d[i];
+        // }
 
-        for i in 0..n - 1 {
-            mat[i][i + 1] = self.du[i];
-            mat[i + 1][i] = self.dl[i];
-        }
+        // for i in 0..n - 1 {
+        //     mat[i][i + 1] = self.du[i];
+        //     mat[i + 1][i] = self.dl[i];
+        // }
 
+        mat.elems
+            .par_iter_mut()
+            .enumerate()
+            .map(|(k, elem)| ((k / n, k % n), elem))
+            .for_each(|((i, j), elem)| {
+                if i == j {
+                    *elem = self.d[i];
+                } else if i + 1 == j {
+                    *elem = self.du[i];
+                } else if i == j + 1 {
+                    *elem = self.dl[j];
+                }
+            });
+ 
         mat
     }
 }

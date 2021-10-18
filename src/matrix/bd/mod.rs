@@ -45,6 +45,20 @@ where
         let n = self.d.len();
         let mut mat = Matrix::new(n, n);
 
+        // for i in 0..n {
+        //   mat[i][i] = self.d[i]
+        // }
+
+        // if upper {
+        //     for i in 0..n - 1 {
+        //         mat[i + 1][i] = self.e[i];
+        //     }
+        // } else {
+        //     for i in 0..n - 1 {
+        //         mat[i][i + 1] = self.e[i];
+        //     }
+        // }
+
         mat.elems
             .par_iter_mut()
             .enumerate()

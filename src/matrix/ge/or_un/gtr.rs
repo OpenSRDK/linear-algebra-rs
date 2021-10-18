@@ -1,4 +1,4 @@
-use crate::{sy::trd::SYTRD, Matrix, MatrixError, SymmetricTridiagonalMatrix};
+use crate::{ge::sy_he::trd::SYTRD, Matrix, MatrixError, SymmetricTridiagonalMatrix};
 use lapack::dorgtr;
 
 impl SYTRD {

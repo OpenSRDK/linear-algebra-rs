@@ -9,7 +9,23 @@ extern crate thiserror;
 
 pub use crate::{
     matrix::{
-        bd::*, ci::*, di::*, ge::*, gt::*, kr::*, po::*, pt::*, ss::*, st::*, to::*, tr::*, *,
+        bd::*,
+        ci::*,
+        di::*,
+        ge::{
+            or_un::*,
+            sy_he::{po::*, *},
+            *,
+        },
+        gt::*,
+        kr::*,
+        pt::*,
+        sp_hp::{pp::*, *},
+        ss::*,
+        st_ht::*,
+        to::*,
+        tr::*,
+        *,
     },
     number::*,
 };

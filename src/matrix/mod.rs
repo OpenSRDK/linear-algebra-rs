@@ -56,6 +56,7 @@ where
         }
     }
 
+    /// You can do `unwrap()` if you have a conviction that `elems.len() % rows == 0`
     pub fn from(rows: usize, elems: Vec<T>) -> Result<Self, MatrixError> {
         let cols = elems.len() / rows;
 

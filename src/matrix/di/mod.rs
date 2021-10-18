@@ -40,17 +40,19 @@ where
     pub fn mat(&self) -> Matrix<T> {
         let n = self.d.len();
         let mut mat = Matrix::<T>::new(n, n);
+
         // for i in 0..n {
         //     mat[i][i] = self.d[i];
         // }
+
         mat.elems
             .par_iter_mut()
             .enumerate()
             .map(|(k, elem)| ((k / n, k % n), elem))
             .for_each(|((i, j), elem)| {
-              if i == j {
-                *elem = self.d[i];
-              }
+                if i == j {
+                    *elem = self.d[i];
+                }
             });
 
         mat

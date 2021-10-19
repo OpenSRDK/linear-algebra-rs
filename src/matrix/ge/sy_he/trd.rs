@@ -111,7 +111,7 @@ impl Matrix {
             }
         }
 
-        let q = Matrix::from(n, v.concat());
+        let q = Matrix::from(n, v.concat()).unwrap();
         let t = SymmetricTridiagonalMatrix::new(d, e)?;
 
         Ok((q, t))

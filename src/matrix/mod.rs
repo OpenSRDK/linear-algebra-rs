@@ -56,12 +56,15 @@ where
         }
     }
 
-    pub fn from(rows: usize, elems: Vec<T>) -> Self {
-        Self {
-            rows,
-            cols: elems.len() / rows,
-            elems,
+    /// You can do `unwrap()` if you have a conviction that `elems.len() % rows == 0`
+    pub fn from(rows: usize, elems: Vec<T>) -> Result<Self, MatrixError> {
+        let cols = elems.len() / rows;
+
+        if elems.len() != rows * cols {
+            return Err(MatrixError::DimensionMismatch);
         }
+
+        Ok(Self { rows, cols, elems })
     }
 
     pub fn same_size(&self, rhs: &Matrix<T>) -> bool {
@@ -98,14 +101,15 @@ impl Matrix<f64> {
             self.rows,
             self.elems.par_iter().map(|&e| c64::new(e, 0.0)).collect(),
         )
+        .unwrap()
     }
 }
 
 impl Matrix<c64> {
     pub fn to_real(&self) -> (Matrix<f64>, Matrix<f64>) {
         (
-            Matrix::from(self.rows, self.elems.par_iter().map(|e| e.re).collect()),
-            Matrix::from(self.rows, self.elems.par_iter().map(|e| e.im).collect()),
+            Matrix::from(self.rows, self.elems.par_iter().map(|e| e.re).collect()).unwrap(),
+            Matrix::from(self.rows, self.elems.par_iter().map(|e| e.im).collect()).unwrap(),
         )
     }
 }
@@ -123,10 +127,10 @@ where
     T: Number,
 {
     fn row_mat(self) -> Matrix<T> {
-        Matrix::<T>::from(1, self)
+        Matrix::<T>::from(1, self).unwrap()
     }
 
     fn col_mat(self) -> Matrix<T> {
-        Matrix::<T>::from(self.len(), self)
+        Matrix::<T>::from(self.len(), self).unwrap()
     }
 }

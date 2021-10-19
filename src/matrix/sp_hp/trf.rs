@@ -50,7 +50,7 @@ impl SymmetricPackedMatrix<c64> {
         let mut info = 0;
         let mut slf = self;
         let mut ipiv = vec![0; n];
-        let mut n = n as i32;
+        let n = n as i32;
 
         unsafe {
             zhptrf('L' as u8, n, &mut slf.elems, &mut ipiv, &mut info);

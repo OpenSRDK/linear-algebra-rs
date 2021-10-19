@@ -44,8 +44,10 @@ where
     pub fn eject(self) -> (Vec<T>, Vec<T>) {
         (self.d, self.e)
     }
+}
 
-    pub fn mat(&self) -> Matrix<T> {
+impl SymmetricTridiagonalMatrix {
+    pub fn mat(&self) -> Matrix {
         let n = self.d.len();
         let mut mat = Matrix::new(n, n);
 
@@ -69,6 +71,29 @@ where
                     *elem = self.e[i];
                 } else if i == j + 1 {
                     *elem = self.e[j];
+                }
+            });
+
+        mat
+    }
+}
+
+impl SymmetricTridiagonalMatrix<c64> {
+    pub fn mat(&self, hermite: bool) -> Matrix<c64> {
+        let n = self.d.len();
+        let mut mat = Matrix::new(n, n);
+
+        mat.elems
+            .par_iter_mut()
+            .enumerate()
+            .map(|(k, elem)| ((k / n, k % n), elem))
+            .for_each(|((i, j), elem)| {
+                if i == j {
+                    *elem = self.d[i];
+                } else if i + 1 == j {
+                    *elem = self.e[i];
+                } else if i == j + 1 {
+                    *elem = if hermite { self.e[j].conj() } else { self.e[j] };
                 }
             });
 

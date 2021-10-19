@@ -1,12 +1,12 @@
-use super::trf::SPHPTRF;
+use super::trf::{HPTRF, SPTRF};
 use crate::number::c64;
 use crate::{matrix::MatrixError, Matrix};
-use lapack::{dpptrs, zpptrs};
+use lapack::{dsptrs, zhptrs, zsptrs};
 
-impl SPHPTRF {
+impl SPTRF {
     /// # Solve equation
     ///
-    /// with matrix decomposed by pptrs
+    /// with matrix decomposed by sptrf
     ///
     /// $$
     /// \mathbf{A} \mathbf{x} = \mathbf{b}
@@ -15,8 +15,8 @@ impl SPHPTRF {
     /// $$
     /// \mathbf{x} = \mathbf{A}^{-1} \mathbf{b}
     /// $$
-    pub fn pptrs(&self, b: Matrix) -> Result<Matrix, MatrixError> {
-        let SPHPTRF(mat) = self;
+    pub fn sptrs(&self, b: Matrix) -> Result<Matrix, MatrixError> {
+        let SPTRF(mat, ipiv) = self;
         let n = mat.dim();
 
         let mut info = 0;
@@ -25,11 +25,12 @@ impl SPHPTRF {
         let mut b = b;
 
         unsafe {
-            dpptrs(
+            dsptrs(
                 'L' as u8,
                 n,
                 b.cols as i32,
                 &mat.elems,
+                &ipiv,
                 &mut b.elems,
                 n,
                 &mut info,
@@ -39,17 +40,17 @@ impl SPHPTRF {
         match info {
             0 => Ok(b),
             _ => Err(MatrixError::LapackRoutineError {
-                routine: "dpptrs".to_owned(),
+                routine: "dsptrs".to_owned(),
                 info,
             }),
         }
     }
 }
 
-impl SPHPTRF<c64> {
+impl SPTRF<c64> {
     /// # Solve equation
     ///
-    /// with matrix decomposed by pptrs
+    /// with matrix decomposed by sptrf
     ///
     /// $$
     /// \mathbf{A} \mathbf{x} = \mathbf{b}
@@ -58,8 +59,8 @@ impl SPHPTRF<c64> {
     /// $$
     /// \mathbf{x} = \mathbf{A}^{-1} \mathbf{b}
     /// $$
-    pub fn pptrs(&self, b: Matrix<c64>) -> Result<Matrix<c64>, MatrixError> {
-        let SPHPTRF::<c64>(mat) = self;
+    pub fn sptrs(&self, b: Matrix<c64>) -> Result<Matrix<c64>, MatrixError> {
+        let SPTRF::<c64>(mat, ipiv) = self;
         let n = mat.dim();
 
         let mut info = 0;
@@ -68,11 +69,12 @@ impl SPHPTRF<c64> {
         let mut b = b;
 
         unsafe {
-            zpptrs(
+            zsptrs(
                 'L' as u8,
                 n,
                 b.cols as i32,
                 &mat.elems,
+                &ipiv,
                 &mut b.elems,
                 n,
                 &mut info,
@@ -82,7 +84,51 @@ impl SPHPTRF<c64> {
         match info {
             0 => Ok(b),
             _ => Err(MatrixError::LapackRoutineError {
-                routine: "zpptrs".to_owned(),
+                routine: "zsptrs".to_owned(),
+                info,
+            }),
+        }
+    }
+}
+
+impl HPTRF {
+    /// # Solve equation
+    ///
+    /// with matrix decomposed by hptrf
+    ///
+    /// $$
+    /// \mathbf{A} \mathbf{x} = \mathbf{b}
+    /// $$
+    ///
+    /// $$
+    /// \mathbf{x} = \mathbf{A}^{-1} \mathbf{b}
+    /// $$
+    pub fn hptrs(&self, b: Matrix<c64>) -> Result<Matrix<c64>, MatrixError> {
+        let HPTRF(mat, ipiv) = self;
+        let n = mat.dim();
+
+        let mut info = 0;
+
+        let n = n as i32;
+        let mut b = b;
+
+        unsafe {
+            zhptrs(
+                'L' as u8,
+                n,
+                b.cols as i32,
+                &mat.elems,
+                &ipiv,
+                &mut b.elems,
+                n,
+                &mut info,
+            );
+        }
+
+        match info {
+            0 => Ok(b),
+            _ => Err(MatrixError::LapackRoutineError {
+                routine: "zhptrs".to_owned(),
                 info,
             }),
         }
@@ -102,7 +148,7 @@ mod tests {
             2.0, 4.0
         ];
         let l = c.sptrf().unwrap();
-        let x_t = l.pptrs(b).unwrap();
+        let x_t = l.sptrs(b).unwrap();
 
         println!("{:#?}", x_t);
         // assert_eq!(x_t[0][0], 0.0);

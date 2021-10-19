@@ -1,7 +1,8 @@
-use crate::number::Number;
+use crate::number::*;
 use crate::MatrixError;
 
 pub mod trf;
+pub mod tri;
 pub mod trs;
 
 pub mod pp;
@@ -37,11 +38,15 @@ where
         self.dim
     }
 
-    pub fn vec(self) -> Vec<T> {
+    pub fn eject(self) -> Vec<T> {
         self.elems
     }
 
-    pub fn slice(&self) -> &[T] {
+    pub fn elems(&self) -> &[T] {
         &self.elems
+    }
+
+    pub fn elems_mut(&mut self) -> &mut [T] {
+        &mut self.elems
     }
 }

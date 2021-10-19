@@ -1,6 +1,9 @@
 use crate::number::Number;
 use crate::MatrixError;
 
+pub mod trf;
+pub mod trs;
+
 pub mod pp;
 
 pub struct SymmetricPackedMatrix<T = f64>

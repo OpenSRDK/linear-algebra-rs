@@ -1,11 +1,11 @@
 use crate::number::*;
 use crate::MatrixError;
 
+pub mod pp;
+
 pub mod trf;
 pub mod tri;
 pub mod trs;
-
-pub mod pp;
 
 pub struct SymmetricPackedMatrix<T = f64>
 where

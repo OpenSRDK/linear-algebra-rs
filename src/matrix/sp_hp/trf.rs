@@ -2,20 +2,17 @@ use crate::matrix::MatrixError;
 use crate::number::c64;
 use crate::Number;
 use crate::SymmetricPackedMatrix;
-use lapack::{dsptrf, zhptrf};
+use lapack::{dsptrf, zhptrf, zsptrf};
 
-pub struct SPHPTRF<T = f64>(pub SymmetricPackedMatrix<T>)
+pub struct SPTRF<T = f64>(pub SymmetricPackedMatrix<T>, pub Vec<i32>)
 where
     T: Number;
 
+pub struct HPTRF(pub SymmetricPackedMatrix<c64>, pub Vec<i32>);
+
 impl SymmetricPackedMatrix {
-    /// # Cholesky decomposition
-    /// for positive definite f64 SymmetricPackedMatrix
     ///
-    /// https://en.wikipedia.org/wiki/Cholesky_decomposition
-    ///
-    /// `A = L * L^T`
-    pub fn sptrf(self) -> Result<SPHPTRF, MatrixError> {
+    pub fn sptrf(self) -> Result<SPTRF, MatrixError> {
         let n = self.dim;
 
         let mut info = 0;
@@ -28,7 +25,7 @@ impl SymmetricPackedMatrix {
         }
 
         match info {
-            0 => Ok(SPHPTRF(slf)),
+            0 => Ok(SPTRF(slf, ipiv)),
             _ => Err(MatrixError::LapackRoutineError {
                 routine: "dsptrf".to_owned(),
                 info,
@@ -38,13 +35,30 @@ impl SymmetricPackedMatrix {
 }
 
 impl SymmetricPackedMatrix<c64> {
-    /// # Cholesky decomposition
-    /// for positive definite c64 matrix
     ///
-    /// https://en.wikipedia.org/wiki/Cholesky_decomposition
+    pub fn sptrf(self) -> Result<SPTRF<c64>, MatrixError> {
+        let n = self.dim;
+
+        let mut info = 0;
+        let mut slf = self;
+        let mut ipiv = vec![0; n];
+        let n = n as i32;
+
+        unsafe {
+            zsptrf('L' as u8, n, &mut slf.elems, &mut ipiv, &mut info);
+        }
+
+        match info {
+            0 => Ok(SPTRF::<c64>(slf, ipiv)),
+            _ => Err(MatrixError::LapackRoutineError {
+                routine: "zsptrf".to_owned(),
+                info,
+            }),
+        }
+    }
+
     ///
-    /// `A = L * L^*`
-    pub fn hptrf(self) -> Result<SPHPTRF<c64>, MatrixError> {
+    pub fn hptrf(self) -> Result<HPTRF, MatrixError> {
         let n = self.dim;
 
         let mut info = 0;
@@ -57,7 +71,7 @@ impl SymmetricPackedMatrix<c64> {
         }
 
         match info {
-            0 => Ok(SPHPTRF::<c64>(slf)),
+            0 => Ok(HPTRF(slf, ipiv)),
             _ => Err(MatrixError::LapackRoutineError {
                 routine: "zhptrf".to_owned(),
                 info,

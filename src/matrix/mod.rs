@@ -11,7 +11,7 @@ pub mod kr;
 pub mod pt;
 pub mod sp_hp;
 pub mod ss;
-pub mod st_ht;
+pub mod st;
 pub mod to;
 pub mod tr;
 

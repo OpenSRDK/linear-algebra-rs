@@ -1,9 +1,9 @@
-use super::trf::{HPTRF, SPTRF};
+use super::trf::{HETRF, SYTRF};
 use crate::number::c64;
 use crate::{matrix::MatrixError, Matrix};
-use lapack::{dsptrs, zhptrs, zsptrs};
+use lapack::{dsytrs, zhetrs, zsytrs};
 
-impl SPTRF {
+impl SYTRF {
     /// # Solve equation
     ///
     /// with matrix decomposed by sptrf
@@ -15,9 +15,12 @@ impl SPTRF {
     /// $$
     /// \mathbf{x} = \mathbf{A}^{-1} \mathbf{b}
     /// $$
-    pub fn sptrs(&self, b: Matrix) -> Result<Matrix, MatrixError> {
-        let SPTRF(mat, ipiv) = self;
-        let n = mat.dim();
+    pub fn sytrs(&self, b: Matrix) -> Result<Matrix, MatrixError> {
+        let SYTRF(mat, ipiv) = self;
+        let n = mat.rows;
+        if n != mat.cols {
+            return Err(MatrixError::DimensionMismatch);
+        }
 
         let mut info = 0;
 
@@ -25,11 +28,12 @@ impl SPTRF {
         let mut b = b;
 
         unsafe {
-            dsptrs(
+            dsytrs(
                 'L' as u8,
                 n,
                 b.cols as i32,
                 &mat.elems,
+                n,
                 &ipiv,
                 &mut b.elems,
                 n,
@@ -40,14 +44,14 @@ impl SPTRF {
         match info {
             0 => Ok(b),
             _ => Err(MatrixError::LapackRoutineError {
-                routine: "dsptrs".to_owned(),
+                routine: "dsytrs".to_owned(),
                 info,
             }),
         }
     }
 }
 
-impl SPTRF<c64> {
+impl SYTRF<c64> {
     /// # Solve equation
     ///
     /// with matrix decomposed by sptrf
@@ -59,9 +63,12 @@ impl SPTRF<c64> {
     /// $$
     /// \mathbf{x} = \mathbf{A}^{-1} \mathbf{b}
     /// $$
-    pub fn sptrs(&self, b: Matrix<c64>) -> Result<Matrix<c64>, MatrixError> {
-        let SPTRF::<c64>(mat, ipiv) = self;
-        let n = mat.dim();
+    pub fn sytrs(&self, b: Matrix<c64>) -> Result<Matrix<c64>, MatrixError> {
+        let SYTRF::<c64>(mat, ipiv) = self;
+        let n = mat.rows;
+        if n != mat.cols {
+            return Err(MatrixError::DimensionMismatch);
+        }
 
         let mut info = 0;
 
@@ -69,11 +76,12 @@ impl SPTRF<c64> {
         let mut b = b;
 
         unsafe {
-            zsptrs(
+            zsytrs(
                 'L' as u8,
                 n,
                 b.cols as i32,
                 &mat.elems,
+                n,
                 &ipiv,
                 &mut b.elems,
                 n,
@@ -84,14 +92,14 @@ impl SPTRF<c64> {
         match info {
             0 => Ok(b),
             _ => Err(MatrixError::LapackRoutineError {
-                routine: "zsptrs".to_owned(),
+                routine: "zsytrs".to_owned(),
                 info,
             }),
         }
     }
 }
 
-impl HPTRF {
+impl HETRF {
     /// # Solve equation
     ///
     /// with matrix decomposed by hptrf
@@ -103,9 +111,12 @@ impl HPTRF {
     /// $$
     /// \mathbf{x} = \mathbf{A}^{-1} \mathbf{b}
     /// $$
-    pub fn hptrs(&self, b: Matrix<c64>) -> Result<Matrix<c64>, MatrixError> {
-        let HPTRF(mat, ipiv) = self;
-        let n = mat.dim();
+    pub fn hetrs(&self, b: Matrix<c64>) -> Result<Matrix<c64>, MatrixError> {
+        let HETRF(mat, ipiv) = self;
+        let n = mat.rows;
+        if n != mat.cols {
+            return Err(MatrixError::DimensionMismatch);
+        }
 
         let mut info = 0;
 
@@ -113,11 +124,12 @@ impl HPTRF {
         let mut b = b;
 
         unsafe {
-            zhptrs(
+            zhetrs(
                 'L' as u8,
                 n,
                 b.cols as i32,
                 &mat.elems,
+                n,
                 &ipiv,
                 &mut b.elems,
                 n,
@@ -128,7 +140,7 @@ impl HPTRF {
         match info {
             0 => Ok(b),
             _ => Err(MatrixError::LapackRoutineError {
-                routine: "zhptrs".to_owned(),
+                routine: "zhetrs".to_owned(),
                 info,
             }),
         }

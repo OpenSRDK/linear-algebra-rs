@@ -1,6 +1,6 @@
 use crate::matrix::*;
 use crate::DiagonalMatrix;
-use crate::{bd::BidiagonalMatrix, matrix::st_ht::SymmetricTridiagonalMatrix};
+use crate::{bd::BidiagonalMatrix, matrix::st::SymmetricTridiagonalMatrix};
 use lapack::dpttrf;
 use lapack::zpttrf;
 

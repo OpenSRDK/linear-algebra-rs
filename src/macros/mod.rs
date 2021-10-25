@@ -2,8 +2,10 @@ pub mod stack;
 pub mod sub_matrix;
 pub mod zeros;
 
-///
+/// Usage:
 /// ```
+/// use opensrdk_linear_algebra::*;
+///
 /// let a = mat!(
 ///   1.0, 2.0;
 ///   3.0, 4.0

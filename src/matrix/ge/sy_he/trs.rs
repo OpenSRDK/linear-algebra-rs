@@ -1,6 +1,6 @@
 use super::trf::{HETRF, SYTRF};
 use crate::number::c64;
-use crate::{matrix::MatrixError, Matrix};
+use crate::{matrix::MatrixError, ge::Matrix};
 use lapack::{dsytrs, zhetrs, zsytrs};
 
 impl SYTRF {

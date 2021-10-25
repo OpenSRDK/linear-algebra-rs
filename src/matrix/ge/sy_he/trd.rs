@@ -1,6 +1,7 @@
 use crate::{
-    matrix::{Matrix, MatrixError, Vector},
+    matrix::{ge::Vector, MatrixError},
     st::SymmetricTridiagonalMatrix,
+    Matrix,
 };
 use lapack::dsytrd;
 use std::error::Error;

@@ -22,7 +22,7 @@ fn mul_di<T>(lhs: DiagonalMatrix<T>, rhs: &DiagonalMatrix<T>) -> DiagonalMatrix<
 where
     T: Number,
 {
-    if lhs.n() != rhs.n() {
+    if lhs.dim() != rhs.dim() {
         panic!("Dimension mismatch.")
     }
 

@@ -1,5 +1,5 @@
 use super::trf::PPTRF;
-use crate::matrix::Matrix;
+use crate::matrix::ge::Matrix;
 use crate::matrix::MatrixError;
 use crate::number::c64;
 use lapack::{dpptrs, zpptrs};
@@ -29,9 +29,9 @@ impl PPTRF {
             dpptrs(
                 'L' as u8,
                 n,
-                b.cols as i32,
+                b.cols() as i32,
                 &mat.elems,
-                &mut b.elems,
+                b.elems_mut(),
                 n,
                 &mut info,
             );
@@ -72,9 +72,9 @@ impl PPTRF<c64> {
             zpptrs(
                 'L' as u8,
                 n,
-                b.cols as i32,
+                b.cols() as i32,
                 &mat.elems,
-                &mut b.elems,
+                b.elems_mut(),
                 n,
                 &mut info,
             );

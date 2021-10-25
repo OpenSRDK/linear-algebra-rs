@@ -1,5 +1,5 @@
 use super::trf::GETRF;
-use crate::matrix::Matrix;
+use crate::matrix::ge::Matrix;
 use crate::matrix::MatrixError;
 use crate::number::c64;
 use lapack::{dgetrs, zgetrs};

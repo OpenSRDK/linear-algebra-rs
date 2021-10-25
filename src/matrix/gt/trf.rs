@@ -12,7 +12,7 @@ impl TridiagonalMatrix {
     /// # LU decomposition
     /// for tridiagonal matrix
     pub fn gttrf(self) -> Result<GTTRF, MatrixError> {
-        let (mut dl, mut d, mut du) = self.elems();
+        let (mut dl, mut d, mut du) = self.eject();
         let n = d.len();
         let mut du2 = vec![0.0; n.max(2) - 2];
         let mut ipiv = vec![0; n];
@@ -39,7 +39,7 @@ impl TridiagonalMatrix<c64> {
     /// # LU decomposition
     /// for tridiagonal matrix
     pub fn gttrf(self) -> Result<GTTRF<c64>, MatrixError> {
-        let (mut dl, mut d, mut du) = self.elems();
+        let (mut dl, mut d, mut du) = self.eject();
         let n = d.len();
         let mut du2 = vec![c64::default(); n.max(2) - 2];
         let mut ipiv = vec![0; n];

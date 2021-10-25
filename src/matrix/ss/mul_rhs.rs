@@ -1,18 +1,18 @@
 use super::SparseMatrix;
-use crate::{matrix::Matrix, number::Number};
+use crate::{matrix::ge::Matrix, number::Number};
 use std::ops::Mul;
 
 fn mul<T>(slf: &SparseMatrix<T>, rhs: &Matrix<T>) -> Matrix<T>
 where
     T: Number,
 {
-    if slf.cols != rhs.rows {
+    if slf.cols != rhs.rows() {
         panic!("Dimension mismatch.");
     }
-    let mut new_matrix = Matrix::new(slf.rows, rhs.cols);
+    let mut new_matrix = Matrix::new(slf.rows, rhs.cols());
 
     for (&(i, j), &s) in slf.elems.iter() {
-        for k in 0..rhs.cols {
+        for k in 0..rhs.cols() {
             new_matrix[(k, i)] += s * rhs[(j, k)];
         }
     }

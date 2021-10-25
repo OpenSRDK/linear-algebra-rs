@@ -1,8 +1,10 @@
 use crate::matrix::*;
+use crate::number::*;
 use crate::DiagonalMatrix;
 use crate::{bd::BidiagonalMatrix, matrix::st::SymmetricTridiagonalMatrix};
 use lapack::dpttrf;
 use lapack::zpttrf;
+use rayon::prelude::*;
 
 pub struct PTTRF<T = f64>(pub BidiagonalMatrix<T>, pub DiagonalMatrix)
 where

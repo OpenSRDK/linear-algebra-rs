@@ -1,5 +1,6 @@
+use crate::matrix::ge::*;
 use crate::matrix::MatrixError;
-use crate::{matrix::*, number::Number};
+use crate::number::Number;
 
 #[derive(Clone, Debug, Default, Hash)]
 pub struct KroneckerMatrices<T = f64>
@@ -15,10 +16,14 @@ impl<T> KroneckerMatrices<T>
 where
     T: Number,
 {
+    /// The code below means that `a = a_1 ⊗ a_2`
+    /// ```
+    /// let a = KroneckerMatrices::new(vec![a_1, a_2]);
+    /// ```
     pub fn new(matrices: Vec<Matrix<T>>) -> Self {
         let (rows, cols) = matrices
             .iter()
-            .fold((1usize, 1usize), |v, m| (v.0 * m.rows, v.1 * m.cols));
+            .fold((1usize, 1usize), |v, m| (v.0 * m.rows(), v.1 * m.cols()));
         Self {
             matrices,
             rows,
@@ -53,13 +58,13 @@ where
         for p in (0..bigp).rev() {
             for j in 0..self.cols {
                 for i in 0..self.rows {
-                    new_matrix[j][i] *= self.matrices[p][j / col_block % self.matrices[p].cols]
-                        [i / row_block % self.matrices[p].rows];
+                    new_matrix[j][i] *= self.matrices[p][j / col_block % self.matrices[p].cols()]
+                        [i / row_block % self.matrices[p].rows()];
                 }
             }
 
-            row_block *= self.matrices[p].rows;
-            col_block *= self.matrices[p].cols;
+            row_block *= self.matrices[p].rows();
+            col_block *= self.matrices[p].cols();
         }
 
         new_matrix
@@ -78,7 +83,7 @@ impl KroneckerMatrices {
         let mut u = v.col_mat();
 
         for p in (0..bigp).rev() {
-            let bigu_rows = self.matrices[p].cols;
+            let bigu_rows = self.matrices[p].cols();
             let bigu = u.reshape(bigu_rows);
             let k_bigu = &self.matrices[p] * bigu;
 

@@ -1,5 +1,5 @@
 use crate::matrix::ci::CirculantMatrix;
-use crate::{matrix::Matrix, number::c64};
+use crate::{number::c64, Matrix};
 use rayon::prelude::*;
 use rustfft::FftPlanner;
 use std::f64::consts::PI;
@@ -22,7 +22,7 @@ impl CirculantMatrix<f64> {
         // }
 
         fourier_matrix
-            .elems
+            .elems_mut()
             .par_iter_mut()
             .enumerate()
             .map(|(k, elem)| ((k / n, k % n), elem))

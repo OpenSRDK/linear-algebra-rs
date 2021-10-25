@@ -1,4 +1,5 @@
-use crate::{matrix::*, number::Number};
+use crate::{number::Number, Matrix, MatrixError};
+use rayon::prelude::*;
 
 #[derive(Clone, Debug, Default, Hash)]
 pub struct BidiagonalMatrix<T = f64>
@@ -13,8 +14,8 @@ impl<T> BidiagonalMatrix<T>
 where
     T: Number,
 {
-    /// `d`: diagonal elements
-    /// `e`: first superdiagonal or subdiagonal elements
+    /// - `d`: Diagonal elements. The length must be `dimension`.
+    /// - `e`: First superdiagonal or subdiagonal elements. The length must be `dimension - 1`.
     pub fn new(d: Vec<T>, e: Vec<T>) -> Result<Self, MatrixError> {
         if d.len().max(1) - 1 != e.len() {
             return Err(MatrixError::DimensionMismatch);
@@ -23,20 +24,22 @@ where
         Ok(Self { d, e })
     }
 
-    pub fn n(&self) -> usize {
+    /// Dimension.
+    pub fn dim(&self) -> usize {
         self.d.len()
     }
 
-    /// diagonal elements
+    /// Diagonal elements.
     pub fn d(&self) -> &[T] {
         &self.d
     }
 
-    /// first superdiagonal or subdiagonal elements
+    /// first superdiagonal or subdiagonal elements.
     pub fn e(&self) -> &[T] {
         &self.e
     }
 
+    /// Returns `(self.d, self.e)`
     pub fn eject(self) -> (Vec<T>, Vec<T>) {
         (self.d, self.e)
     }
@@ -59,7 +62,7 @@ where
         //     }
         // }
 
-        mat.elems
+        mat.elems_mut()
             .par_iter_mut()
             .enumerate()
             .map(|(k, elem)| ((k / n, k % n), elem))

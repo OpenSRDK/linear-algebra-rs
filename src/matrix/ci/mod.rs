@@ -14,6 +14,7 @@ impl<T> CirculantMatrix<T>
 where
     T: Number,
 {
+    /// - `col_elems`: First column elements.
     pub fn new(col_elems: Vec<T>) -> Self {
         Self { col_elems }
     }
@@ -32,10 +33,12 @@ where
         Self::new(col_elems)
     }
 
+    /// First column elements.
     pub fn col_elems(&self) -> &[T] {
         &self.col_elems
     }
 
+    /// First row elements.
     pub fn row_elems(&self) -> Vec<T> {
         if self.col_elems.len() <= 1 {
             return self.col_elems.clone();

@@ -1,4 +1,4 @@
-use crate::{matrix::Matrix, matrix::Vector, MatrixError};
+use crate::{matrix::ge::Vector, ge::Matrix, MatrixError};
 use std::error::Error;
 
 impl Matrix {

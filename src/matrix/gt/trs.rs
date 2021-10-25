@@ -1,5 +1,7 @@
 use super::trf::GTTRF;
+use crate::matrix::ge::Matrix;
 use crate::matrix::*;
+use crate::number::c64;
 use lapack::dgttrs;
 use lapack::zgttrs;
 
@@ -18,13 +20,13 @@ impl GTTRF {
             dgttrs(
                 'N' as u8,
                 n,
-                b.cols as i32,
+                b.cols() as i32,
                 dl,
                 d,
                 du,
                 du2,
                 ipiv,
-                &mut b.elems,
+                b.elems_mut(),
                 n,
                 &mut info,
             )
@@ -55,13 +57,13 @@ impl GTTRF<c64> {
             zgttrs(
                 'N' as u8,
                 n,
-                b.cols as i32,
+                b.cols() as i32,
                 dl,
                 d,
                 du,
                 du2,
                 ipiv,
-                &mut b.elems,
+                b.elems_mut(),
                 n,
                 &mut info,
             )

@@ -1,5 +1,5 @@
 use super::SymmetricTridiagonalMatrix;
-use crate::matrix::*;
+use crate::{matrix::ge::Matrix, matrix::*};
 use lapack::dstev;
 
 impl SymmetricTridiagonalMatrix {
@@ -20,7 +20,7 @@ impl SymmetricTridiagonalMatrix {
                 n,
                 &mut d,
                 &mut e,
-                &mut z.elems,
+                z.elems_mut(),
                 n,
                 &mut work,
                 &mut info,

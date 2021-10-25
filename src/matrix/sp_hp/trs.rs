@@ -28,10 +28,10 @@ impl SPTRF {
             dsptrs(
                 'L' as u8,
                 n,
-                b.cols as i32,
+                b.cols() as i32,
                 &mat.elems,
                 &ipiv,
-                &mut b.elems,
+                b.elems_mut(),
                 n,
                 &mut info,
             );
@@ -72,10 +72,10 @@ impl SPTRF<c64> {
             zsptrs(
                 'L' as u8,
                 n,
-                b.cols as i32,
+                b.cols() as i32,
                 &mat.elems,
                 &ipiv,
-                &mut b.elems,
+                b.elems_mut(),
                 n,
                 &mut info,
             );
@@ -116,10 +116,10 @@ impl HPTRF {
             zhptrs(
                 'L' as u8,
                 n,
-                b.cols as i32,
+                b.cols() as i32,
                 &mat.elems,
                 &ipiv,
-                &mut b.elems,
+                b.elems_mut(),
                 n,
                 &mut info,
             );

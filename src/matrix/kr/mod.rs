@@ -18,6 +18,10 @@ where
 {
     /// The code below means that `a = a_1 ⊗ a_2`
     /// ```
+    /// use opensrdk_linear_algebra::*;
+    ///
+    /// let a_1 = Matrix::<f64>::new(2, 2);
+    /// let a_2 = Matrix::<f64>::new(3, 4);
     /// let a = KroneckerMatrices::new(vec![a_1, a_2]);
     /// ```
     pub fn new(matrices: Vec<Matrix<T>>) -> Self {

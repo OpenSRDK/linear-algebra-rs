@@ -84,7 +84,7 @@ mod tests {
     use crate::*;
     #[test]
     fn it_works() {
-        let a = TridiagonalMatrix::new(vec![1.0; 2], vec![1.0; 3], vec![1.0; 2]).unwrap();
+        let a = TridiagonalMatrix::from(vec![1.0; 2], vec![1.0; 3], vec![1.0; 2]).unwrap();
         let b = mat!(
             3.0;
             4.0;

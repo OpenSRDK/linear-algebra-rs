@@ -28,7 +28,7 @@ impl SymmetricTridiagonalMatrix {
             });
         }
 
-        let bd = BidiagonalMatrix::new(vec![1.0; n as usize], e)?;
+        let bd = BidiagonalMatrix::from(vec![1.0; n as usize], e)?;
         let d = DiagonalMatrix::new(d);
 
         Ok(PTTRF(bd, d))
@@ -54,7 +54,7 @@ impl SymmetricTridiagonalMatrix<c64> {
             });
         }
 
-        let bd = BidiagonalMatrix::<c64>::new(vec![c64::one(); n as usize], e)?;
+        let bd = BidiagonalMatrix::<c64>::from(vec![c64::one(); n as usize], e)?;
         let d = DiagonalMatrix::new(d);
 
         Ok(PTTRF::<c64>(bd, d))

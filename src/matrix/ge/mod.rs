@@ -18,6 +18,21 @@ pub mod tri;
 pub mod trs;
 
 /// # Matrix
+/// ```
+/// use opensrdk_linear_algebra::*;
+///
+/// let a = mat!(
+///   1.0, 2.0;
+///   3.0, 4.0
+/// );
+/// assert_eq!(a[0], [1.0, 3.0]);
+/// assert_eq!(a[1], [2.0, 4.0]);
+///
+/// assert_eq!(a[(0, 0)], 1.0);
+/// assert_eq!(a[(0, 1)], 2.0);
+/// assert_eq!(a[(1, 0)], 3.0);
+/// assert_eq!(a[(1, 1)], 4.0);
+/// ```
 #[derive(Clone, Debug, Default, Hash, PartialEq)]
 pub struct Matrix<T = f64>
 where
@@ -73,7 +88,7 @@ where
         self.elems
     }
 
-    pub fn slice(&self) -> &[T] {
+    pub fn elems(&self) -> &[T] {
         &self.elems
     }
 

@@ -19,10 +19,19 @@ impl<T> TridiagonalMatrix<T>
 where
     T: Number,
 {
+    pub fn new(dim: usize) -> Self {
+        let e = vec![T::default(); dim.max(1) - 1];
+        Self {
+            dl: e.clone(),
+            d: vec![T::default(); dim],
+            du: e,
+        }
+    }
+
     /// - `dl`: Lower diagonal elements. The length must be `dimension - 1`.
     /// - `d`: Diagonal elements. The length must be `dimension`.
     /// - `du`: Upper diagonal elements. The length must be `dimension - 1`.
-    pub fn new(dl: Vec<T>, d: Vec<T>, du: Vec<T>) -> Result<Self, MatrixError> {
+    pub fn from(dl: Vec<T>, d: Vec<T>, du: Vec<T>) -> Result<Self, MatrixError> {
         let n_1 = d.len().max(1) - 1;
         if n_1 != dl.len() || n_1 != du.len() {
             return Err(MatrixError::DimensionMismatch);

@@ -20,9 +20,16 @@ impl<T> SymmetricTridiagonalMatrix<T>
 where
     T: Number,
 {
+    pub fn new(dim: usize) -> Self {
+        Self {
+            d: vec![T::default(); dim],
+            e: vec![T::default(); dim.max(1) - 1],
+        }
+    }
+
     /// - `d`: Diagonal elements. The length must be `dimension`.
     /// - `e`: First both superdiagonal and subdiagonal elements. The length must be `dimension - 1`.
-    pub fn new(d: Vec<T>, e: Vec<T>) -> Result<Self, MatrixError> {
+    pub fn from(d: Vec<T>, e: Vec<T>) -> Result<Self, MatrixError> {
         if d.len().max(1) - 1 != e.len() {
             return Err(MatrixError::DimensionMismatch);
         }

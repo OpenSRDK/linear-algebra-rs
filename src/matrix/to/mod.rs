@@ -7,7 +7,6 @@ pub struct ToeplitzMatrix<T = f64>
 where
     T: Number,
 {
-    dim: usize,
     col_elems: Vec<T>,
     row_elems: Vec<T>,
 }
@@ -16,9 +15,16 @@ impl<T> ToeplitzMatrix<T>
 where
     T: Number,
 {
+    pub fn new(dim: usize) -> Self {
+        Self {
+            col_elems: vec![T::default(); dim],
+            row_elems: vec![T::default(); dim.max(1) - 1],
+        }
+    }
+
     /// - `col_elems`: First column elements. The length must be `dimension`.
     /// - `row_elems`: First roe elements without first element. The length must be `dimension - 1`.
-    pub fn new(col_elems: Vec<T>, row_elems: Vec<T>) -> Result<Self, MatrixError> {
+    pub fn from(col_elems: Vec<T>, row_elems: Vec<T>) -> Result<Self, MatrixError> {
         let dim = col_elems.len();
 
         if row_elems.len() != dim.max(1) - 1 {
@@ -26,7 +32,6 @@ where
         }
 
         Ok(Self {
-            dim,
             col_elems,
             row_elems,
         })
@@ -34,7 +39,7 @@ where
 
     /// Dimension.
     pub fn dim(&self) -> usize {
-        self.dim
+        self.col_elems.len()
     }
 
     /// First column elements.
@@ -53,9 +58,9 @@ where
     }
 
     pub fn embedded_circulant(&self) -> CirculantMatrix<T> {
-        let col_elems = (0..self.dim)
+        let col_elems = (0..self.dim())
             .into_par_iter()
-            .chain((1..self.dim - 1).into_par_iter().rev())
+            .chain((1..self.dim() - 1).into_par_iter().rev())
             .map(|i| self.col_elems[i])
             .collect();
 

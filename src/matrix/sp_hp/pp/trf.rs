@@ -4,6 +4,7 @@ use crate::Number;
 use crate::SymmetricPackedMatrix;
 use lapack::{dpptrf, zpptrf};
 
+#[derive(Clone, Debug)]
 pub struct PPTRF<T = f64>(pub SymmetricPackedMatrix<T>)
 where
     T: Number;

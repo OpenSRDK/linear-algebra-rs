@@ -7,6 +7,7 @@ pub mod trf;
 pub mod tri;
 pub mod trs;
 
+#[derive(Clone, Debug, Default, Hash)]
 pub struct SymmetricPackedMatrix<T = f64>
 where
     T: Number,

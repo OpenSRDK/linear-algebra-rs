@@ -4,10 +4,12 @@ use crate::Number;
 use crate::SymmetricPackedMatrix;
 use lapack::{dsptrf, zhptrf, zsptrf};
 
+#[derive(Clone, Debug)]
 pub struct SPTRF<T = f64>(pub SymmetricPackedMatrix<T>, pub Vec<i32>)
 where
     T: Number;
 
+#[derive(Clone, Debug)]
 pub struct HPTRF(pub SymmetricPackedMatrix<c64>, pub Vec<i32>);
 
 impl SymmetricPackedMatrix {

@@ -6,6 +6,7 @@ use lapack::dpttrf;
 use lapack::zpttrf;
 use rayon::prelude::*;
 
+#[derive(Clone, Debug)]
 pub struct PTTRF<T = f64>(pub BidiagonalMatrix<T>, pub DiagonalMatrix)
 where
     T: Number;

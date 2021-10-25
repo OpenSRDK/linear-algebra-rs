@@ -4,6 +4,7 @@ use crate::number::c64;
 use crate::Number;
 use lapack::{dgetrf, zgetrf};
 
+#[derive(Clone, Debug)]
 pub struct GETRF<T = f64>(pub Matrix<T>, pub Vec<i32>)
 where
     T: Number;

@@ -4,6 +4,7 @@ use crate::number::c64;
 use crate::Number;
 use lapack::{dpotrf, zpotrf};
 
+#[derive(Clone, Debug)]
 pub struct POTRF<T = f64>(pub Matrix<T>)
 where
     T: Number;

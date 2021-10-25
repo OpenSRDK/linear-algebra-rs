@@ -4,6 +4,7 @@ use crate::number::c64;
 use crate::Number;
 use lapack::{dsytrf, zhetrf, zsytrf};
 
+#[derive(Clone, Debug)]
 pub struct SYTRF<T = f64>(pub Matrix<T>, pub Vec<i32>)
 where
     T: Number;

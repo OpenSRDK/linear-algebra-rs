@@ -4,6 +4,7 @@ use crate::number::*;
 use lapack::dgttrf;
 use lapack::zgttrf;
 
+#[derive(Clone, Debug)]
 pub struct GTTRF<T = f64>(pub Vec<T>, pub [Vec<T>; 3], pub Vec<i32>)
 where
     T: Number;

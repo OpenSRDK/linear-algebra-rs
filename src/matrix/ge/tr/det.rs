@@ -1,4 +1,4 @@
-use crate::{matrix::Matrix, number::Number};
+use crate::{number::Number, Matrix};
 use rayon::prelude::*;
 
 impl<T> Matrix<T>

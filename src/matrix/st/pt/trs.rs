@@ -1,5 +1,7 @@
 use super::trf::PTTRF;
+use crate::matrix::ge::Matrix;
 use crate::matrix::*;
+use crate::number::*;
 use lapack::dpttrs;
 use lapack::zpttrs;
 
@@ -14,7 +16,17 @@ impl PTTRF {
         let mut b = b;
         let mut info = 0;
 
-        unsafe { dpttrs(n, b.cols as i32, self.1.d(), &e, &mut b.elems, n, &mut info) }
+        unsafe {
+            dpttrs(
+                n,
+                b.cols() as i32,
+                self.1.d(),
+                &e,
+                b.elems_mut(),
+                n,
+                &mut info,
+            )
+        }
 
         match info {
             0 => Ok(b),
@@ -41,10 +53,10 @@ impl PTTRF<c64> {
             zpttrs(
                 'L' as u8,
                 n,
-                b.cols as i32,
+                b.cols() as i32,
                 self.1.d(),
                 &e,
-                &mut b.elems,
+                b.elems_mut(),
                 n,
                 &mut info,
             )

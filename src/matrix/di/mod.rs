@@ -1,4 +1,4 @@
-use crate::{Matrix, Number};
+use crate::{ge::Matrix, Number};
 use rayon::prelude::*;
 
 pub mod operators;
@@ -17,22 +17,27 @@ impl<T> DiagonalMatrix<T>
 where
     T: Number,
 {
+    /// - `d`: Diagonal elements. The length must be `dimension`.
     pub fn new(d: Vec<T>) -> Self {
         Self { d }
     }
 
+    /// Creates an identity matrix.
     pub fn identity(n: usize) -> Self {
         Self::new(vec![T::one(); n])
     }
 
-    pub fn n(&self) -> usize {
+    /// Dimension.
+    pub fn dim(&self) -> usize {
         self.d.len()
     }
 
+    /// Diagonal elements.
     pub fn d(&self) -> &[T] {
         &self.d
     }
 
+    /// Returns `self.d`
     pub fn eject(self) -> Vec<T> {
         self.d
     }
@@ -45,7 +50,7 @@ where
         //     mat[i][i] = self.d[i];
         // }
 
-        mat.elems
+        mat.elems_mut()
             .par_iter_mut()
             .enumerate()
             .map(|(k, elem)| ((k / n, k % n), elem))

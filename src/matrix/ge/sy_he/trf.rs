@@ -1,6 +1,6 @@
+use crate::matrix::ge::Matrix;
 use crate::matrix::MatrixError;
 use crate::number::c64;
-use crate::Matrix;
 use crate::Number;
 use lapack::{dsytrf, zhetrf, zsytrf};
 

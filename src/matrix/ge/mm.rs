@@ -1,5 +1,5 @@
 use crate::matrix::MatrixError;
-use crate::{matrix::Matrix, number::c64};
+use crate::{number::c64, Matrix};
 use blas::dgemm;
 use blas::zgemm;
 

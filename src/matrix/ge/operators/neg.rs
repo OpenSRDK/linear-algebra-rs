@@ -1,5 +1,5 @@
 use super::mul::mul_scalar;
-use crate::{Matrix, Number};
+use crate::{ge::Matrix, Number};
 use std::ops::Neg;
 
 impl<T> Neg for Matrix<T>

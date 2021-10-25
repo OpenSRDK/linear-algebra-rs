@@ -26,6 +26,7 @@ where
         }
     }
 
+    /// You can do `unwrap()` if you have a conviction that `elems.len() == dim * (dim + 1) / 2`
     pub fn from(dim: usize, elems: Vec<T>) -> Result<Self, MatrixError> {
         if elems.len() != dim * (dim + 1) / 2 {
             return Err(MatrixError::DimensionMismatch);

@@ -1,5 +1,8 @@
-use crate::matrix::*;
-use crate::number::Number;
+use crate::number::*;
+use crate::{matrix::ge::Matrix, matrix::*};
+use rayon::prelude::*;
+
+pub mod pt;
 
 pub mod ev;
 pub mod evd;
@@ -17,9 +20,16 @@ impl<T> SymmetricTridiagonalMatrix<T>
 where
     T: Number,
 {
-    /// `d`: diagonal elements
-    /// `e`: first both superdiagonal and subdiagonal elements
-    pub fn new(d: Vec<T>, e: Vec<T>) -> Result<Self, MatrixError> {
+    pub fn new(dim: usize) -> Self {
+        Self {
+            d: vec![T::default(); dim],
+            e: vec![T::default(); dim.max(1) - 1],
+        }
+    }
+
+    /// - `d`: Diagonal elements. The length must be `dimension`.
+    /// - `e`: First both superdiagonal and subdiagonal elements. The length must be `dimension - 1`.
+    pub fn from(d: Vec<T>, e: Vec<T>) -> Result<Self, MatrixError> {
         if d.len().max(1) - 1 != e.len() {
             return Err(MatrixError::DimensionMismatch);
         }
@@ -27,20 +37,22 @@ where
         Ok(Self { d, e })
     }
 
+    /// Dimension.
     pub fn n(&self) -> usize {
         self.d.len()
     }
 
-    /// diagonal elements
+    /// Diagonal elements.
     pub fn d(&self) -> &[T] {
         &self.d
     }
 
-    /// first both superdiagonal and subdiagonal elements
+    /// First both superdiagonal and subdiagonal elements/
     pub fn e(&self) -> &[T] {
         &self.e
     }
 
+    /// Returns `(self.d, self.e)`
     pub fn eject(self) -> (Vec<T>, Vec<T>) {
         (self.d, self.e)
     }
@@ -60,7 +72,7 @@ impl SymmetricTridiagonalMatrix {
         //     mat[i + 1][i] = self.e[i];
         // }
 
-        mat.elems
+        mat.elems_mut()
             .par_iter_mut()
             .enumerate()
             .map(|(k, elem)| ((k / n, k % n), elem))
@@ -83,7 +95,7 @@ impl SymmetricTridiagonalMatrix<c64> {
         let n = self.d.len();
         let mut mat = Matrix::new(n, n);
 
-        mat.elems
+        mat.elems_mut()
             .par_iter_mut()
             .enumerate()
             .map(|(k, elem)| ((k / n, k % n), elem))

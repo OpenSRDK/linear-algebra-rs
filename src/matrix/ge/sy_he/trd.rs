@@ -1,6 +1,7 @@
 use crate::{
-    matrix::{Matrix, MatrixError, Vector},
+    matrix::{ge::Vector, MatrixError},
     st::SymmetricTridiagonalMatrix,
+    Matrix,
 };
 use lapack::dsytrd;
 use std::error::Error;
@@ -44,7 +45,7 @@ impl Matrix {
             }
         }
 
-        let t = SymmetricTridiagonalMatrix::new(d, e)?;
+        let t = SymmetricTridiagonalMatrix::from(d, e)?;
 
         Ok(SYTRD(mat, tau, t))
     }
@@ -91,13 +92,13 @@ impl Matrix {
 
             for i in 1..k {
                 e[i - 1] = w_prev
-                    .slice()
+                    .elems()
                     .iter()
                     .map(|wi| wi.powi(2))
                     .sum::<f64>()
                     .sqrt();
 
-                v[i].clone_from_slice((w_prev * (1.0 / e[i - 1])).slice());
+                v[i].clone_from_slice((w_prev * (1.0 / e[i - 1])).elems());
 
                 let a_v = match vec_mul(v[i].clone()) {
                     Ok(v) => Ok(v),
@@ -112,7 +113,7 @@ impl Matrix {
         }
 
         let q = Matrix::from(n, v.concat()).unwrap();
-        let t = SymmetricTridiagonalMatrix::new(d, e)?;
+        let t = SymmetricTridiagonalMatrix::from(d, e)?;
 
         Ok((q, t))
     }

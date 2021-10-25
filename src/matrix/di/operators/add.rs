@@ -49,7 +49,7 @@ fn add<T>(lhs: DiagonalMatrix<T>, rhs: &DiagonalMatrix<T>) -> DiagonalMatrix<T>
 where
     T: Number,
 {
-    if lhs.n() != rhs.n() {
+    if lhs.dim() != rhs.dim() {
         panic!("Dimension mismatch.")
     }
     let mut lhs = lhs;
@@ -101,7 +101,7 @@ fn add_mat<T>(lhs: Matrix<T>, rhs: &DiagonalMatrix<T>) -> Matrix<T>
 where
     T: Number,
 {
-    let n = rhs.n();
+    let n = rhs.dim();
     if lhs.rows() != n || lhs.cols() != n {
         panic!("Dimension mismatch.")
     }

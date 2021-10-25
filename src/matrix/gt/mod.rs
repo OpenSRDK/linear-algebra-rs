@@ -1,8 +1,9 @@
+use crate::number::Number;
+use crate::{ge::Matrix, matrix::*};
+use rayon::prelude::*;
+
 pub mod trf;
 pub mod trs;
-
-use crate::matrix::*;
-use crate::number::Number;
 
 #[derive(Clone, Debug, Default, Hash)]
 pub struct TridiagonalMatrix<T = f64>
@@ -18,7 +19,19 @@ impl<T> TridiagonalMatrix<T>
 where
     T: Number,
 {
-    pub fn new(dl: Vec<T>, d: Vec<T>, du: Vec<T>) -> Result<Self, MatrixError> {
+    pub fn new(dim: usize) -> Self {
+        let e = vec![T::default(); dim.max(1) - 1];
+        Self {
+            dl: e.clone(),
+            d: vec![T::default(); dim],
+            du: e,
+        }
+    }
+
+    /// - `dl`: Lower diagonal elements. The length must be `dimension - 1`.
+    /// - `d`: Diagonal elements. The length must be `dimension`.
+    /// - `du`: Upper diagonal elements. The length must be `dimension - 1`.
+    pub fn from(dl: Vec<T>, d: Vec<T>, du: Vec<T>) -> Result<Self, MatrixError> {
         let n_1 = d.len().max(1) - 1;
         if n_1 != dl.len() || n_1 != du.len() {
             return Err(MatrixError::DimensionMismatch);
@@ -27,19 +40,28 @@ where
         Ok(Self { dl, d, du })
     }
 
+    /// Dimension.
+    pub fn dim(&self) -> usize {
+        self.d.len()
+    }
+
+    /// Lower diagonal elements.
     pub fn dl(&self) -> &[T] {
         &self.dl
     }
 
+    /// Diagonal elements.
     pub fn d(&self) -> &[T] {
         &self.d
     }
 
+    /// Lower diagonal elements.
     pub fn du(&self) -> &[T] {
         &self.du
     }
 
-    pub fn elems(self) -> (Vec<T>, Vec<T>, Vec<T>) {
+    /// Returns `(self.dl, self.d, self.du)`
+    pub fn eject(self) -> (Vec<T>, Vec<T>, Vec<T>) {
         (self.dl, self.d, self.du)
     }
 
@@ -56,7 +78,7 @@ where
         //     mat[i + 1][i] = self.dl[i];
         // }
 
-        mat.elems
+        mat.elems_mut()
             .par_iter_mut()
             .enumerate()
             .map(|(k, elem)| ((k / n, k % n), elem))
@@ -69,7 +91,7 @@ where
                     *elem = self.dl[j];
                 }
             });
- 
+
         mat
     }
 }

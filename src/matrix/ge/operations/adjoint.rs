@@ -1,4 +1,4 @@
-use crate::matrix::Matrix;
+use crate::matrix::ge::Matrix;
 use crate::number::c64;
 use rayon::prelude::*;
 

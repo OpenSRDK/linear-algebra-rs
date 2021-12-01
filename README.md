@@ -38,16 +38,16 @@ use opensrdk_linear_algebra::*;
 - `ci`: **Ci**rculant
 - `di`: **Di**agonal
 - `ge`: **Ge**neral
-  - `sy_he`: **Sy**mmetryc, **He**rmite
+  - `sy_he`: **Sy**mmetric, **He**rmitian
     - `po`: **Po**sitive definite
   - `tr`: **Tr**iangle
 - `gt`: **G**eneral **t**ridiagonal
 - `kr`: **Kr**onecker
-- `or_un`: **Or**thogonal, **Un**itary
+<!--- `or_un`: **Or**thogonal, **Un**itary-->
 - `sp_hp`: **S**ymmetric **p**acked, **H**ermite **p**acked
   - `pp`: **P**ositive definite **p**acked
 - `ss`: **S**par**s**e
-- `st_ht`: **S**ymmetric **t**ridiagonal, **H**ermite **t**ridiagonal
+- `st`: **S**ymmetric **t**ridiagonal
   - `pt`: **P**ositive definite **t**ridiagonal
 - `to`: **To**eplitz
 

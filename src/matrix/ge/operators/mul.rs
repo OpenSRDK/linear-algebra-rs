@@ -4,17 +4,13 @@ use blas::{dgemm, zgemm};
 use rayon::prelude::*;
 use std::ops::Mul;
 
-pub(crate) fn mul_scalar<T>(slf: T, rhs: Matrix<T>) -> Matrix<T>
+pub(crate) fn mul_scalar<T>(slf: T, mut rhs: Matrix<T>) -> Matrix<T>
 where
     T: Number,
 {
-    let mut rhs = rhs;
-    rhs.elems
-        .par_iter_mut()
-        .map(|r| {
-            *r *= slf;
-        })
-        .collect::<Vec<_>>();
+    rhs.elems.par_iter_mut().for_each(|r| {
+        *r *= slf;
+    });
 
     rhs
 }
@@ -93,12 +89,28 @@ macro_rules! impl_mul_scalar {
             }
         }
 
+        impl Mul<Matrix<$t>> for &$t {
+          type Output = Matrix<$t>;
+
+          fn mul(self, rhs: Matrix<$t>) -> Self::Output {
+              mul_scalar(*self, rhs)
+          }
+        }
+
         impl Mul<$t> for Matrix<$t> {
             type Output = Matrix<$t>;
 
             fn mul(self, rhs: $t) -> Self::Output {
                 mul_scalar(rhs, self)
             }
+        }
+
+        impl Mul<&$t> for Matrix<$t> {
+          type Output = Matrix<$t>;
+
+          fn mul(self, rhs: &$t) -> Self::Output {
+              mul_scalar(*rhs, self)
+          }
         }
     };
 }
@@ -148,8 +160,18 @@ impl_mul! {c64, mul_c64}
 #[cfg(test)]
 mod tests {
     use crate::*;
+
     #[test]
     fn it_works() {
+        let a = mat!(
+            1.0, 2.0;
+            3.0, 4.0
+        ) * 2.0;
+        assert_eq!(a[(0, 0)], 2.0);
+    }
+
+    #[test]
+    fn it_works2() {
         let a = mat!(
             1.0, 2.0;
             3.0, 4.0

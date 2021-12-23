@@ -102,6 +102,31 @@ where
 
         self
     }
+
+    pub fn eject_row(&self, index: usize) -> Vec<T> {
+        (0..self.cols)
+            .into_iter()
+            .map(|j| self[(index, j)])
+            .collect()
+    }
+
+    pub fn eject_sub_matrix(
+        &self,
+        start_i: usize,
+        start_j: usize,
+        rows: usize,
+        cols: usize,
+    ) -> Matrix<T> {
+        Matrix::from(
+            rows,
+            (0..cols)
+                .into_iter()
+                .flat_map(|j| (0..rows).into_iter().map(move |i| (i, j)))
+                .map(|(i, j)| self[(start_i + i, start_j + j)])
+                .collect(),
+        )
+        .unwrap()
+    }
 }
 
 impl Matrix<f64> {

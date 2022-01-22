@@ -5,7 +5,7 @@ pub mod operators;
 pub mod powf;
 pub mod powi;
 
-#[derive(Clone, Debug, Default, Hash)]
+#[derive(Clone, Debug, Default, PartialEq, Hash)]
 pub struct DiagonalMatrix<T = f64>
 where
     T: Number,

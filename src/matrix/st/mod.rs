@@ -7,7 +7,7 @@ pub mod pt;
 pub mod ev;
 pub mod evd;
 
-#[derive(Clone, Debug, Default, Hash)]
+#[derive(Clone, Debug, Default, PartialEq, Hash)]
 pub struct SymmetricTridiagonalMatrix<T = f64>
 where
     T: Number,

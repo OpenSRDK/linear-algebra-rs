@@ -2,7 +2,7 @@ use crate::matrix::ci::CirculantMatrix;
 use crate::{matrix::MatrixError, number::Number};
 use rayon::prelude::*;
 
-#[derive(Clone, Debug, Default, Hash)]
+#[derive(Clone, Debug, Default, PartialEq, Hash)]
 pub struct ToeplitzMatrix<T = f64>
 where
     T: Number,

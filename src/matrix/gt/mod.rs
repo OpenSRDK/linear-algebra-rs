@@ -5,7 +5,7 @@ use rayon::prelude::*;
 pub mod trf;
 pub mod trs;
 
-#[derive(Clone, Debug, Default, Hash)]
+#[derive(Clone, Debug, Default, PartialEq, Hash)]
 pub struct TridiagonalMatrix<T = f64>
 where
     T: Number,

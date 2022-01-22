@@ -1,7 +1,7 @@
 use crate::{number::Number, Matrix, MatrixError};
 use rayon::prelude::*;
 
-#[derive(Clone, Debug, Default, Hash)]
+#[derive(Clone, Debug, Default, PartialEq, Hash)]
 pub struct BidiagonalMatrix<T = f64>
 where
     T: Number,

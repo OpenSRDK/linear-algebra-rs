@@ -33,7 +33,7 @@ pub mod trs;
 /// assert_eq!(a[(1, 0)], 3.0);
 /// assert_eq!(a[(1, 1)], 4.0);
 /// ```
-#[derive(Clone, Debug, Default, Hash, PartialEq)]
+#[derive(Clone, Debug, Default, PartialEq, Hash)]
 pub struct Matrix<T = f64>
 where
     T: Number,

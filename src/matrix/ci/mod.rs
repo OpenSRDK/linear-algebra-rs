@@ -2,7 +2,7 @@ pub mod evd;
 
 use crate::number::Number;
 
-#[derive(Clone, Debug, Default, Hash)]
+#[derive(Clone, Debug, Default, PartialEq, Hash)]
 pub struct CirculantMatrix<T = f64>
 where
     T: Number,

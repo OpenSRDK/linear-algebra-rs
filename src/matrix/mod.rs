@@ -13,7 +13,7 @@ pub mod to;
 
 #[derive(thiserror::Error, Debug)]
 pub enum MatrixError {
-    #[error("Dimension mismatch.")]
+    #[error("Dimension mismatch (Matrix)")]
     DimensionMismatch,
     #[error("BLAS routine error. routine: {routine}, info: {info}")]
     BlasRoutineError { routine: String, info: i32 },

@@ -92,17 +92,7 @@ impl KroneckerMatrices {
             return Err(MatrixError::DimensionMismatch);
         }
 
-        let bigp = self.matrices.len();
-        let mut u = v.col_mat();
-
-        for p in (0..bigp).rev() {
-            let bigu_rows = self.matrices[p].cols();
-            let bigu = u.reshape(bigu_rows);
-            let k_bigu = &self.matrices[p] * bigu;
-
-            u = k_bigu.t().vec().col_mat();
-        }
-
+        let u = &self.prod() * v.col_mat();
         Ok(u.vec())
     }
 }
@@ -113,22 +103,28 @@ mod tests {
     #[test]
     fn it_works() {
         let a = mat![
-            1.0, 2.0, 3.0;
-            3.0, 4.0, 5.0;
-            0.0, 7.0, 8.0
+            1.0, 2.0;
+            3.0, 4.0
         ];
         let b = mat![
-            1.0, 2.0, 3.0;
-            3.0, 4.0, 5.0;
-            6.0, 7.0, 5.0
+            1.0, 2.0;
+            3.0, 4.0
         ];
-        let c = mat![
-            1.0, 2.0, 3.0;
-            3.0, 9.0, 5.0;
-            6.0, 7.0, 8.0
-        ];
-        let abc = KroneckerMatrices::new(vec![a, b, c]);
-        let d = abc.prod();
-        println!("d {:#?}", d);
+        let ab = KroneckerMatrices::new(vec![a, b]);
+        let c = ab.prod();
+
+        println!("c {:#?}", c);
+
+        assert_eq!(c[(0, 0)], 1.0);
+        assert_eq!(c[(0, 3)], 4.0);
+        assert_eq!(c[(2, 1)], 6.0);
+
+        let ab1 = ab.vec_mul(vec![1.0; 4]).unwrap().col_mat();
+        println!("ab1 {:#?}", ab1);
+        let c1 = &c * vec![1.0; 4].col_mat();
+        println!("c1 {:#?}", c1);
+
+        assert_eq!(ab1[(0, 0)], c1[(0, 0)]);
+        assert_eq!(ab1[(1, 0)], c1[(1, 0)]);
     }
 }

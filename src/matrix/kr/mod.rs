@@ -52,55 +52,35 @@ where
     }
 
     pub fn prod(&self) -> Matrix<T> {
-        // let mut new_matrix =
-        //     Matrix::from(self.rows, vec![T::one(); self.rows * self.cols]).unwrap();
         let bigp = self.matrices.len();
-
-        // let mut row_block = 1;
-        // let mut col_block = 1;
-
-        // for p in (0..bigp).rev() {
-        //     for j in 0..self.cols {
-        //         for i in 0..self.rows {
-        //             new_matrix[j][i] *= self.matrices[p][j / col_block % self.matrices[p].cols()]
-        //                 [i / row_block % self.matrices[p].rows()];
-        //         }
-        //     }
-        //     row_block *= self.matrices[p].rows();
-        //     col_block *= self.matrices[p].cols();
-        // }
-
-        let prod_elem = |a: Matrix<T>, b: Matrix<T>| {
-            let rows_a = a.rows();
-            let cols_a = a.cols();
-            let rows_b = b.rows();
-            let cols_b = b.cols();
-            let elems = (0..rows_a * rows_b)
-                .into_iter()
-                .map(|j| {
-                    let rows_mod = j % rows_b;
-                    (0..cols_a * cols_b)
-                        .into_iter()
-                        .map(|i| {
-                            let cols_mod = i % cols_b;
-                            let elem = a[((i - cols_mod) / cols_a, (j - rows_mod) / rows_a)]
-                                * b[(cols_mod, rows_mod)];
-                            elem
-                        })
-                        .collect::<Vec<T>>()
-                })
-                .collect::<Vec<Vec<T>>>()
-                .concat();
-            Matrix::from(rows_a * cols_b, elems)
-        };
-
-        let mut new_matrix = self.matrices[0].clone();
-        for p in (1..bigp) {
-            let matrix = prod_elem(new_matrix, self.matrices[p].clone()).unwrap();
-            new_matrix = matrix;
-        }
-
-        new_matrix
+        let rows = self.matrices[0].rows();
+        let cols = self.matrices[0].cols();
+        let elems_row = (0..rows.pow(bigp as u32))
+            .into_iter()
+            .map(|j| {
+                (0..cols.pow(bigp as u32))
+                    .into_iter()
+                    .map(|i| {
+                        let elem_a = (0..bigp - 1)
+                            .into_iter()
+                            .map(|p| {
+                                let k = bigp - 1 - p;
+                                let row =
+                                    ((j - (j % rows.pow(k as u32))) / rows.pow(k as u32)) % rows;
+                                let col =
+                                    ((i - (i % cols.pow(k as u32))) / cols.pow(k as u32)) % cols;
+                                self.matrices[p][(col, row)]
+                            })
+                            .product::<T>();
+                        let elem_b = self.matrices[bigp - 1][(i % cols, j % rows)];
+                        elem_a * elem_b
+                    })
+                    .collect::<Vec<T>>()
+            })
+            .collect::<Vec<Vec<T>>>()
+            .concat();
+        let result = Matrix::from(rows.pow(bigp as u32), elems_row).unwrap();
+        result
     }
 }
 
@@ -133,67 +113,22 @@ mod tests {
     #[test]
     fn it_works() {
         let a = mat![
-            1.0, 2.0;
-            3.0, 4.0
+            1.0, 2.0, 3.0;
+            3.0, 4.0, 5.0;
+            0.0, 7.0, 8.0
         ];
         let b = mat![
-            1.0, 2.0;
-            3.0, 4.0
+            1.0, 2.0, 3.0;
+            3.0, 4.0, 5.0;
+            6.0, 7.0, 5.0
         ];
-        let ab = KroneckerMatrices::new(vec![a, b]);
-        let c = ab.prod();
-
-        println!("c {:#?}", c);
-
-        assert_eq!(c[(0, 0)], 1.0);
-        assert_eq!(c[(0, 3)], 4.0);
-        assert_eq!(c[(2, 1)], 6.0);
-
-        let ab1 = ab.vec_mul(vec![1.0; 4]).unwrap().col_mat();
-        let c1 = &c * vec![1.0; 4].col_mat();
-
-        assert_eq!(ab1[(0, 0)], c1[(0, 0)]);
-        assert_eq!(ab1[(1, 0)], c1[(1, 0)]);
-    }
-
-    #[test]
-    fn it_works2() {
-        let a = mat![
-            1.0, 2.0;
-            3.0, 4.0
+        let c = mat![
+            1.0, 2.0, 3.0;
+            3.0, 9.0, 5.0;
+            6.0, 7.0, 8.0
         ];
-        let b = mat![
-            1.0, 2.0;
-            3.0, 4.0
-        ];
-
-        let prod_elem = |a: Matrix<f64>, b: Matrix<f64>| {
-            let rows_a = a.rows();
-            let cols_a = a.cols();
-            let rows_b = b.rows();
-            let cols_b = b.cols();
-
-            let elems = (0..rows_a * rows_b)
-                .into_iter()
-                .map(|j| {
-                    let rows_mod = j % rows_b;
-                    (0..cols_a * cols_b)
-                        .into_iter()
-                        .map(|i| {
-                            let cols_mod = i % cols_b;
-                            let elem = a[((i - cols_mod) / cols_a, (j - rows_mod) / rows_a)]
-                                * b[(cols_mod, rows_mod)];
-                            elem
-                        })
-                        .collect::<Vec<f64>>()
-                })
-                .collect::<Vec<Vec<f64>>>()
-                .concat();
-            Matrix::from(rows_a * rows_b, elems)
-        };
-
-        let d = prod_elem(a, b);
-
+        let abc = KroneckerMatrices::new(vec![a, b, c]);
+        let d = abc.prod();
         println!("d {:#?}", d);
     }
 }

@@ -1,3 +1,4 @@
+//これも掛け算逆っぽい
 use super::SparseMatrix;
 use crate::{matrix::ge::Matrix, number::Number};
 use std::ops::Mul;

@@ -1,6 +1,6 @@
 use super::SparseMatrix;
 use crate::number::Number;
-use std::ops::Mul;
+use std::{collections::HashMap, ops::Mul};
 
 fn mul<T>(lhs: &SparseMatrix<T>, rhs: &SparseMatrix<T>) -> SparseMatrix<T>
 where
@@ -9,37 +9,32 @@ where
     if lhs.cols != rhs.rows {
         panic!("Dimension mismatch.");
     }
-    let mut new_matrix = SparseMatrix::new(lhs.rows, rhs.cols);
+    // let mut new_matrix = SparseMatrix::new(lhs.rows, rhs.cols);
 
-    for (&(i, j), &s) in lhs.elems.iter() {
-        for (&(_, k), &r) in rhs.elems.iter().filter(|&(&(jr, _), _)| j == jr) {
-            let sr = s * r;
-            if sr == T::default() {
-                continue;
-            }
+    // for (&(i, j), &s) in lhs.elems.iter() {
+    //     for (&(_, k), &r) in rhs.elems.iter().filter(|&(&(jr, _), _)| j == jr) {
+    //         let sr = s * r;
+    //         if sr == T::default() {
+    //             continue;
+    //         }
 
-            *new_matrix.elems.entry((i, k)).or_insert(T::default()) += sr;
-        }
-    }
+    //         *new_matrix.elems.entry((i, k)).or_insert(T::default()) += sr;
+    //     }
+    // }
 
-    println!("lhs_elems {:#?}", lhs.elems.get(&(0, 0)));
+    // println!("lhs_elems {:#?}", lhs.elems.get(&(0, 0)));
 
-    let elems = lhs
+    let elems_orig = lhs
         .elems
         .iter()
         .map(|(&(l_row, l_col), &l)| {
             let elems_orig = rhs
                 .elems
                 .iter()
-                .map(|(&(r_row, r_col), &r)| {
-                    let mut result = ((l_row, r_col), r);
-                    if l_col == r_row {
-                        let elem = r * l;
-                        result = ((l_row, r_col), elem);
-                    } else {
-                        result = ((l_row, r_col), r - r);
-                    }
-                    result
+                .filter(|(&(r_row, _r_col), &_r)| l_col == r_row)
+                .map(|(&(_r_row, r_col), &r)| {
+                    let elem = r * l;
+                    ((l_row, r_col), elem)
                 })
                 .collect::<Vec<((usize, usize), T)>>();
             elems_orig
@@ -47,7 +42,24 @@ where
         .collect::<Vec<Vec<((usize, usize), T)>>>()
         .concat();
 
-    println!("elems {:#?}", elems);
+    let elems_hash = elems_orig.clone().into_iter().collect::<HashMap<_, _>>();
+
+    let elems = elems_hash
+        .iter()
+        .map(|((row, col), _)| {
+            let mut elems_same = elems_orig.clone();
+            elems_same.retain(|((row_v, col_v), _value)| (row_v, col_v) == (row, col));
+            let value = elems_same
+                .iter()
+                .map(|((_row, _col), value)| *value)
+                .sum::<T>();
+            ((*row, *col), value)
+        })
+        .collect::<HashMap<_, _>>();
+
+    //println!("elems {:#?}", elems);
+
+    let new_matrix = SparseMatrix::from(lhs.rows, rhs.cols, elems);
 
     new_matrix
 }

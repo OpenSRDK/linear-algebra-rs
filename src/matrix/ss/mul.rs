@@ -9,20 +9,6 @@ where
     if lhs.cols != rhs.rows {
         panic!("Dimension mismatch.");
     }
-    // let mut new_matrix = SparseMatrix::new(lhs.rows, rhs.cols);
-
-    // for (&(i, j), &s) in lhs.elems.iter() {
-    //     for (&(_, k), &r) in rhs.elems.iter().filter(|&(&(jr, _), _)| j == jr) {
-    //         let sr = s * r;
-    //         if sr == T::default() {
-    //             continue;
-    //         }
-
-    //         *new_matrix.elems.entry((i, k)).or_insert(T::default()) += sr;
-    //     }
-    // }
-
-    // println!("lhs_elems {:#?}", lhs.elems.get(&(0, 0)));
 
     let elems_orig = lhs
         .elems
@@ -56,8 +42,6 @@ where
             ((*row, *col), value)
         })
         .collect::<HashMap<_, _>>();
-
-    //println!("elems {:#?}", elems);
 
     let new_matrix = SparseMatrix::from(lhs.rows, rhs.cols, elems);
 

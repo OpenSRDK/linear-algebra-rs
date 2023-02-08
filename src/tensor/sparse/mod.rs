@@ -5,7 +5,7 @@ use crate::{Number, Tensor};
 use std::collections::HashMap;
 
 #[derive(Clone, Debug, PartialEq)]
-pub struct SparseTensor<T>
+pub struct SparseTensor<T = f64>
 where
     T: Number,
 {

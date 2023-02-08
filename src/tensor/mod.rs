@@ -1,11 +1,11 @@
 pub mod matrix;
 pub mod sparse;
 
-use std::error::Error;
+use std::{error::Error, fmt::Debug};
 
 use crate::Number;
 
-pub trait Tensor<T>
+pub trait Tensor<T>: Clone + Debug + PartialEq + Send + Sync
 where
     T: Number,
 {

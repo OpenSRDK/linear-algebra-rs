@@ -4,6 +4,7 @@ pub mod operators;
 use crate::{Number, Tensor};
 use std::collections::HashMap;
 
+#[derive(Clone, Debug, PartialEq)]
 pub struct SparseTensor<T>
 where
     T: Number,

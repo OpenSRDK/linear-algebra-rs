@@ -7,14 +7,10 @@ impl<T> SparseTensor<T>
 where
     T: Number,
 {
-    pub fn inner_prod(
-        &self,
-        rhs: Self,
-        level_pairs: &[(usize, usize)],
-    ) -> Result<Self, TensorError> {
+    pub fn inner_prod(&self, rhs: &Self, level_pairs: &[(usize, usize)]) -> Self {
         for &(level, level_prime) in level_pairs {
             if self.dim(level) != rhs.dim(level_prime) {
-                return Err(TensorError::DimensionMismatch);
+                panic!("Dimension mismatch.")
             }
         }
 
@@ -29,6 +25,6 @@ where
 
         todo!();
 
-        Ok(new)
+        new
     }
 }

@@ -9,13 +9,13 @@ where
     pub fn linear_prod(&self, rhs: &Matrix<T>) -> T {
         if !self.same_size(rhs) {
             panic!("Dimension mismatch.")
-        } else {
-            self.elems
-                .par_iter()
-                .zip(rhs.elems.par_iter())
-                .map(|(&s, &r)| s * r)
-                .sum()
         }
+
+        self.elems
+            .par_iter()
+            .zip(rhs.elems.par_iter())
+            .map(|(&s, &r)| s * r)
+            .sum()
     }
 
     /// # Hamadard product

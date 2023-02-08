@@ -10,9 +10,9 @@ where
     pub fn inner_prod(
         &self,
         rhs: Self,
-        level_pairs: Vec<(usize, usize)>,
+        level_pairs: &[(usize, usize)],
     ) -> Result<Self, TensorError> {
-        for &(level, level_prime) in &level_pairs {
+        for &(level, level_prime) in level_pairs {
             if self.dim(level) != rhs.dim(level_prime) {
                 return Err(TensorError::DimensionMismatch);
             }

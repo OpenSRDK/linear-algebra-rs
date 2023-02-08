@@ -15,34 +15,34 @@ where
 macro_rules! impl_mul_scalar {
     {$t: ty} => {
         impl Mul<SparseTensor<$t>> for $t {
-            type Output = SparseTensor<$t>;
+          type Output = SparseTensor<$t>;
 
-            fn mul(self, rhs: SparseTensor<$t>) -> Self::Output {
-                mul_scalar(self, rhs)
-            }
+          fn mul(self, rhs: SparseTensor<$t>) -> Self::Output {
+            mul_scalar(self, rhs)
+          }
         }
 
         impl Mul<SparseTensor<$t>> for &$t {
           type Output = SparseTensor<$t>;
 
           fn mul(self, rhs: SparseTensor<$t>) -> Self::Output {
-              mul_scalar(*self, rhs)
+            mul_scalar(*self, rhs)
           }
         }
 
         impl Mul<$t> for SparseTensor<$t> {
-            type Output = SparseTensor<$t>;
+          type Output = SparseTensor<$t>;
 
-            fn mul(self, rhs: $t) -> Self::Output {
-                mul_scalar(rhs, self)
-            }
+          fn mul(self, rhs: $t) -> Self::Output {
+            mul_scalar(rhs, self)
+          }
         }
 
         impl Mul<&$t> for SparseTensor<$t> {
           type Output = SparseTensor<$t>;
 
           fn mul(self, rhs: &$t) -> Self::Output {
-              mul_scalar(*rhs, self)
+            mul_scalar(*rhs, self)
           }
         }
     };

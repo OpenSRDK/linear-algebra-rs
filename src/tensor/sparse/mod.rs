@@ -37,6 +37,10 @@ where
     pub fn same_size(&self, rhs: &SparseTensor<T>) -> bool {
         self.dims == rhs.dims
     }
+
+    pub fn total_size(&self) -> usize {
+        self.dims.iter().product()
+    }
 }
 
 impl<T> Tensor<T> for SparseTensor<T>

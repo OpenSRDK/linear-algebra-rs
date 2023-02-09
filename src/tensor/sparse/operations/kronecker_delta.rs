@@ -23,7 +23,7 @@ where
         let mut dims = self
             .dims
             .iter()
-            .map(|dim| *dim)
+            .cloned()
             .chain((0..new_levels - self.levels()).map(|_| 1usize))
             .collect::<Vec<_>>();
 
@@ -36,7 +36,7 @@ where
             .map(|(indices, value)| {
                 let mut new_indices = indices
                     .iter()
-                    .map(|i| *i)
+                    .cloned()
                     .chain((0..new_levels - self.levels()).map(|_| 0usize))
                     .collect::<Vec<_>>();
 

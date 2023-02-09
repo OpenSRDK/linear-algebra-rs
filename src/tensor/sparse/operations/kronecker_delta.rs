@@ -1,15 +1,15 @@
-use std::collections::HashMap;
-
 use crate::tensor::Tensor;
 use crate::TensorError;
 use crate::{sparse::SparseTensor, Number};
 use rayon::prelude::*;
+use std::collections::HashMap;
+use std::ops::Mul;
 
 impl<T> SparseTensor<T>
 where
     T: Number,
 {
-    pub fn mul_kronecker_delta(&self, mut level_pair: (usize, usize)) -> Self {
+    fn mul_kronecker_delta(&self, mut level_pair: (usize, usize)) -> Self {
         if level_pair.0 == level_pair.1 {
             return self.clone();
         }
@@ -57,5 +57,96 @@ where
         }
 
         result
+    }
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct KroneckerDelta(pub usize, pub usize);
+
+impl<T> Mul<SparseTensor<T>> for KroneckerDelta
+where
+    T: Number,
+{
+    type Output = SparseTensor<T>;
+
+    fn mul(self, rhs: SparseTensor<T>) -> Self::Output {
+        rhs.mul_kronecker_delta((self.0, self.1))
+    }
+}
+
+impl<T> Mul<&SparseTensor<T>> for KroneckerDelta
+where
+    T: Number,
+{
+    type Output = SparseTensor<T>;
+
+    fn mul(self, rhs: &SparseTensor<T>) -> Self::Output {
+        rhs.mul_kronecker_delta((self.0, self.1))
+    }
+}
+
+impl<T> Mul<SparseTensor<T>> for &KroneckerDelta
+where
+    T: Number,
+{
+    type Output = SparseTensor<T>;
+
+    fn mul(self, rhs: SparseTensor<T>) -> Self::Output {
+        rhs.mul_kronecker_delta((self.0, self.1))
+    }
+}
+
+impl<T> Mul<&SparseTensor<T>> for &KroneckerDelta
+where
+    T: Number,
+{
+    type Output = SparseTensor<T>;
+
+    fn mul(self, rhs: &SparseTensor<T>) -> Self::Output {
+        rhs.mul_kronecker_delta((self.0, self.1))
+    }
+}
+
+impl<T> Mul<KroneckerDelta> for SparseTensor<T>
+where
+    T: Number,
+{
+    type Output = SparseTensor<T>;
+
+    fn mul(self, rhs: KroneckerDelta) -> Self::Output {
+        self.mul_kronecker_delta((rhs.0, rhs.1))
+    }
+}
+
+impl<T> Mul<&KroneckerDelta> for SparseTensor<T>
+where
+    T: Number,
+{
+    type Output = SparseTensor<T>;
+
+    fn mul(self, rhs: &KroneckerDelta) -> Self::Output {
+        self.mul_kronecker_delta((rhs.0, rhs.1))
+    }
+}
+
+impl<T> Mul<KroneckerDelta> for &SparseTensor<T>
+where
+    T: Number,
+{
+    type Output = SparseTensor<T>;
+
+    fn mul(self, rhs: KroneckerDelta) -> Self::Output {
+        self.mul_kronecker_delta((rhs.0, rhs.1))
+    }
+}
+
+impl<T> Mul<&KroneckerDelta> for &SparseTensor<T>
+where
+    T: Number,
+{
+    type Output = SparseTensor<T>;
+
+    fn mul(self, rhs: &KroneckerDelta) -> Self::Output {
+        self.mul_kronecker_delta((rhs.0, rhs.1))
     }
 }

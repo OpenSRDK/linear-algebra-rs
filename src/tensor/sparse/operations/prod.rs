@@ -7,22 +7,22 @@ impl<T> SparseTensor<T>
 where
     T: Number,
 {
-    pub fn inner_prod(&self, rhs: &Self, level_pairs: &[(usize, usize)]) -> Self {
-        for &(level, level_prime) in level_pairs {
-            if self.dim(level) != rhs.dim(level_prime) {
+    pub fn inner_prod(&self, rhs: &Self, rank_pairs: &[(usize, usize)]) -> Self {
+        for &rank_pair in rank_pairs {
+            if self.dim(rank_pair.0) != rhs.dim(rank_pair.1) {
                 panic!("Dimension mismatch.")
             }
         }
 
         let mut new_dims1 = self.dims.clone();
         let mut new_dims2 = rhs.dims.clone();
-        level_pairs.iter().for_each(|(level, level_prime)| {
-            new_dims1[*level] = 1;
-            new_dims2[*level_prime] = 1;
+        rank_pairs.iter().for_each(|&rank_pair| {
+            new_dims1[rank_pair.0] = 1;
+            new_dims2[rank_pair.1] = 1;
         });
 
         // Convert to matrix format to calculate rapidly
-        for &level_pair in level_pairs {}
+        for &rank_pair in rank_pairs {}
 
         todo!();
     }

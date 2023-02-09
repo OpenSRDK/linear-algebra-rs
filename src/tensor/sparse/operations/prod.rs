@@ -21,10 +21,9 @@ where
             new_dims2[*level_prime] = 1;
         });
 
-        let new = Self::new([new_dims1, new_dims2].concat());
+        // Convert to matrix format to calculate rapidly
+        for &level_pair in level_pairs {}
 
         todo!();
-
-        new
     }
 }

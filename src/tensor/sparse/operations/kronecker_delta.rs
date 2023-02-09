@@ -19,12 +19,12 @@ where
             level_pair.1 = buffer;
         }
 
-        let new_levels = self.levels().max(level_pair.1);
+        let new_levels = self.rank().max(level_pair.1);
         let mut dims = self
             .dims
             .iter()
             .cloned()
-            .chain((0..new_levels - self.levels()).map(|_| 1usize))
+            .chain((0..new_levels - self.rank()).map(|_| 1usize))
             .collect::<Vec<_>>();
 
         dims[level_pair.1] = dims[level_pair.0];
@@ -37,7 +37,7 @@ where
                 let mut new_indices = indices
                     .iter()
                     .cloned()
-                    .chain((0..new_levels - self.levels()).map(|_| 0usize))
+                    .chain((0..new_levels - self.rank()).map(|_| 0usize))
                     .collect::<Vec<_>>();
 
                 new_indices[level_pair.1] = new_indices[level_pair.0];

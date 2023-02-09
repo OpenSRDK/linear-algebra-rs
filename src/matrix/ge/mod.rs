@@ -72,7 +72,7 @@ where
         Ok(Self { rows, cols, elems })
     }
 
-    pub fn same_size(&self, rhs: &Matrix<T>) -> bool {
+    pub fn is_same_size(&self, rhs: &Matrix<T>) -> bool {
         self.rows == rhs.rows && self.cols == rhs.cols
     }
 

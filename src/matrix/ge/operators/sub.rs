@@ -23,7 +23,7 @@ fn sub<T>(lhs: Matrix<T>, rhs: &Matrix<T>) -> Matrix<T>
 where
     T: Number,
 {
-    if !lhs.same_size(rhs) {
+    if !lhs.is_same_size(rhs) {
         panic!("Dimension mismatch.")
     }
     let mut lhs = lhs;

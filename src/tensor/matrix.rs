@@ -4,7 +4,7 @@ impl<T> Tensor<T> for Matrix<T>
 where
     T: Number,
 {
-    fn levels(&self) -> usize {
+    fn rank(&self) -> usize {
         2
     }
 

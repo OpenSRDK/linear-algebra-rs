@@ -3,54 +3,27 @@ use crate::number::{c64, Number};
 use rayon::prelude::*;
 use std::ops::Add;
 
-fn add_scalar<T>(lhs: Matrix<T>, rhs: T) -> Matrix<T>
+fn add_scalar<T>(lhs: T, rhs: Matrix<T>) -> Matrix<T>
 where
     T: Number,
 {
-    let mut lhs = lhs;
+    let mut rhs = rhs;
 
-    lhs.elems
+    rhs.elems
         .par_iter_mut()
-        .map(|l| {
-            *l += rhs;
+        .map(|r| {
+            *r += lhs;
         })
         .collect::<Vec<_>>();
 
-    lhs
-}
-
-impl<T> Add<T> for Matrix<T>
-where
-    T: Number,
-{
-    type Output = Matrix<T>;
-
-    fn add(self, rhs: T) -> Self::Output {
-        add_scalar(self, rhs)
-    }
-}
-
-impl Add<Matrix> for f64 {
-    type Output = Matrix;
-
-    fn add(self, rhs: Matrix) -> Self::Output {
-        add_scalar(rhs, self)
-    }
-}
-
-impl Add<Matrix<c64>> for c64 {
-    type Output = Matrix<c64>;
-
-    fn add(self, rhs: Matrix<c64>) -> Self::Output {
-        add_scalar(rhs, self)
-    }
+    rhs
 }
 
 fn add<T>(lhs: Matrix<T>, rhs: &Matrix<T>) -> Matrix<T>
 where
     T: Number,
 {
-    if !lhs.same_size(rhs) {
+    if !lhs.is_same_size(rhs) {
         panic!("Dimension mismatch.")
     }
     let mut lhs = lhs;
@@ -66,38 +39,75 @@ where
     lhs
 }
 
-impl<T> Add<Matrix<T>> for Matrix<T>
-where
-    T: Number,
-{
-    type Output = Matrix<T>;
+macro_rules! impl_add_scalar {
+    {$t: ty} => {
+        impl Add<Matrix<$t>> for $t {
+          type Output = Matrix<$t>;
 
-    fn add(self, rhs: Matrix<T>) -> Self::Output {
-        add(self, &rhs)
-    }
+          fn add(self, rhs: Matrix<$t>) -> Self::Output {
+            add_scalar(self, rhs)
+          }
+        }
+
+        impl Add<Matrix<$t>> for &$t {
+          type Output = Matrix<$t>;
+
+          fn add(self, rhs: Matrix<$t>) -> Self::Output {
+            add_scalar(*self, rhs)
+          }
+        }
+
+        impl Add<$t> for Matrix<$t> {
+          type Output = Matrix<$t>;
+
+          fn add(self, rhs: $t) -> Self::Output {
+            add_scalar(rhs, self)
+          }
+        }
+
+        impl Add<&$t> for Matrix<$t> {
+          type Output = Matrix<$t>;
+
+          fn add(self, rhs: &$t) -> Self::Output {
+            add_scalar(*rhs, self)
+          }
+        }
+    };
 }
 
-impl<T> Add<&Matrix<T>> for Matrix<T>
-where
-    T: Number,
-{
-    type Output = Matrix<T>;
+impl_add_scalar! {f64}
+impl_add_scalar! {c64}
 
-    fn add(self, rhs: &Matrix<T>) -> Self::Output {
-        add(self, rhs)
-    }
+macro_rules! impl_add {
+  {$t: ty} => {
+      impl Add<Matrix<$t>> for Matrix<$t> {
+          type Output = Matrix<$t>;
+
+          fn add(self, rhs: Matrix<$t>) -> Self::Output {
+            add(self, &rhs)
+          }
+      }
+
+      impl Add<&Matrix<$t>> for Matrix<$t> {
+          type Output = Matrix<$t>;
+
+          fn add(self, rhs: &Matrix<$t>) -> Self::Output {
+            add(self, rhs)
+          }
+      }
+
+      impl Add<Matrix<$t>> for &Matrix<$t> {
+          type Output = Matrix<$t>;
+
+          fn add(self, rhs: Matrix<$t>) -> Self::Output {
+            add(rhs, self)
+          }
+      }
+  };
 }
 
-impl<T> Add<Matrix<T>> for &Matrix<T>
-where
-    T: Number,
-{
-    type Output = Matrix<T>;
-
-    fn add(self, rhs: Matrix<T>) -> Self::Output {
-        add(rhs, self)
-    }
-}
+impl_add! {f64}
+impl_add! {c64}
 
 #[cfg(test)]
 mod tests {

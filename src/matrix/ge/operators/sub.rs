@@ -3,54 +3,27 @@ use crate::number::{c64, Number};
 use rayon::prelude::*;
 use std::ops::Sub;
 
-fn sub_scalar<T>(lhs: Matrix<T>, rhs: T) -> Matrix<T>
+fn sub_scalar<T>(lhs: T, rhs: Matrix<T>) -> Matrix<T>
 where
     T: Number,
 {
-    let mut lhs = lhs;
+    let mut rhs = rhs;
 
-    lhs.elems
+    rhs.elems
         .par_iter_mut()
-        .map(|l| {
-            *l -= rhs;
+        .map(|r| {
+            *r = lhs - *r;
         })
         .collect::<Vec<_>>();
 
-    lhs
-}
-
-impl<T> Sub<T> for Matrix<T>
-where
-    T: Number,
-{
-    type Output = Matrix<T>;
-
-    fn sub(self, rhs: T) -> Self::Output {
-        sub_scalar(self, rhs)
-    }
-}
-
-impl Sub<Matrix> for f64 {
-    type Output = Matrix;
-
-    fn sub(self, rhs: Matrix) -> Self::Output {
-        -sub_scalar(rhs, self)
-    }
-}
-
-impl Sub<Matrix<c64>> for c64 {
-    type Output = Matrix<c64>;
-
-    fn sub(self, rhs: Matrix<c64>) -> Self::Output {
-        -sub_scalar(rhs, self)
-    }
+    rhs
 }
 
 fn sub<T>(lhs: Matrix<T>, rhs: &Matrix<T>) -> Matrix<T>
 where
     T: Number,
 {
-    if !lhs.same_size(rhs) {
+    if !lhs.is_same_size(rhs) {
         panic!("Dimension mismatch.")
     }
     let mut lhs = lhs;
@@ -66,38 +39,75 @@ where
     lhs
 }
 
-impl<T> Sub<Matrix<T>> for Matrix<T>
-where
-    T: Number,
-{
-    type Output = Matrix<T>;
+macro_rules! impl_sub_scalar {
+    {$t: ty} => {
+        impl Sub<Matrix<$t>> for $t {
+          type Output = Matrix<$t>;
 
-    fn sub(self, rhs: Matrix<T>) -> Self::Output {
-        sub(self, &rhs)
-    }
+          fn sub(self, rhs: Matrix<$t>) -> Self::Output {
+            sub_scalar(self, rhs)
+          }
+        }
+
+        impl Sub<Matrix<$t>> for &$t {
+          type Output = Matrix<$t>;
+
+          fn sub(self, rhs: Matrix<$t>) -> Self::Output {
+            sub_scalar(*self, rhs)
+          }
+        }
+
+        impl Sub<$t> for Matrix<$t> {
+          type Output = Matrix<$t>;
+
+          fn sub(self, rhs: $t) -> Self::Output {
+            -sub_scalar(rhs, self)
+          }
+        }
+
+        impl Sub<&$t> for Matrix<$t> {
+          type Output = Matrix<$t>;
+
+          fn sub(self, rhs: &$t) -> Self::Output {
+            -sub_scalar(*rhs, self)
+          }
+        }
+    };
 }
 
-impl<T> Sub<&Matrix<T>> for Matrix<T>
-where
-    T: Number,
-{
-    type Output = Matrix<T>;
+impl_sub_scalar! {f64}
+impl_sub_scalar! {c64}
 
-    fn sub(self, rhs: &Matrix<T>) -> Self::Output {
-        sub(self, rhs)
-    }
+macro_rules! impl_sub {
+  {$t: ty} => {
+      impl Sub<Matrix<$t>> for Matrix<$t> {
+        type Output = Matrix<$t>;
+
+        fn sub(self, rhs: Matrix<$t>) -> Self::Output {
+          sub(self, &rhs)
+        }
+      }
+
+      impl Sub<&Matrix<$t>> for Matrix<$t> {
+        type Output = Matrix<$t>;
+
+        fn sub(self, rhs: &Matrix<$t>) -> Self::Output {
+          sub(self, rhs)
+        }
+      }
+
+      impl Sub<Matrix<$t>> for &Matrix<$t> {
+        type Output = Matrix<$t>;
+
+        fn sub(self, rhs: Matrix<$t>) -> Self::Output {
+          -sub(rhs, self)
+        }
+      }
+  };
 }
 
-impl<T> Sub<Matrix<T>> for &Matrix<T>
-where
-    T: Number,
-{
-    type Output = Matrix<T>;
-
-    fn sub(self, rhs: Matrix<T>) -> Self::Output {
-        -sub(rhs, self)
-    }
-}
+impl_sub! {f64}
+impl_sub! {c64}
 
 #[cfg(test)]
 mod tests {

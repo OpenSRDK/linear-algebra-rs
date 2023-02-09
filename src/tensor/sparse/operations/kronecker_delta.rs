@@ -49,4 +49,13 @@ where
 
         Self::from(dims, new_elems)
     }
+
+    pub fn mul_kronecker_deltas(&self, level_pairs: &[(usize, usize)]) -> Self {
+        let mut result = self.clone();
+        for level_pair in level_pairs {
+            result = result.mul_kronecker_delta(*level_pair);
+        }
+
+        result
+    }
 }

@@ -44,7 +44,7 @@ impl<T> SparseTensor<T>
 where
     T: Number,
 {
-    pub fn inner_prod(self, rhs: Self, rank_pairs: &[[usize; 2]]) -> Self {
+    pub fn inner_prod(self, rhs: Self, rank_pairs: &[[RankIndex; 2]]) -> Self {
         let mut rank_combinations = vec![HashMap::new(); 2];
         for (i, rank_pair) in rank_pairs.iter().enumerate() {
             rank_combinations[0].insert(rank_pair[0], i.to_string());

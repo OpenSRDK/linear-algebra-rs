@@ -44,3 +44,17 @@ where
         result
     }
 }
+
+impl<T> SparseTensor<T>
+where
+    T: Number,
+{
+    pub fn inner_prod(self, rhs: Self, rank_pairs: &[(usize, usize)]) -> Self {
+        let mut rank_combinations = vec![vec![None; self.rank()], vec![None; rhs.rank()]];
+        for (i, rank_pair) in rank_pairs.iter().enumerate() {
+            rank_combinations[0][rank_pair.0] = Some(format!("id{}", i));
+            rank_combinations[1][rank_pair.1] = Some(format!("id{}", i));
+        }
+        vec![self, rhs].into_iter().inner_prod(&rank_combinations)
+    }
+}

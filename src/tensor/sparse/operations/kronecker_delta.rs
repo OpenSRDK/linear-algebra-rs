@@ -22,7 +22,7 @@ where
 
         let new_levels = self.rank().max(level_pair.1);
         let mut dims = self
-            .dims
+            .sizes
             .iter()
             .cloned()
             .chain((0..new_levels - self.rank()).map(|_| 1usize))

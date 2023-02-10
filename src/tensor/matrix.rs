@@ -8,7 +8,7 @@ where
         2
     }
 
-    fn dim(&self, level: usize) -> usize {
+    fn size(&self, level: usize) -> usize {
         match level {
             0 => self.rows(),
             1 => self.cols(),

@@ -23,7 +23,7 @@ where
         let mut new_dims = vec![1; max_rank];
 
         for (i, t) in tensors.iter().enumerate() {
-            for (j, &dim) in t.dims.iter().enumerate() {
+            for (j, &dim) in t.sizes.iter().enumerate() {
                 if rank_combinations[i].get(&j).is_none() && dim > 1 {
                     if new_dims[j] == 1 {
                         new_dims[j] = dim;

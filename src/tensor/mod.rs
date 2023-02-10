@@ -10,7 +10,7 @@ where
     T: Number,
 {
     fn rank(&self) -> usize;
-    fn dim(&self, rank: usize) -> usize;
+    fn size(&self, rank: usize) -> usize;
     fn elem(&self, indices: &[usize]) -> T;
     fn elem_mut(&mut self, indices: &[usize]) -> &mut T;
 }

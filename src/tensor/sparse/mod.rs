@@ -11,7 +11,7 @@ pub struct SparseTensor<T = f64>
 where
     T: Number,
 {
-    dims: Vec<usize>,
+    sizes: Vec<usize>,
     elems: HashMap<Vec<usize>, T>,
     default: T,
 }
@@ -20,43 +20,43 @@ impl<T> SparseTensor<T>
 where
     T: Number,
 {
-    pub fn new(dims: Vec<usize>) -> Self {
-        if dims.iter().product::<usize>() == 0 {
+    pub fn new(sizes: Vec<usize>) -> Self {
+        if sizes.iter().product::<usize>() == 0 {
             panic!("SparseTensor::new() is not available for zero-sized tensor.");
         }
         Self {
-            dims,
+            sizes,
             elems: HashMap::new(),
             default: T::default(),
         }
     }
 
-    pub fn from(dims: Vec<usize>, elems: HashMap<Vec<usize>, T>) -> Self {
-        if dims.iter().product::<usize>() == 0 {
+    pub fn from(sizes: Vec<usize>, elems: HashMap<Vec<usize>, T>) -> Self {
+        if sizes.iter().product::<usize>() == 0 {
             panic!("SparseTensor::from() is not available for zero-sized tensor.");
         }
         Self {
-            dims,
+            sizes,
             elems,
             default: T::default(),
         }
     }
 
     pub fn is_same_size(&self, rhs: &SparseTensor<T>) -> bool {
-        self.dims == rhs.dims
+        self.sizes == rhs.sizes
     }
 
     pub fn total_size(&self) -> usize {
-        self.dims.iter().product()
+        self.sizes.iter().product()
     }
 
     pub fn not_1dimension_ranks(&self) -> usize {
-        self.dims.iter().filter(|&d| *d != 1).count()
+        self.sizes.iter().filter(|&d| *d != 1).count()
     }
 
     pub fn reduce_1dimension_rank(&self) -> Self {
         let mut new_dims = vec![];
-        for d in self.dims.iter() {
+        for d in self.sizes.iter() {
             if *d != 1 {
                 new_dims.push(*d);
             }
@@ -67,7 +67,7 @@ where
         for (k, v) in self.elems.iter() {
             let mut new_k = vec![];
             for (i, d) in k.iter().enumerate() {
-                if self.dims[i] != 1 {
+                if self.sizes[i] != 1 {
                     new_k.push(*d);
                 }
             }
@@ -75,7 +75,7 @@ where
         }
 
         Self {
-            dims: new_dims,
+            sizes: new_dims,
             elems: new_elems,
             default: self.default,
         }
@@ -86,7 +86,7 @@ where
             panic!("SparseTensor::to_vec() is only available for rank 1 tensor.");
         }
 
-        let mut vec = vec![T::default(); self.dims[0]];
+        let mut vec = vec![T::default(); self.sizes[0]];
         for (k, v) in self.elems.iter() {
             vec[k[0]] = *v;
         }
@@ -99,7 +99,7 @@ where
             panic!("SparseTensor::to_mat() is only available for rank 2 tensor.");
         }
 
-        let mut mat = Matrix::new(self.dims[0], self.dims[1]);
+        let mut mat = Matrix::new(self.sizes[0], self.sizes[1]);
         for (k, v) in self.elems.iter() {
             mat[(k[0], k[1])] = *v;
         }
@@ -112,11 +112,11 @@ where
     T: Number,
 {
     fn rank(&self) -> usize {
-        self.dims.len()
+        self.sizes.len()
     }
 
-    fn dim(&self, rank: RankIndex) -> usize {
-        self.dims[rank]
+    fn size(&self, rank: RankIndex) -> usize {
+        self.sizes[rank]
     }
 
     fn elem(&self, indices: &[usize]) -> T {

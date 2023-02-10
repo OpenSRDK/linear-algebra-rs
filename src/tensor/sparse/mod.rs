@@ -42,8 +42,8 @@ where
         }
     }
 
-    pub fn is_same_size(&self, rhs: &SparseTensor<T>) -> bool {
-        self.sizes == rhs.sizes
+    pub fn is_same_size(&self, other: &SparseTensor<T>) -> bool {
+        self.sizes == other.sizes
     }
 
     pub fn total_size(&self) -> usize {

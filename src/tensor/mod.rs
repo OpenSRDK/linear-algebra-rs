@@ -12,7 +12,9 @@ pub fn generate_rank_combination_id() -> RankCombinationId {
     thread_rng().gen::<u32>().to_string()
 }
 
-pub fn rank_combinations(rank_pairs: &[[RankIndex; 2]]) -> [HashMap<RankIndex, String>; 2] {
+pub fn generate_rank_combinations(
+    rank_pairs: &[[RankIndex; 2]],
+) -> [HashMap<RankIndex, String>; 2] {
     let mut rank_combinations = [HashMap::new(), HashMap::new()];
     for rank_pair in rank_pairs.iter() {
         let id = generate_rank_combination_id();

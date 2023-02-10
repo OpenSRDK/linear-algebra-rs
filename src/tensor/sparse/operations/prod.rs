@@ -1,6 +1,6 @@
 use crate::sparse::RankIndex;
 use crate::tensor::Tensor;
-use crate::{rank_combinations, RankCombinationId, TensorError};
+use crate::{generate_rank_combinations, RankCombinationId, TensorError};
 use crate::{sparse::SparseTensor, Number};
 use rand::prelude::*;
 use std::collections::HashMap;
@@ -51,7 +51,7 @@ where
     T: Number,
 {
     pub fn inner_prod(self, rhs: Self, rank_pairs: &[[RankIndex; 2]]) -> Self {
-        let rank_combinations = rank_combinations(rank_pairs);
+        let rank_combinations = generate_rank_combinations(rank_pairs);
 
         vec![self, rhs].into_iter().inner_prod(&rank_combinations)
     }

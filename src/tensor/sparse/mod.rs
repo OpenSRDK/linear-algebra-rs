@@ -1,10 +1,8 @@
 pub mod operations;
 pub mod operators;
 
-use crate::{Matrix, Number, Tensor};
+use crate::{Matrix, Number, RankIndex, Tensor};
 use std::collections::HashMap;
-
-pub type RankIndex = usize;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct SparseTensor<T = f64>

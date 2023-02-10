@@ -1,15 +1,15 @@
-use std::collections::HashMap;
-
+use crate::sparse::RankIndex;
 use crate::tensor::Tensor;
 use crate::TensorError;
 use crate::{sparse::SparseTensor, Number};
 use rayon::prelude::*;
+use std::collections::HashMap;
 
 pub trait TInnerProd<T>
 where
     T: Number,
 {
-    fn inner_prod(self, rank_combinations: &[HashMap<usize, String>]) -> SparseTensor<T>;
+    fn inner_prod(self, rank_combinations: &[HashMap<RankIndex, String>]) -> SparseTensor<T>;
 }
 
 impl<I, T> TInnerProd<T> for I
@@ -17,7 +17,7 @@ where
     I: Iterator<Item = SparseTensor<T>>,
     T: Number,
 {
-    fn inner_prod(self, rank_combinations: &[HashMap<usize, String>]) -> SparseTensor<T> {
+    fn inner_prod(self, rank_combinations: &[HashMap<RankIndex, String>]) -> SparseTensor<T> {
         let tensors = self.collect::<Vec<_>>();
         let max_rank = tensors.iter().map(|t| t.rank()).max().unwrap();
         let mut new_dims = vec![1; max_rank];

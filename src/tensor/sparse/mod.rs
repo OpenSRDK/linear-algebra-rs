@@ -4,6 +4,8 @@ pub mod operators;
 use crate::{Matrix, Number, Tensor};
 use std::collections::HashMap;
 
+pub type RankIndex = usize;
+
 #[derive(Clone, Debug, PartialEq)]
 pub struct SparseTensor<T = f64>
 where
@@ -113,8 +115,8 @@ where
         self.dims.len()
     }
 
-    fn dim(&self, level: usize) -> usize {
-        self.dims[level]
+    fn dim(&self, rank: RankIndex) -> usize {
+        self.dims[rank]
     }
 
     fn elem(&self, indices: &[usize]) -> T {

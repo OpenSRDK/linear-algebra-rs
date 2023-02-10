@@ -1,3 +1,4 @@
+use crate::sparse::RankIndex;
 use crate::tensor::Tensor;
 use crate::{sparse::SparseTensor, Number};
 use rayon::prelude::*;
@@ -21,7 +22,7 @@ where
 
         let new_levels = self.rank().max(level_pair.1);
         let mut dims = self
-            .dims
+            .sizes
             .iter()
             .cloned()
             .chain((0..new_levels - self.rank()).map(|_| 1usize))
@@ -61,7 +62,7 @@ where
 }
 
 #[derive(Clone, Debug, PartialEq)]
-pub struct KroneckerDelta(pub usize, pub usize);
+pub struct KroneckerDelta(pub RankIndex, pub RankIndex);
 
 impl Mul for KroneckerDelta {
     type Output = Vec<KroneckerDelta>;

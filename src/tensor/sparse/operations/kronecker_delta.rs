@@ -2,6 +2,7 @@ use crate::sparse::RankIndex;
 use crate::tensor::Tensor;
 use crate::{sparse::SparseTensor, Number};
 use rayon::prelude::*;
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::ops::Mul;
 
@@ -61,7 +62,7 @@ where
     }
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct KroneckerDelta(pub RankIndex, pub RankIndex);
 
 impl Mul for KroneckerDelta {

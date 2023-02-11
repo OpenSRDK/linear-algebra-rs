@@ -1,8 +1,11 @@
+use serde::Deserialize;
+use serde::Serialize;
+
 use crate::matrix::ge::*;
 use crate::matrix::MatrixError;
 use crate::number::Number;
 
-#[derive(Clone, Debug, Default, PartialEq, Hash)]
+#[derive(Clone, Debug, Default, PartialEq, Hash, Serialize, Deserialize)]
 pub struct KroneckerMatrices<T = f64>
 where
     T: Number,

@@ -4,8 +4,10 @@ use crate::{
     Matrix,
 };
 use lapack::dsytrd;
+use serde::{Deserialize, Serialize};
 use std::error::Error;
 
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct SYTRD(pub Matrix, pub Vec<f64>, pub SymmetricTridiagonalMatrix);
 
 impl Matrix {

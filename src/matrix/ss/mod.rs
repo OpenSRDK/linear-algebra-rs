@@ -1,3 +1,5 @@
+use serde::{Deserialize, Serialize};
+
 use crate::number::Number;
 use std::collections::HashMap;
 
@@ -6,7 +8,7 @@ pub mod mul;
 pub mod mul_lhs;
 pub mod mul_rhs;
 
-#[derive(Clone, Debug, Default, PartialEq)]
+#[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
 pub struct SparseMatrix<T = f64>
 where
     T: Number,

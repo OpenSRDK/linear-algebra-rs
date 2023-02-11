@@ -3,8 +3,10 @@ use crate::matrix::MatrixError;
 use crate::number::*;
 use lapack::dgttrf;
 use lapack::zgttrf;
+use serde::Deserialize;
+use serde::Serialize;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct GTTRF<T = f64>(pub Vec<T>, pub [Vec<T>; 3], pub Vec<i32>)
 where
     T: Number;

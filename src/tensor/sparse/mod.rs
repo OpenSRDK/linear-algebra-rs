@@ -1,10 +1,12 @@
 pub mod operations;
 pub mod operators;
 
+use serde::{Deserialize, Serialize};
+
 use crate::{Matrix, Number, RankIndex, Tensor};
 use std::collections::HashMap;
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct SparseTensor<T = f64>
 where
     T: Number,

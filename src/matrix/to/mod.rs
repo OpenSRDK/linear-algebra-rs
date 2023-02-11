@@ -1,8 +1,9 @@
 use crate::matrix::ci::CirculantMatrix;
 use crate::{matrix::MatrixError, number::Number};
 use rayon::prelude::*;
+use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, Default, PartialEq, Hash)]
+#[derive(Clone, Debug, Default, PartialEq, Hash, Serialize, Deserialize)]
 pub struct ToeplitzMatrix<T = f64>
 where
     T: Number,

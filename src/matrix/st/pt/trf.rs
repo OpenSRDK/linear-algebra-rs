@@ -5,8 +5,10 @@ use crate::{bd::BidiagonalMatrix, matrix::st::SymmetricTridiagonalMatrix};
 use lapack::dpttrf;
 use lapack::zpttrf;
 use rayon::prelude::*;
+use serde::Deserialize;
+use serde::Serialize;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct PTTRF<T = f64>(pub BidiagonalMatrix<T>, pub DiagonalMatrix)
 where
     T: Number;

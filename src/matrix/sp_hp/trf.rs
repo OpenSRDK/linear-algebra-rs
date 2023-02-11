@@ -3,8 +3,10 @@ use crate::number::c64;
 use crate::Number;
 use crate::SymmetricPackedMatrix;
 use lapack::{dsptrf, zhptrf, zsptrf};
+use serde::Deserialize;
+use serde::Serialize;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct SPTRF<T = f64>(pub SymmetricPackedMatrix<T>, pub Vec<i32>)
 where
     T: Number;

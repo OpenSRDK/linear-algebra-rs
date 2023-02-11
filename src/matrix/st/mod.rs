@@ -1,13 +1,14 @@
 use crate::number::*;
 use crate::{matrix::ge::Matrix, matrix::*};
 use rayon::prelude::*;
+use serde::{Deserialize, Serialize};
 
 pub mod pt;
 
 pub mod ev;
 pub mod evd;
 
-#[derive(Clone, Debug, Default, PartialEq, Hash)]
+#[derive(Clone, Debug, Default, PartialEq, Hash, Serialize, Deserialize)]
 pub struct SymmetricTridiagonalMatrix<T = f64>
 where
     T: Number,

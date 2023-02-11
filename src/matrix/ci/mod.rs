@@ -1,8 +1,10 @@
 pub mod evd;
 
+use serde::{Deserialize, Serialize};
+
 use crate::number::Number;
 
-#[derive(Clone, Debug, Default, PartialEq, Hash)]
+#[derive(Clone, Debug, Default, PartialEq, Hash, Serialize, Deserialize)]
 pub struct CirculantMatrix<T = f64>
 where
     T: Number,

@@ -3,8 +3,10 @@ use crate::number::c64;
 use crate::Number;
 use crate::SymmetricPackedMatrix;
 use lapack::{dpptrf, zpptrf};
+use serde::Deserialize;
+use serde::Serialize;
 
-#[derive(Clone, Debug, Default, PartialEq, Hash)]
+#[derive(Clone, Debug, Default, PartialEq, Hash, Serialize, Deserialize)]
 pub struct PPTRF<T = f64>(pub SymmetricPackedMatrix<T>)
 where
     T: Number;

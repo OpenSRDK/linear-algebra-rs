@@ -1,11 +1,12 @@
 use crate::{ge::Matrix, Number};
 use rayon::prelude::*;
+use serde::{Deserialize, Serialize};
 
 pub mod operators;
 pub mod powf;
 pub mod powi;
 
-#[derive(Clone, Debug, Default, PartialEq, Hash)]
+#[derive(Clone, Debug, Default, PartialEq, Hash, Serialize, Deserialize)]
 pub struct DiagonalMatrix<T = f64>
 where
     T: Number,

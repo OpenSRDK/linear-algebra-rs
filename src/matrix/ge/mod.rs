@@ -1,21 +1,21 @@
+pub mod mm;
+pub mod operations;
+pub mod operators;
+pub mod or_un;
+pub mod svd;
+pub mod sy_he;
+pub mod tr;
+pub mod trf;
+pub mod tri;
+pub mod trs;
+
 use crate::{
     number::{c64, Number},
     MatrixError,
 };
 use rayon::prelude::*;
+use serde::{Deserialize, Serialize};
 use std::error::Error;
-
-pub mod or_un;
-pub mod sy_he;
-pub mod tr;
-
-pub mod mm;
-pub mod operations;
-pub mod operators;
-pub mod svd;
-pub mod trf;
-pub mod tri;
-pub mod trs;
 
 /// # Matrix
 /// ```
@@ -33,7 +33,7 @@ pub mod trs;
 /// assert_eq!(a[(1, 0)], 3.0);
 /// assert_eq!(a[(1, 1)], 4.0);
 /// ```
-#[derive(Clone, Debug, Default, PartialEq, Hash)]
+#[derive(Clone, Debug, Default, PartialEq, Hash, Serialize, Deserialize)]
 pub struct Matrix<T = f64>
 where
     T: Number,

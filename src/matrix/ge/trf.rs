@@ -3,8 +3,9 @@ use crate::matrix::MatrixError;
 use crate::number::c64;
 use crate::Number;
 use lapack::{dgetrf, zgetrf};
+use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct GETRF<T = f64>(pub Matrix<T>, pub Vec<i32>)
 where
     T: Number;

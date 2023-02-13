@@ -139,3 +139,23 @@ where
         &mut self[indices]
     }
 }
+
+impl<T> From<Vec<T>> for SparseTensor<T>
+where
+    T: Number,
+{
+    fn from(vec: Vec<T>) -> Self {
+        let sizes = vec![vec.len()];
+        let elems = vec
+            .into_iter()
+            .enumerate()
+            .map(|(i, v)| (vec![i], v))
+            .collect();
+
+        Self {
+            sizes,
+            elems,
+            default: T::default(),
+        }
+    }
+}

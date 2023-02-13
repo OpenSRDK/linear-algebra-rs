@@ -129,18 +129,18 @@ where
     }
 }
 
-impl Matrix<f64> {
-    pub fn to_complex(&self) -> Matrix<c64> {
+impl From<Matrix<f64>> for Matrix<c64> {
+    fn from(m: Matrix<f64>) -> Self {
         Matrix::<c64>::from(
-            self.rows,
-            self.elems.par_iter().map(|&e| c64::new(e, 0.0)).collect(),
+            m.rows,
+            m.elems.par_iter().map(|&e| c64::new(e, 0.0)).collect(),
         )
         .unwrap()
     }
 }
 
 impl Matrix<c64> {
-    pub fn to_real(&self) -> (Matrix<f64>, Matrix<f64>) {
+    pub fn real(&self) -> (Matrix<f64>, Matrix<f64>) {
         (
             Matrix::from(self.rows, self.elems.par_iter().map(|e| e.re).collect()).unwrap(),
             Matrix::from(self.rows, self.elems.par_iter().map(|e| e.im).collect()).unwrap(),

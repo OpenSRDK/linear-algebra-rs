@@ -1,6 +1,6 @@
 use std::ops::{Index, IndexMut};
 
-use crate::{sparse::SparseTensor, Number};
+use crate::{sparse::SparseTensor, Number, TensorError};
 
 impl<T> Index<&[usize]> for SparseTensor<T>
 where
@@ -9,6 +9,15 @@ where
     type Output = T;
 
     fn index(&self, index: &[usize]) -> &Self::Output {
+        if index.len() != self.sizes.len() {
+            panic!("{}", TensorError::RankMismatch);
+        }
+        for (rank, &d) in index.iter().enumerate() {
+            if d >= self.sizes[rank] {
+                panic!("{}", TensorError::OutOfRange);
+            }
+        }
+
         self.elems.get(index).unwrap_or(&self.default)
     }
 }
@@ -18,6 +27,15 @@ where
     T: Number,
 {
     fn index_mut(&mut self, index: &[usize]) -> &mut Self::Output {
+        if index.len() != self.sizes.len() {
+            panic!("{}", TensorError::RankMismatch);
+        }
+        for (rank, &d) in index.iter().enumerate() {
+            if d >= self.sizes[rank] {
+                panic!("{}", TensorError::OutOfRange);
+            }
+        }
+
         self.elems.entry(index.to_vec()).or_default()
     }
 }

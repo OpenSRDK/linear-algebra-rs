@@ -38,7 +38,9 @@ where
 #[derive(thiserror::Error, Debug)]
 pub enum TensorError {
     #[error("Dimension mismatch.")]
-    DimensionMismatch,
+    RankMismatch,
+    #[error("Out of range.")]
+    OutOfRange,
     #[error("Others")]
     Others(Box<dyn Error + Send + Sync>),
 }

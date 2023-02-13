@@ -3,7 +3,7 @@ pub mod operators;
 
 use serde::{Deserialize, Serialize};
 
-use crate::{Matrix, Number, RankIndex, Tensor};
+use crate::{Matrix, Number, RankIndex, Tensor, TensorError};
 use std::collections::HashMap;
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
@@ -21,9 +21,6 @@ where
     T: Number,
 {
     pub fn new(sizes: Vec<usize>) -> Self {
-        if sizes.iter().product::<usize>() == 0 {
-            panic!("SparseTensor::new() is not available for zero-sized tensor.");
-        }
         Self {
             sizes,
             elems: HashMap::new(),
@@ -31,15 +28,22 @@ where
         }
     }
 
-    pub fn from(sizes: Vec<usize>, elems: HashMap<Vec<usize>, T>) -> Self {
-        if sizes.iter().product::<usize>() == 0 {
-            panic!("SparseTensor::from() is not available for zero-sized tensor.");
+    pub fn from(sizes: Vec<usize>, elems: HashMap<Vec<usize>, T>) -> Result<Self, TensorError> {
+        for (index, _) in elems.iter() {
+            if index.len() != sizes.len() {
+                return Err(TensorError::RankMismatch);
+            }
+            for (rank, &d) in index.iter().enumerate() {
+                if d >= sizes[rank] {
+                    return Err(TensorError::OutOfRange);
+                }
+            }
         }
-        Self {
+        Ok(Self {
             sizes,
             elems,
             default: T::default(),
-        }
+        })
     }
 
     pub fn is_same_size(&self, other: &SparseTensor<T>) -> bool {

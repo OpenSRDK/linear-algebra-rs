@@ -42,6 +42,8 @@ where
 
         let mut result = SparseTensor::<T>::new(new_dims);
 
+        todo!();
+
         result
     }
 }

@@ -1,4 +1,3 @@
-use super::mul::mul_scalar;
 use crate::{ge::Matrix, Number};
 use std::ops::Neg;
 
@@ -9,7 +8,7 @@ where
     type Output = Self;
 
     fn neg(self) -> Self::Output {
-        mul_scalar(-T::one(), self)
+        self * (-T::one())
     }
 }
 

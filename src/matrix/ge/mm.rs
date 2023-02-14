@@ -107,7 +107,7 @@ mod tests {
         let alpha = 2.0;
         let beta = 3.0;
         let result = c.clone().gemm(&a, &b, alpha, beta).unwrap();
-        let result2 = alpha * a * b + beta * c;
+        let result2 = alpha * a.dot(&b) + beta * c;
         assert_eq!(result[(0, 0)], result2[(0, 0)]);
     }
 }

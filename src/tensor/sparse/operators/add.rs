@@ -3,23 +3,41 @@ use crate::{
     sparse::SparseTensor,
 };
 use rayon::prelude::*;
-use std::ops::Add;
+use std::ops::{Add, AddAssign};
 
 fn add_scalar<T>(lhs: T, rhs: SparseTensor<T>) -> SparseTensor<T>
 where
     T: Number,
 {
-    todo!()
+    let mut rhs = rhs;
+
+    rhs.elems
+        .par_iter_mut()
+        .map(|r| {
+            *r.1 += lhs;
+        })
+        .collect::<Vec<_>>();
+
+    rhs
 }
 
 fn add<T>(lhs: SparseTensor<T>, rhs: &SparseTensor<T>) -> SparseTensor<T>
 where
     T: Number,
 {
-    todo!()
+    if !lhs.is_same_size(rhs) {
+        panic!("Dimension mismatch.")
+    }
+    let mut lhs = lhs;
+
+    todo!();
+
+    lhs
 }
 
-macro_rules! impl_add_scalar {
+// Scalar and SparseTensor
+
+macro_rules! impl_div_scalar {
     {$t: ty} => {
         impl Add<SparseTensor<$t>> for $t {
             type Output = SparseTensor<$t>;
@@ -30,61 +48,84 @@ macro_rules! impl_add_scalar {
         }
 
         impl Add<SparseTensor<$t>> for &$t {
-          type Output = SparseTensor<$t>;
-
-          fn add(self, rhs: SparseTensor<$t>) -> Self::Output {
-              add_scalar(*self, rhs)
-          }
-        }
-
-        impl Add<$t> for SparseTensor<$t> {
             type Output = SparseTensor<$t>;
 
-            fn add(self, rhs: $t) -> Self::Output {
-                add_scalar(rhs, self)
+            fn add(self, rhs: SparseTensor<$t>) -> Self::Output {
+                add_scalar(*self, rhs)
             }
         }
-
-        impl Add<&$t> for SparseTensor<$t> {
-          type Output = SparseTensor<$t>;
-
-          fn add(self, rhs: &$t) -> Self::Output {
-              add_scalar(*rhs, self)
-          }
-        }
-    };
+    }
 }
 
-impl_add_scalar! {f64}
-impl_add_scalar! {c64}
+impl_div_scalar! {f64}
+impl_div_scalar! {c64}
 
-macro_rules! impl_add {
-  {$t: ty} => {
-      impl Add<SparseTensor<$t>> for SparseTensor<$t> {
-          type Output = SparseTensor<$t>;
+// SparseTensor and Scalar
 
-          fn add(self, rhs: SparseTensor<$t>) -> Self::Output {
-            add(self, &rhs)
-          }
-      }
+impl<T> Add<T> for SparseTensor<T>
+where
+    T: Number,
+{
+    type Output = SparseTensor<T>;
 
-      impl Add<&SparseTensor<$t>> for SparseTensor<$t> {
-          type Output = SparseTensor<$t>;
-
-          fn add(self, rhs: &SparseTensor<$t>) -> Self::Output {
-            add(self, rhs)
-          }
-      }
-
-      impl Add<SparseTensor<$t>> for &SparseTensor<$t> {
-          type Output = SparseTensor<$t>;
-
-          fn add(self, rhs: SparseTensor<$t>) -> Self::Output {
-            add(rhs, self)
-          }
-      }
-  };
+    fn add(self, rhs: T) -> Self::Output {
+        add_scalar(rhs, self)
+    }
 }
 
-impl_add! {f64}
-impl_add! {c64}
+impl<T> Add<&T> for SparseTensor<T>
+where
+    T: Number,
+{
+    type Output = SparseTensor<T>;
+
+    fn add(self, rhs: &T) -> Self::Output {
+        add_scalar(*rhs, self)
+    }
+}
+
+// SparseTensor and SparseTensor
+
+impl<T> Add<SparseTensor<T>> for SparseTensor<T>
+where
+    T: Number,
+{
+    type Output = SparseTensor<T>;
+
+    fn add(self, rhs: SparseTensor<T>) -> Self::Output {
+        add(self, &rhs)
+    }
+}
+
+impl<T> Add<&SparseTensor<T>> for SparseTensor<T>
+where
+    T: Number,
+{
+    type Output = SparseTensor<T>;
+
+    fn add(self, rhs: &SparseTensor<T>) -> Self::Output {
+        add(self, rhs)
+    }
+}
+
+impl<T> Add<SparseTensor<T>> for &SparseTensor<T>
+where
+    T: Number,
+{
+    type Output = SparseTensor<T>;
+
+    fn add(self, rhs: SparseTensor<T>) -> Self::Output {
+        add(rhs, self)
+    }
+}
+
+// AddAssign
+
+impl<T> AddAssign<SparseTensor<T>> for SparseTensor<T>
+where
+    T: Number,
+{
+    fn add_assign(&mut self, rhs: SparseTensor<T>) {
+        *self = self as &Self + rhs;
+    }
+}

@@ -13,7 +13,7 @@ where
             panic!("{}", TensorError::RankMismatch);
         }
         for (rank, &d) in index.iter().enumerate() {
-            if d >= self.sizes[rank] {
+            if self.sizes[rank] <= d {
                 panic!("{}", TensorError::OutOfRange);
             }
         }
@@ -31,7 +31,7 @@ where
             panic!("{}", TensorError::RankMismatch);
         }
         for (rank, &d) in index.iter().enumerate() {
-            if d >= self.sizes[rank] {
+            if self.sizes[rank] <= d {
                 panic!("{}", TensorError::OutOfRange);
             }
         }

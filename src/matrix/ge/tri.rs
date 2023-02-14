@@ -75,7 +75,7 @@ mod tests {
         );
         let result = a.clone().getrf().unwrap();
         let a_inv = result.getri().unwrap();
-        let i = a * a_inv;
+        let i = a.dot(&a_inv);
         let i2 = DiagonalMatrix::identity(2);
         let i3 = i2.mat();
         assert_eq!(i[(0, 0)], i3[(0, 0)]);

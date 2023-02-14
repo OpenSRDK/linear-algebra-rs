@@ -5,22 +5,22 @@ use crate::{sparse::SparseTensor, Number};
 use rand::prelude::*;
 use std::collections::HashMap;
 
-pub trait InnerProd<T>
+pub trait DotProduct<T>
 where
     T: Number,
 {
-    fn inner_prod(
+    fn dot_product(
         self,
         rank_combinations: &[HashMap<RankIndex, RankCombinationId>],
     ) -> SparseTensor<T>;
 }
 
-impl<I, T> InnerProd<T> for I
+impl<I, T> DotProduct<T> for I
 where
     I: Iterator<Item = SparseTensor<T>>,
     T: Number,
 {
-    fn inner_prod(
+    fn dot_product(
         self,
         rank_combinations: &[HashMap<RankIndex, RankCombinationId>],
     ) -> SparseTensor<T> {
@@ -52,9 +52,9 @@ impl<T> SparseTensor<T>
 where
     T: Number,
 {
-    pub fn inner_prod(self, rhs: Self, rank_pairs: &[[RankIndex; 2]]) -> Self {
+    pub fn dot(self, rhs: Self, rank_pairs: &[[RankIndex; 2]]) -> Self {
         let rank_combinations = generate_rank_combinations(rank_pairs);
 
-        vec![self, rhs].into_iter().inner_prod(&rank_combinations)
+        vec![self, rhs].into_iter().dot_product(&rank_combinations)
     }
 }

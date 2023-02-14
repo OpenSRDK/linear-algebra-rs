@@ -34,7 +34,7 @@ where
                 return Err(TensorError::RankMismatch);
             }
             for (rank, &d) in index.iter().enumerate() {
-                if d >= sizes[rank] {
+                if sizes[rank] <= d {
                     return Err(TensorError::OutOfRange);
                 }
             }

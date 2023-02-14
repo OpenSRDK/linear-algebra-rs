@@ -3,96 +3,129 @@ use crate::{
     sparse::SparseTensor,
 };
 use rayon::prelude::*;
-use std::ops::Mul;
+use std::ops::{Mul, MulAssign};
 
-pub(crate) fn mul_scalar<T>(slf: T, mut rhs: SparseTensor<T>) -> SparseTensor<T>
+fn mul_scalar<T>(lhs: T, rhs: SparseTensor<T>) -> SparseTensor<T>
 where
     T: Number,
 {
-    todo!()
+    let mut rhs = rhs;
+
+    rhs.elems
+        .par_iter_mut()
+        .map(|r| {
+            *r.1 *= lhs;
+        })
+        .collect::<Vec<_>>();
+
+    rhs
 }
 
-pub(crate) fn mul<T>(slf: &SparseTensor<T>, rhs: &SparseTensor<T>) -> SparseTensor<T>
+fn mul<T>(lhs: SparseTensor<T>, rhs: &SparseTensor<T>) -> SparseTensor<T>
 where
     T: Number,
 {
-    todo!()
+    if !lhs.is_same_size(rhs) {
+        panic!("Dimension mismatch.")
+    }
+    let mut lhs = lhs;
+
+    todo!();
+
+    lhs
 }
 
-macro_rules! impl_mul_scalar {
-    {$t: ty} => {
-        impl Mul<SparseTensor<$t>> for $t {
-          type Output = SparseTensor<$t>;
+// Scalar and SparseTensor
 
-          fn mul(self, rhs: SparseTensor<$t>) -> Self::Output {
-            mul_scalar(self, rhs)
-          }
-        }
-
-        impl Mul<SparseTensor<$t>> for &$t {
-          type Output = SparseTensor<$t>;
-
-          fn mul(self, rhs: SparseTensor<$t>) -> Self::Output {
-            mul_scalar(*self, rhs)
-          }
-        }
-
-        impl Mul<$t> for SparseTensor<$t> {
-          type Output = SparseTensor<$t>;
-
-          fn mul(self, rhs: $t) -> Self::Output {
-            mul_scalar(rhs, self)
-          }
-        }
-
-        impl Mul<&$t> for SparseTensor<$t> {
-          type Output = SparseTensor<$t>;
-
-          fn mul(self, rhs: &$t) -> Self::Output {
-            mul_scalar(*rhs, self)
-          }
-        }
-    };
-}
-
-impl_mul_scalar! {f64}
-impl_mul_scalar! {c64}
-
-macro_rules! impl_mul {
+macro_rules! impl_div_scalar {
   {$t: ty} => {
-      impl Mul<SparseTensor<$t>> for SparseTensor<$t> {
+      impl Mul<SparseTensor<$t>> for $t {
           type Output = SparseTensor<$t>;
 
           fn mul(self, rhs: SparseTensor<$t>) -> Self::Output {
-            mul(&self, &rhs)
+              mul_scalar(self, rhs)
           }
       }
 
-      impl Mul<&SparseTensor<$t>> for SparseTensor<$t> {
-          type Output = SparseTensor<$t>;
-
-          fn mul(self, rhs: &SparseTensor<$t>) -> Self::Output {
-            mul(&self, rhs)
-          }
-      }
-
-      impl Mul<SparseTensor<$t>> for &SparseTensor<$t> {
+      impl Mul<SparseTensor<$t>> for &$t {
           type Output = SparseTensor<$t>;
 
           fn mul(self, rhs: SparseTensor<$t>) -> Self::Output {
-            mul(self, &rhs)
+              mul_scalar(*self, rhs)
           }
       }
-
-      impl Mul<&SparseTensor<$t>> for &SparseTensor<$t> {
-          type Output = SparseTensor<$t>;
-
-          fn mul(self, rhs: &SparseTensor<$t>) -> Self::Output {
-            mul(self, rhs)
-          }
-      }
-  };
+  }
 }
 
-impl_mul! {f64}
-impl_mul! {c64}
+impl_div_scalar! {f64}
+impl_div_scalar! {c64}
+
+// SparseTensor and Scalar
+
+impl<T> Mul<T> for SparseTensor<T>
+where
+    T: Number,
+{
+    type Output = SparseTensor<T>;
+
+    fn mul(self, rhs: T) -> Self::Output {
+        mul_scalar(rhs, self)
+    }
+}
+
+impl<T> Mul<&T> for SparseTensor<T>
+where
+    T: Number,
+{
+    type Output = SparseTensor<T>;
+
+    fn mul(self, rhs: &T) -> Self::Output {
+        mul_scalar(*rhs, self)
+    }
+}
+
+// SparseTensor and SparseTensor
+
+impl<T> Mul<SparseTensor<T>> for SparseTensor<T>
+where
+    T: Number,
+{
+    type Output = SparseTensor<T>;
+
+    fn mul(self, rhs: SparseTensor<T>) -> Self::Output {
+        mul(self, &rhs)
+    }
+}
+
+impl<T> Mul<&SparseTensor<T>> for SparseTensor<T>
+where
+    T: Number,
+{
+    type Output = SparseTensor<T>;
+
+    fn mul(self, rhs: &SparseTensor<T>) -> Self::Output {
+        mul(self, rhs)
+    }
+}
+
+impl<T> Mul<SparseTensor<T>> for &SparseTensor<T>
+where
+    T: Number,
+{
+    type Output = SparseTensor<T>;
+
+    fn mul(self, rhs: SparseTensor<T>) -> Self::Output {
+        mul(rhs, self)
+    }
+}
+
+// MulAssign
+
+impl<T> MulAssign<SparseTensor<T>> for SparseTensor<T>
+where
+    T: Number,
+{
+    fn mul_assign(&mut self, rhs: SparseTensor<T>) {
+        *self = self as &Self * rhs;
+    }
+}

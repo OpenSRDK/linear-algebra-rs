@@ -1,85 +1,47 @@
 use crate::matrix::ge::Matrix;
 use crate::number::{c64, Number};
-use blas::{dgemm, zgemm};
 use rayon::prelude::*;
-use std::ops::Mul;
+use std::ops::{Mul, MulAssign};
 
-pub(crate) fn mul_scalar<T>(slf: T, mut rhs: Matrix<T>) -> Matrix<T>
+fn mul_scalar<T>(lhs: T, rhs: Matrix<T>) -> Matrix<T>
 where
     T: Number,
 {
-    rhs.elems.par_iter_mut().for_each(|r| {
-        *r *= slf;
-    });
+    let mut rhs = rhs;
+
+    rhs.elems
+        .par_iter_mut()
+        .map(|r| {
+            *r += lhs;
+        })
+        .collect::<Vec<_>>();
 
     rhs
 }
 
-fn mul_f64(lhs: &Matrix, rhs: &Matrix) -> Matrix {
-    if lhs.cols != rhs.rows {
+fn mul<T>(lhs: Matrix<T>, rhs: &Matrix<T>) -> Matrix<T>
+where
+    T: Number,
+{
+    if !lhs.is_same_size(rhs) {
         panic!("Dimension mismatch.")
     }
+    let mut lhs = lhs;
 
-    let m = lhs.rows as i32;
-    let k = lhs.cols as i32;
-    let n = rhs.cols as i32;
+    lhs.elems
+        .par_iter_mut()
+        .zip(rhs.elems.par_iter())
+        .map(|(l, &r)| {
+            *l += r;
+        })
+        .collect::<Vec<_>>();
 
-    let mut new_matrix = Matrix::new(lhs.rows, rhs.cols);
-
-    unsafe {
-        dgemm(
-            'N' as u8,
-            'N' as u8,
-            m,
-            n,
-            k,
-            1.0,
-            lhs.elems.as_slice(),
-            m,
-            rhs.elems.as_slice(),
-            k,
-            0.0,
-            &mut new_matrix.elems,
-            m,
-        );
-    }
-
-    new_matrix
+    lhs
 }
 
-fn mul_c64(lhs: &Matrix<c64>, rhs: &Matrix<c64>) -> Matrix<c64> {
-    if lhs.cols != rhs.rows {
-        panic!("Dimension mismatch.")
-    }
+// Scalar and Matrix
 
-    let m = lhs.rows as i32;
-    let k = lhs.cols as i32;
-    let n = rhs.cols as i32;
-
-    let mut new_matrix = Matrix::<c64>::new(lhs.rows, rhs.cols);
-
-    unsafe {
-        zgemm(
-            'N' as u8,
-            'N' as u8,
-            m,
-            n,
-            k,
-            blas::c64::new(1.0, 0.0),
-            &lhs.elems,
-            m,
-            &rhs.elems,
-            k,
-            blas::c64::new(0.0, 0.0),
-            &mut new_matrix.elems,
-            m,
-        );
-    }
-
-    new_matrix
-}
-
-macro_rules! impl_mul_scalar {
+macro_rules! impl_div_scalar {
     {$t: ty} => {
         impl Mul<Matrix<$t>> for $t {
             type Output = Matrix<$t>;
@@ -90,72 +52,87 @@ macro_rules! impl_mul_scalar {
         }
 
         impl Mul<Matrix<$t>> for &$t {
-          type Output = Matrix<$t>;
-
-          fn mul(self, rhs: Matrix<$t>) -> Self::Output {
-              mul_scalar(*self, rhs)
-          }
-        }
-
-        impl Mul<$t> for Matrix<$t> {
             type Output = Matrix<$t>;
 
-            fn mul(self, rhs: $t) -> Self::Output {
-                mul_scalar(rhs, self)
+            fn mul(self, rhs: Matrix<$t>) -> Self::Output {
+                mul_scalar(*self, rhs)
             }
         }
-
-        impl Mul<&$t> for Matrix<$t> {
-          type Output = Matrix<$t>;
-
-          fn mul(self, rhs: &$t) -> Self::Output {
-              mul_scalar(*rhs, self)
-          }
-        }
-    };
+    }
 }
 
-impl_mul_scalar! {f64}
-impl_mul_scalar! {c64}
+impl_div_scalar! {f64}
+impl_div_scalar! {c64}
 
-macro_rules! impl_mul {
-  {$t: ty, $e: expr} => {
-      impl Mul<Matrix<$t>> for Matrix<$t> {
-          type Output = Matrix<$t>;
+// Matrix and Scalar
 
-          fn mul(self, rhs: Matrix<$t>) -> Self::Output {
-              $e(&self, &rhs)
-          }
-      }
+impl<T> Mul<T> for Matrix<T>
+where
+    T: Number,
+{
+    type Output = Matrix<T>;
 
-      impl Mul<&Matrix<$t>> for Matrix<$t> {
-          type Output = Matrix<$t>;
-
-          fn mul(self, rhs: &Matrix<$t>) -> Self::Output {
-              $e(&self, rhs)
-          }
-      }
-
-      impl Mul<Matrix<$t>> for &Matrix<$t> {
-          type Output = Matrix<$t>;
-
-          fn mul(self, rhs: Matrix<$t>) -> Self::Output {
-              $e(self, &rhs)
-          }
-      }
-
-      impl Mul<&Matrix<$t>> for &Matrix<$t> {
-          type Output = Matrix<$t>;
-
-          fn mul(self, rhs: &Matrix<$t>) -> Self::Output {
-              $e(self, rhs)
-          }
-      }
-  };
+    fn mul(self, rhs: T) -> Self::Output {
+        mul_scalar(rhs, self)
+    }
 }
 
-impl_mul! {f64, mul_f64}
-impl_mul! {c64, mul_c64}
+impl<T> Mul<&T> for Matrix<T>
+where
+    T: Number,
+{
+    type Output = Matrix<T>;
+
+    fn mul(self, rhs: &T) -> Self::Output {
+        mul_scalar(*rhs, self)
+    }
+}
+
+// Matrix and Matrix
+
+impl<T> Mul<Matrix<T>> for Matrix<T>
+where
+    T: Number,
+{
+    type Output = Matrix<T>;
+
+    fn mul(self, rhs: Matrix<T>) -> Self::Output {
+        mul(self, &rhs)
+    }
+}
+
+impl<T> Mul<&Matrix<T>> for Matrix<T>
+where
+    T: Number,
+{
+    type Output = Matrix<T>;
+
+    fn mul(self, rhs: &Matrix<T>) -> Self::Output {
+        mul(self, rhs)
+    }
+}
+
+impl<T> Mul<Matrix<T>> for &Matrix<T>
+where
+    T: Number,
+{
+    type Output = Matrix<T>;
+
+    fn mul(self, rhs: Matrix<T>) -> Self::Output {
+        mul(rhs, self)
+    }
+}
+
+// MulAssign
+
+impl<T> MulAssign<Matrix<T>> for Matrix<T>
+where
+    T: Number,
+{
+    fn mul_assign(&mut self, rhs: Matrix<T>) {
+        *self = self as &Self * rhs;
+    }
+}
 
 #[cfg(test)]
 mod tests {
@@ -168,17 +145,5 @@ mod tests {
             3.0, 4.0
         ) * 2.0;
         assert_eq!(a[(0, 0)], 2.0);
-    }
-
-    #[test]
-    fn it_works2() {
-        let a = mat!(
-            1.0, 2.0;
-            3.0, 4.0
-        ) * mat!(
-            5.0, 6.0;
-            7.0, 8.0
-        );
-        assert_eq!(a[(0, 0)], 19.0);
     }
 }

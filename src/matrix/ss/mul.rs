@@ -120,7 +120,7 @@ mod tests {
             3.0, 0.0;
             4.0, 0.0];
         println!("row {:#?}", d.rows());
-        let f = d * e;
+        let f = d.dot(&e);
         println!("f {:#?}", f);
     }
 }

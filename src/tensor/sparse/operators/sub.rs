@@ -3,88 +3,129 @@ use crate::{
     sparse::SparseTensor,
 };
 use rayon::prelude::*;
-use std::ops::Sub;
+use std::ops::{Sub, SubAssign};
 
 fn sub_scalar<T>(lhs: T, rhs: SparseTensor<T>) -> SparseTensor<T>
 where
     T: Number,
 {
-    todo!()
+    let mut rhs = rhs;
+
+    rhs.elems
+        .par_iter_mut()
+        .map(|r| {
+            *r.1 -= lhs;
+        })
+        .collect::<Vec<_>>();
+
+    rhs
 }
 
 fn sub<T>(lhs: SparseTensor<T>, rhs: &SparseTensor<T>) -> SparseTensor<T>
 where
     T: Number,
 {
-    todo!()
+    if !lhs.is_same_size(rhs) {
+        panic!("Dimension mismatch.")
+    }
+    let mut lhs = lhs;
+
+    todo!();
+
+    lhs
 }
 
-macro_rules! impl_sub_scalar {
-    {$t: ty} => {
-        impl Sub<SparseTensor<$t>> for $t {
-          type Output = SparseTensor<$t>;
+// Scalar and SparseTensor
 
-          fn sub(self, rhs: SparseTensor<$t>) -> Self::Output {
-            sub_scalar(self, rhs)
-          }
-        }
-
-        impl Sub<SparseTensor<$t>> for &$t {
-          type Output = SparseTensor<$t>;
-
-          fn sub(self, rhs: SparseTensor<$t>) -> Self::Output {
-            sub_scalar(*self, rhs)
-          }
-        }
-
-        impl Sub<$t> for SparseTensor<$t> {
-          type Output = SparseTensor<$t>;
-
-          fn sub(self, rhs: $t) -> Self::Output {
-            -sub_scalar(rhs, self)
-          }
-        }
-
-        impl Sub<&$t> for SparseTensor<$t> {
-          type Output = SparseTensor<$t>;
-
-          fn sub(self, rhs: &$t) -> Self::Output {
-            -sub_scalar(*rhs, self)
-          }
-        }
-    };
-}
-
-impl_sub_scalar! {f64}
-impl_sub_scalar! {c64}
-
-macro_rules! impl_sub {
+macro_rules! impl_div_scalar {
   {$t: ty} => {
-      impl Sub<SparseTensor<$t>> for SparseTensor<$t> {
-        type Output = SparseTensor<$t>;
+      impl Sub<SparseTensor<$t>> for $t {
+          type Output = SparseTensor<$t>;
 
-        fn sub(self, rhs: SparseTensor<$t>) -> Self::Output {
-          sub(self, &rhs)
-        }
+          fn sub(self, rhs: SparseTensor<$t>) -> Self::Output {
+              sub_scalar(self, rhs)
+          }
       }
 
-      impl Sub<&SparseTensor<$t>> for SparseTensor<$t> {
-        type Output = SparseTensor<$t>;
+      impl Sub<SparseTensor<$t>> for &$t {
+          type Output = SparseTensor<$t>;
 
-        fn sub(self, rhs: &SparseTensor<$t>) -> Self::Output {
-          sub(self, rhs)
-        }
+          fn sub(self, rhs: SparseTensor<$t>) -> Self::Output {
+              sub_scalar(*self, rhs)
+          }
       }
-
-      impl Sub<SparseTensor<$t>> for &SparseTensor<$t> {
-        type Output = SparseTensor<$t>;
-
-        fn sub(self, rhs: SparseTensor<$t>) -> Self::Output {
-          -sub(rhs, self)
-        }
-      }
-  };
+  }
 }
 
-impl_sub! {f64}
-impl_sub! {c64}
+impl_div_scalar! {f64}
+impl_div_scalar! {c64}
+
+// SparseTensor and Scalar
+
+impl<T> Sub<T> for SparseTensor<T>
+where
+    T: Number,
+{
+    type Output = SparseTensor<T>;
+
+    fn sub(self, rhs: T) -> Self::Output {
+        -sub_scalar(rhs, self)
+    }
+}
+
+impl<T> Sub<&T> for SparseTensor<T>
+where
+    T: Number,
+{
+    type Output = SparseTensor<T>;
+
+    fn sub(self, rhs: &T) -> Self::Output {
+        -sub_scalar(*rhs, self)
+    }
+}
+
+// SparseTensor and SparseTensor
+
+impl<T> Sub<SparseTensor<T>> for SparseTensor<T>
+where
+    T: Number,
+{
+    type Output = SparseTensor<T>;
+
+    fn sub(self, rhs: SparseTensor<T>) -> Self::Output {
+        sub(self, &rhs)
+    }
+}
+
+impl<T> Sub<&SparseTensor<T>> for SparseTensor<T>
+where
+    T: Number,
+{
+    type Output = SparseTensor<T>;
+
+    fn sub(self, rhs: &SparseTensor<T>) -> Self::Output {
+        sub(self, rhs)
+    }
+}
+
+impl<T> Sub<SparseTensor<T>> for &SparseTensor<T>
+where
+    T: Number,
+{
+    type Output = SparseTensor<T>;
+
+    fn sub(self, rhs: SparseTensor<T>) -> Self::Output {
+        -sub(rhs, self)
+    }
+}
+
+// SubAssign
+
+impl<T> SubAssign<SparseTensor<T>> for SparseTensor<T>
+where
+    T: Number,
+{
+    fn sub_assign(&mut self, rhs: SparseTensor<T>) {
+        *self = self as &Self - rhs;
+    }
+}

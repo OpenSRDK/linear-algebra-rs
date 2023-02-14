@@ -1,4 +1,4 @@
 pub mod adjoint;
-pub mod prod;
+pub mod dot;
 pub mod t;
 pub mod tr;

@@ -89,7 +89,7 @@ impl Matrix {
             .col_mat();
             let v_mat = v[0].clone().col_mat();
 
-            d[0] = (a_v.t() * &v_mat)[0][0];
+            d[0] = a_v.t().dot(&v_mat)[0][0];
             let mut w_prev = a_v - d[0] * v_mat;
 
             for i in 1..k {
@@ -109,7 +109,7 @@ impl Matrix {
                 .col_mat();
                 let v_mat = v[i].clone().col_mat();
 
-                d[i] = (a_v.t() * &v_mat)[0][0];
+                d[i] = a_v.t().dot(&v_mat)[0][0];
                 w_prev = a_v - d[i] * v_mat - e[i - 1] * v[i - 1].clone().col_mat();
             }
         }
@@ -133,11 +133,11 @@ mod tests {
             4.0, 8.0, 16.0, 30.0
         ];
         let (q, t) =
-            Matrix::sytrd_k(4, 3, &|v: Vec<f64>| Ok((&a * v.col_mat()).vec()), None).unwrap();
+            Matrix::sytrd_k(4, 3, &|v: Vec<f64>| Ok((a.dot(&v.col_mat())).vec()), None).unwrap();
 
-        let aback = &q * &t.mat() * &q.t();
+        let aback = q.dot(&t.mat()).dot(&q.t());
 
         println!("{:#?}", aback);
-        println!("{:#?}", &q * &q.t());
+        println!("{:#?}", q.dot(&q.t()));
     }
 }

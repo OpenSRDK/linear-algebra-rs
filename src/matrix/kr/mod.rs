@@ -95,7 +95,7 @@ impl KroneckerMatrices {
             return Err(MatrixError::DimensionMismatch);
         }
 
-        let u = &self.prod() * v.col_mat();
+        let u = self.prod().dot(&v.col_mat());
         Ok(u.vec())
     }
 }
@@ -124,7 +124,7 @@ mod tests {
 
         let ab1 = ab.vec_mul(vec![1.0; 4]).unwrap().col_mat();
         println!("ab1 {:#?}", ab1);
-        let c1 = &c * vec![1.0; 4].col_mat();
+        let c1 = c.dot(&vec![1.0; 4].col_mat());
         println!("c1 {:#?}", c1);
 
         assert_eq!(ab1[(0, 0)], c1[(0, 0)]);

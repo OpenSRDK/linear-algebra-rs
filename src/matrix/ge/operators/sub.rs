@@ -12,7 +12,7 @@ where
     rhs.elems
         .par_iter_mut()
         .map(|r| {
-            *r += lhs;
+            *r -= lhs;
         })
         .collect::<Vec<_>>();
 
@@ -32,7 +32,7 @@ where
         .par_iter_mut()
         .zip(rhs.elems.par_iter())
         .map(|(l, &r)| {
-            *l += r;
+            *l -= r;
         })
         .collect::<Vec<_>>();
 

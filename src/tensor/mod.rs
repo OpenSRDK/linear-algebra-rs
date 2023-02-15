@@ -25,6 +25,23 @@ pub fn generate_rank_combinations(
     rank_combinations
 }
 
+pub fn indices_cartesian_product(sizes: &[usize]) -> Vec<Vec<usize>> {
+    sizes
+        .iter()
+        .fold(Vec::<Vec<usize>>::new(), |accum, &next_size| {
+            accum
+                .into_iter()
+                .flat_map(|acc| {
+                    (0..next_size)
+                        .map(|i| [&acc[..], &[i]].concat())
+                        .collect::<Vec<_>>()
+                })
+                .collect::<Vec<_>>()
+        })
+        .into_iter()
+        .collect()
+}
+
 pub trait Tensor<T>: Clone + Debug + PartialEq + Send + Sync
 where
     T: Number,

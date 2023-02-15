@@ -39,3 +39,49 @@ where
         self.elems.entry(index.to_vec()).or_default()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::{sparse::SparseTensor, *};
+
+    #[test]
+    fn index() {
+        let mut tensor = SparseTensor::new(vec![2, 3]);
+        tensor[&[0, 0]] = 1.0;
+        tensor[&[1, 1]] = 2.0;
+        tensor[&[1, 2]] = 3.0;
+
+        assert_eq!(tensor[&[0, 0]], 1.0);
+        assert_eq!(tensor[&[0, 1]], 0.0);
+        assert_eq!(tensor[&[0, 2]], 0.0);
+        assert_eq!(tensor[&[1, 0]], 0.0);
+        assert_eq!(tensor[&[1, 1]], 2.0);
+        assert_eq!(tensor[&[1, 2]], 3.0);
+    }
+
+    #[test]
+    fn index_mut() {
+        let mut tensor = SparseTensor::new(vec![2, 3]);
+        tensor[&[0, 0]] = 1.0;
+        tensor[&[1, 1]] = 2.0;
+        tensor[&[1, 2]] = 3.0;
+
+        assert_eq!(tensor[&[0, 0]], 1.0);
+        assert_eq!(tensor[&[0, 1]], 0.0);
+        assert_eq!(tensor[&[0, 2]], 0.0);
+        assert_eq!(tensor[&[1, 0]], 0.0);
+        assert_eq!(tensor[&[1, 1]], 2.0);
+        assert_eq!(tensor[&[1, 2]], 3.0);
+
+        tensor[&[0, 0]] = 0.0;
+        tensor[&[1, 1]] = 0.0;
+        tensor[&[1, 2]] = 0.0;
+
+        assert_eq!(tensor[&[0, 0]], 0.0);
+        assert_eq!(tensor[&[0, 1]], 0.0);
+        assert_eq!(tensor[&[0, 2]], 0.0);
+        assert_eq!(tensor[&[1, 0]], 0.0);
+        assert_eq!(tensor[&[1, 1]], 0.0);
+        assert_eq!(tensor[&[1, 2]], 0.0);
+    }
+}

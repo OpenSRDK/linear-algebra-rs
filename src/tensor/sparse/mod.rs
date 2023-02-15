@@ -1,9 +1,10 @@
 pub mod operations;
 pub mod operators;
 
-use serde::{Deserialize, Serialize};
+pub use operations::*;
 
 use crate::{Matrix, Number, RankIndex, Tensor, TensorError};
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]

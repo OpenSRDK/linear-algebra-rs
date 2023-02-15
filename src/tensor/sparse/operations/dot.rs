@@ -15,10 +15,10 @@ where
     ) -> SparseTensor<T>;
 }
 
-impl<I, T> DotProduct<T> for I
+impl<'a, I, T> DotProduct<T> for I
 where
-    I: Iterator<Item = SparseTensor<T>>,
-    T: Number,
+    I: Iterator<Item = &'a SparseTensor<T>>,
+    T: Number + 'a,
 {
     fn dot_product(
         self,
@@ -52,7 +52,7 @@ impl<T> SparseTensor<T>
 where
     T: Number,
 {
-    pub fn dot(self, rhs: Self, rank_pairs: &[[RankIndex; 2]]) -> Self {
+    pub fn dot(&self, rhs: &Self, rank_pairs: &[[RankIndex; 2]]) -> Self {
         let rank_combinations = generate_rank_combinations(rank_pairs);
 
         vec![self, rhs].into_iter().dot_product(&rank_combinations)

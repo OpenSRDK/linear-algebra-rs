@@ -129,3 +129,39 @@ where
         *self = self as &Self / rhs;
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use std::collections::HashMap;
+
+    use super::*;
+    use crate::number::c64;
+
+    #[test]
+    fn div_scalar() {
+        let mut lhs = SparseTensor::new(vec![3, 2, 2]);
+        lhs[&[0, 0, 0]] = 2.0;
+        lhs[&[0, 0, 1]] = 4.0;
+        lhs[&[1, 1, 0]] = 2.0;
+        lhs[&[1, 1, 1]] = 4.0;
+        lhs[&[2, 0, 0]] = 2.0;
+        lhs[&[2, 0, 1]] = 4.0;
+
+        let mut hash2 = HashMap::new();
+
+        hash2.insert(vec![0usize, 0, 0], 1.0);
+        hash2.insert(vec![0usize, 0, 1], 2.0);
+        hash2.insert(vec![1usize, 1, 0], 1.0);
+
+        hash2.insert(vec![1usize, 1, 0], 1.0);
+        hash2.insert(vec![1usize, 1, 1], 2.0);
+        hash2.insert(vec![2usize, 0, 0], 1.0);
+        hash2.insert(vec![2usize, 0, 1], 2.0);
+
+        let rhs = SparseTensor::from(vec![3, 2, 2], hash2).unwrap();
+
+        let res = lhs / 2.0;
+
+        assert_eq!(res, rhs);
+    }
+}

@@ -135,7 +135,6 @@ mod tests {
     use std::collections::HashMap;
 
     use super::*;
-    use crate::number::c64;
 
     #[test]
     fn div_scalar() {

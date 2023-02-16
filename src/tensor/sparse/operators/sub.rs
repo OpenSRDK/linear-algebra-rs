@@ -132,10 +132,10 @@ where
 
 #[cfg(test)]
 mod tests {
-    use std::{collections::HashMap, hash};
+    // use std::{collections::HashMap, hash};
 
-    use super::*;
-    use crate::sparse::SparseTensor;
+    // use super::*;
+    // use crate::sparse::SparseTensor;
 
     // #[test]
 

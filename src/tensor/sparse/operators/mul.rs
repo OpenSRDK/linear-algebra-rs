@@ -129,3 +129,38 @@ where
         *self = self as &Self * rhs;
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::number::Number;
+
+    #[test]
+    fn mul_scalar() {
+        let mut a = SparseTensor::new(vec![3, 2, 2]);
+        a[&[0, 0, 0]] = 2.0;
+        a[&[0, 0, 1]] = 4.0;
+        a[&[1, 1, 0]] = 2.0;
+        a[&[1, 1, 1]] = 4.0;
+        a[&[2, 0, 0]] = 2.0;
+        a[&[2, 0, 1]] = 4.0;
+
+        let b = 2.0 * a.clone();
+        let c = a.clone() * 2.0;
+        let d = 2.0 * a;
+
+        // cannot multiply &SparseTensor by Scalar
+
+        // let e = a * 2.0;
+        // let f = &a * &2.0;
+        // let g = 2.0 * &a;
+        // let h = &2.0 * &a;
+
+        assert_eq!(b, c);
+        assert_eq!(c, d);
+        // assert_eq!(d, e);
+        // assert_eq!(e, f);
+        // assert_eq!(f, g);
+        // assert_eq!(g, h);
+    }
+}

@@ -151,10 +151,11 @@ mod tests {
 
         hash2.insert(vec![0usize, 0, 0], 1.0);
         hash2.insert(vec![0usize, 0, 1], 2.0);
-        hash2.insert(vec![1usize, 1, 0], 1.0);
 
         hash2.insert(vec![1usize, 1, 0], 1.0);
+        hash2.insert(vec![1usize, 1, 0], 1.0);
         hash2.insert(vec![1usize, 1, 1], 2.0);
+
         hash2.insert(vec![2usize, 0, 0], 1.0);
         hash2.insert(vec![2usize, 0, 1], 2.0);
 

@@ -145,7 +145,6 @@ where
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::number::Number;
 
     #[test]
     fn mul_scalar() {
@@ -159,20 +158,11 @@ mod tests {
 
         let b = 2.0 * a.clone();
         let c = a.clone() * 2.0;
-        let d = 2.0 * a;
-
-        // cannot multiply &SparseTensor by Scalar
-
-        // let e = a * 2.0;
-        // let f = &a * &2.0;
-        // let g = 2.0 * &a;
-        // let h = &2.0 * &a;
+        let d = 2.0 * a.clone();
+        let e = a * &2.0;
 
         assert_eq!(b, c);
         assert_eq!(c, d);
-        // assert_eq!(d, e);
-        // assert_eq!(e, f);
-        // assert_eq!(f, g);
-        // assert_eq!(g, h);
+        assert_eq!(d, e);
     }
 }

@@ -134,54 +134,51 @@ where
 
 #[cfg(test)]
 mod tests {
-    // use std::{collections::HashMap, hash};
+    use std::{collections::HashMap, hash};
 
-    // use super::*;
-    // use crate::sparse::SparseTensor;
+    use super::*;
 
-    // #[test]
+    #[test]
 
-    // cannot work cos neg is not implemented yet
+    fn sub_scalar() {
+        let mut hash1 = HashMap::new();
+        hash1.insert(vec![0usize, 0, 0], 1.0);
+        hash1.insert(vec![0usize, 0, 1], 2.0);
+        hash1.insert(vec![0usize, 1, 0], 1.0);
+        hash1.insert(vec![0usize, 1, 1], 2.0);
 
-    // fn sub_scalar() {
-    //     let mut hash1 = HashMap::new();
-    //     hash1.insert(vec![0usize, 0, 0], 1.0);
-    //     hash1.insert(vec![0usize, 0, 1], 2.0);
-    //     hash1.insert(vec![0usize, 1, 0], 1.0);
-    //     hash1.insert(vec![0usize, 1, 1], 2.0);
+        hash1.insert(vec![1usize, 0, 0], 1.0);
+        hash1.insert(vec![1usize, 0, 1], 2.0);
+        hash1.insert(vec![1usize, 1, 0], 2.0);
+        hash1.insert(vec![1usize, 1, 1], 2.0);
 
-    //     hash1.insert(vec![1usize, 0, 0], 1.0);
-    //     hash1.insert(vec![1usize, 0, 1], 2.0);
-    //     hash1.insert(vec![1usize, 1, 0], 2.0);
-    //     hash1.insert(vec![1usize, 1, 1], 2.0);
+        hash1.insert(vec![2usize, 0, 0], 1.0);
+        hash1.insert(vec![2usize, 0, 1], 2.0);
+        hash1.insert(vec![2usize, 1, 0], 2.0);
+        hash1.insert(vec![2usize, 1, 1], 2.0);
 
-    //     hash1.insert(vec![2usize, 0, 0], 1.0);
-    //     hash1.insert(vec![2usize, 0, 1], 2.0);
-    //     hash1.insert(vec![2usize, 1, 0], 2.0);
-    //     hash1.insert(vec![2usize, 1, 1], 2.0);
+        let a = SparseTensor::from(vec![3, 2, 2], hash1).unwrap();
 
-    //     let a = SparseTensor::from(vec![3, 2, 2], hash1).unwrap();
+        let mut hash2 = HashMap::new();
+        hash2.insert(vec![0usize, 0, 0], 1.0);
+        hash2.insert(vec![0usize, 0, 1], 2.0);
+        hash2.insert(vec![0usize, 1, 0], 1.0);
+        hash2.insert(vec![0usize, 1, 1], 2.0);
 
-    //     let mut hash2 = HashMap::new();
-    //     hash2.insert(vec![0usize, 0, 0], 1.0);
-    //     hash2.insert(vec![0usize, 0, 1], 2.0);
-    //     hash2.insert(vec![0usize, 1, 0], 1.0);
-    //     hash2.insert(vec![0usize, 1, 1], 2.0);
+        hash2.insert(vec![1usize, 0, 0], 1.0);
+        hash2.insert(vec![1usize, 0, 1], 2.0);
+        hash2.insert(vec![1usize, 1, 0], 2.0);
+        hash2.insert(vec![1usize, 1, 1], 2.0);
 
-    //     hash2.insert(vec![1usize, 0, 0], 1.0);
-    //     hash2.insert(vec![1usize, 0, 1], 2.0);
-    //     hash2.insert(vec![1usize, 1, 0], 2.0);
-    //     hash2.insert(vec![1usize, 1, 1], 2.0);
+        hash2.insert(vec![2usize, 0, 0], 1.0);
+        hash2.insert(vec![2usize, 0, 1], 2.0);
+        hash2.insert(vec![2usize, 1, 0], 2.0);
+        hash2.insert(vec![2usize, 1, 1], 2.0);
 
-    //     hash2.insert(vec![2usize, 0, 0], 1.0);
-    //     hash2.insert(vec![2usize, 0, 1], 2.0);
-    //     hash2.insert(vec![2usize, 1, 0], 2.0);
-    //     hash2.insert(vec![2usize, 1, 1], 2.0);
+        let b = SparseTensor::from(vec![3, 2, 2], hash2).unwrap();
 
-    //     let b = SparseTensor::from(vec![3, 2, 2], hash2).unwrap();
-
-    //     let d = a - 1.0;
-    //     let e = b - 1.0;
-    //     assert_eq!(d, e);
-    // }
+        let d = a - 1.0;
+        let e = b - 1.0;
+        assert_eq!(d, e);
+    }
 }

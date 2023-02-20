@@ -30,7 +30,9 @@ where
     }
     let mut lhs = lhs;
 
-    todo!();
+    rhs.elems.iter().for_each(|(k, v)| {
+        lhs[k] += *v;
+    });
 
     lhs
 }

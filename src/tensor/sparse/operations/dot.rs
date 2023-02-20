@@ -26,13 +26,13 @@ where
     ) -> SparseTensor<T> {
         let tensors = self.collect::<Vec<_>>();
         let max_rank = tensors.iter().map(|t| t.rank()).max().unwrap();
-        let mut new_dims = vec![1; max_rank];
+        let mut new_sizes = vec![1; max_rank];
 
         for (i, t) in tensors.iter().enumerate() {
             for (j, &dim) in t.sizes.iter().enumerate() {
                 if rank_combinations[i].get(&j).is_none() && dim > 1 {
-                    if new_dims[j] == 1 {
-                        new_dims[j] = dim;
+                    if new_sizes[j] == 1 {
+                        new_sizes[j] = dim;
                     } else {
                         panic!("The tensor whose a rank that is not aggregated and has a dimension greater than 1 can't be included.")
                     }
@@ -40,7 +40,7 @@ where
             }
         }
 
-        let mut result = SparseTensor::<T>::new(new_dims);
+        let mut result = SparseTensor::<T>::new(new_sizes);
 
         todo!();
 

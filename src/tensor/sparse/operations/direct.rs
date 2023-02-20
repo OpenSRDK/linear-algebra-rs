@@ -17,7 +17,26 @@ where
     T: Number + 'a,
 {
     fn direct_product(self) -> SparseTensor<T> {
+        let terms = self.collect::<Vec<_>>();
+        let new_sizes = terms.iter().fold(vec![], |mut acc, &next| {
+            if acc.len() < next.sizes.len() {
+                for i in 0..acc.len() {
+                    acc[i] *= next.size(i);
+                }
+                acc.extend(next.sizes[acc.len()..].iter().copied());
+            } else {
+                for i in 0..next.sizes.len() {
+                    acc[i] *= next.size(i);
+                }
+            }
+            acc
+        });
+
+        let mut result = SparseTensor::<T>::new(new_sizes);
+
         todo!();
+
+        result
     }
 }
 

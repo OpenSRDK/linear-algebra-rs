@@ -1,4 +1,5 @@
 use crate::{
+    indices_cartesian_product,
     number::{c64, Number},
     sparse::SparseTensor,
 };
@@ -30,7 +31,18 @@ where
     }
     let mut lhs = lhs;
 
-    todo!();
+    indices_cartesian_product(&lhs.sizes)
+        .into_iter()
+        .for_each(|k| {
+            if !lhs.elems.contains_key(&k) {
+                return;
+            }
+            if !rhs.elems.contains_key(&k) {
+                lhs.elems.remove(&k);
+                return;
+            }
+            lhs[&k] *= rhs[&k];
+        });
 
     lhs
 }

@@ -29,6 +29,9 @@ pub fn indices_cartesian_product(sizes: &[usize]) -> Vec<Vec<usize>> {
     sizes
         .iter()
         .fold(Vec::<Vec<usize>>::new(), |accum, &next_size| {
+            if accum.is_empty() {
+                return (0..next_size).map(|i| vec![i]).collect::<Vec<_>>();
+            };
             accum
                 .into_iter()
                 .flat_map(|acc| {
@@ -36,7 +39,7 @@ pub fn indices_cartesian_product(sizes: &[usize]) -> Vec<Vec<usize>> {
                         .map(|i| [&acc[..], &[i]].concat())
                         .collect::<Vec<_>>()
                 })
-                .collect::<Vec<_>>()
+                .collect()
         })
         .into_iter()
         .collect()
@@ -60,4 +63,45 @@ pub enum TensorError {
     OutOfRange,
     #[error("Others")]
     Others(Box<dyn Error + Send + Sync>),
+}
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn indices_cartesian_product() {
+        use super::indices_cartesian_product;
+        let a = indices_cartesian_product(&[2, 2]);
+        let b = indices_cartesian_product(&[2, 3, 4]);
+        assert_eq!(a, vec![vec![0, 0], vec![0, 1], vec![1, 0], vec![1, 1]]);
+
+        assert_eq!(
+            b,
+            vec![
+                vec![0, 0, 0],
+                vec![0, 0, 1],
+                vec![0, 0, 2],
+                vec![0, 0, 3],
+                vec![0, 1, 0],
+                vec![0, 1, 1],
+                vec![0, 1, 2],
+                vec![0, 1, 3],
+                vec![0, 2, 0],
+                vec![0, 2, 1],
+                vec![0, 2, 2],
+                vec![0, 2, 3],
+                vec![1, 0, 0],
+                vec![1, 0, 1],
+                vec![1, 0, 2],
+                vec![1, 0, 3],
+                vec![1, 1, 0],
+                vec![1, 1, 1],
+                vec![1, 1, 2],
+                vec![1, 1, 3],
+                vec![1, 2, 0],
+                vec![1, 2, 1],
+                vec![1, 2, 2],
+                vec![1, 2, 3],
+            ]
+        );
+    }
 }

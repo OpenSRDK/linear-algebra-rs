@@ -131,3 +131,84 @@ where
         *self = self as &Self - rhs;
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use std::{collections::HashMap, hash};
+
+    use super::*;
+
+    #[test]
+
+    fn sub_scalar() {
+        let mut hash1 = HashMap::new();
+        hash1.insert(vec![0usize, 0, 0], 1.0);
+        hash1.insert(vec![0usize, 0, 1], 2.0);
+        hash1.insert(vec![0usize, 1, 0], 1.0);
+        hash1.insert(vec![0usize, 1, 1], 2.0);
+
+        hash1.insert(vec![1usize, 0, 0], 1.0);
+        hash1.insert(vec![1usize, 0, 1], 2.0);
+        hash1.insert(vec![1usize, 1, 0], 2.0);
+        hash1.insert(vec![1usize, 1, 1], 2.0);
+
+        hash1.insert(vec![2usize, 0, 0], 1.0);
+        hash1.insert(vec![2usize, 0, 1], 2.0);
+        hash1.insert(vec![2usize, 1, 0], 2.0);
+        hash1.insert(vec![2usize, 1, 1], 2.0);
+
+        let a = SparseTensor::from(vec![3, 2, 2], hash1).unwrap();
+
+        let mut hash2 = HashMap::new();
+        hash2.insert(vec![0usize, 0, 0], 1.0);
+        hash2.insert(vec![0usize, 0, 1], 2.0);
+        hash2.insert(vec![0usize, 1, 0], 1.0);
+        hash2.insert(vec![0usize, 1, 1], 2.0);
+
+        hash2.insert(vec![1usize, 0, 0], 1.0);
+        hash2.insert(vec![1usize, 0, 1], 2.0);
+        hash2.insert(vec![1usize, 1, 0], 2.0);
+        hash2.insert(vec![1usize, 1, 1], 2.0);
+
+        hash2.insert(vec![2usize, 0, 0], 1.0);
+        hash2.insert(vec![2usize, 0, 1], 2.0);
+        hash2.insert(vec![2usize, 1, 0], 2.0);
+        hash2.insert(vec![2usize, 1, 1], 2.0);
+
+        let b = SparseTensor::from(vec![3, 2, 2], hash2).unwrap();
+
+        let d = a - 1.0;
+        let e = b - 1.0;
+        assert_eq!(d, e);
+    }
+
+    #[test]
+
+    fn sub() {
+        let mut a = SparseTensor::new(vec![3, 2, 2]);
+
+        a[&[0, 0, 0]] = 2.0;
+        a[&[0, 0, 1]] = 4.0;
+        a[&[1, 1, 0]] = 2.0;
+        a[&[1, 1, 1]] = 4.0;
+        a[&[2, 0, 0]] = 2.0;
+        a[&[2, 0, 1]] = 4.0;
+
+        let mut b = SparseTensor::new(vec![3, 2, 2]);
+        b[&[0, 0, 0]] = 2.0;
+        b[&[0, 0, 1]] = 4.0;
+        b[&[1, 1, 0]] = 2.0;
+        b[&[1, 1, 1]] = 1.0;
+        b[&[2, 0, 0]] = 1.0;
+        b[&[2, 0, 1]] = 2.0;
+
+        let c = a - b;
+
+        assert_eq!(c[&[0, 0, 0]], 0.0);
+        assert_eq!(c[&[0, 0, 1]], 0.0);
+        assert_eq!(c[&[1, 1, 0]], 0.0);
+        assert_eq!(c[&[1, 1, 1]], 3.0);
+        assert_eq!(c[&[2, 0, 0]], 1.0);
+        assert_eq!(c[&[2, 0, 1]], 2.0);
+    }
+}

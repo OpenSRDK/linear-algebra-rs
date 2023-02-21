@@ -141,3 +141,63 @@ where
         *self = self as &Self * rhs;
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn mul_scalar() {
+        let mut a = SparseTensor::new(vec![3, 2, 2]);
+        a[&[0, 0, 0]] = 2.0;
+        a[&[0, 0, 1]] = 4.0;
+        a[&[1, 1, 0]] = 2.0;
+        a[&[1, 1, 1]] = 4.0;
+        a[&[2, 0, 0]] = 2.0;
+        a[&[2, 0, 1]] = 4.0;
+
+        let b = 2.0 * a.clone();
+        let c = a.clone() * 2.0;
+        let d = 2.0 * a.clone();
+        let e = a * &2.0;
+
+        assert_eq!(b, c);
+        assert_eq!(c, d);
+        assert_eq!(d, e);
+    }
+
+    #[test]
+    fn mul() {
+        let mut a = SparseTensor::new(vec![3, 2, 2]);
+        a[&[0, 0, 0]] = 2.0;
+        a[&[0, 0, 1]] = 4.0;
+        a[&[1, 1, 0]] = 2.0;
+        a[&[1, 1, 1]] = 4.0;
+        a[&[2, 0, 0]] = 2.0;
+        a[&[2, 0, 1]] = 4.0;
+
+        let mut b = SparseTensor::new(vec![3, 2, 2]);
+        b[&[0, 0, 0]] = 2.0;
+        b[&[0, 0, 1]] = 4.0;
+        b[&[1, 1, 0]] = 2.0;
+        b[&[1, 1, 1]] = 4.0;
+        b[&[2, 0, 0]] = 2.0;
+        b[&[2, 0, 1]] = 4.0;
+
+        let mut c = SparseTensor::new(vec![3, 2, 2]);
+        c[&[0, 0, 0]] = 4.0;
+        c[&[0, 0, 1]] = 16.0;
+        c[&[1, 1, 0]] = 4.0;
+        c[&[1, 1, 1]] = 16.0;
+        c[&[2, 0, 0]] = 4.0;
+        c[&[2, 0, 1]] = 16.0;
+
+        let d = a.clone() * b.clone();
+
+        let e = b * a;
+
+        assert_eq!(c, d);
+        assert_eq!(d, e);
+        assert_eq!(e, c);
+    }
+}

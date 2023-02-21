@@ -55,10 +55,6 @@ where
                 combination.into_iter().fold(
                     (Vec::<usize>::new(), T::default()),
                     |(mut accum_indices, mut accum_value), (term_index, indices)| {
-                        if accum_indices.is_empty() {
-                            return (indices.clone(), terms[term_index].elem(&indices).clone());
-                        }
-
                         if accum_indices.len() < indices.len() {
                             for i in 0..accum_indices.len() {
                                 accum_indices[i] = (accum_indices[i] + 1) * (indices[i] + 1) - 1;

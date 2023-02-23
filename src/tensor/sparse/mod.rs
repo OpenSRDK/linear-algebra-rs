@@ -115,6 +115,10 @@ where
         &self.elems
     }
 
+    pub fn elems_mut(&mut self) -> &mut HashMap<Vec<usize>, T> {
+        &mut self.elems
+    }
+
     pub fn eject(self) -> (Vec<usize>, HashMap<Vec<usize>, T>) {
         (self.sizes, self.elems)
     }

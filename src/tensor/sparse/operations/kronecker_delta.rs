@@ -189,10 +189,21 @@ mod test {
     use crate::TensorError;
 
     #[test]
-    fn test_kronecker_delta_mul() -> Result<(), TensorError> {
-        let a =
-            KroneckerDelta(0, 1) * KroneckerDelta(1, 2) * SparseTensor::<f64>::new(vec![2, 2, 2]);
-        let b = KroneckerDelta(1, 2) * KroneckerDelta(0, 1);
+    fn test_kronecker_delta() -> Result<(), TensorError> {
+        let mut a = SparseTensor::new(vec![2, 3, 4]);
+
+        a[&[0, 0, 0]] = 1.0;
+        a[&[1, 2, 3]] = 2.0;
+
+        let mut b = SparseTensor::new(vec![2, 3, 4]);
+
+        b[&[0, 0, 0]] = 1.0;
+        b[&[1, 2, 3]] = 2.0;
+
+        let c = a * KroneckerDelta(0, 1);
+        let d = b * KroneckerDelta(1, 0);
+
+        assert_eq!(c, d);
 
         Ok(())
     }

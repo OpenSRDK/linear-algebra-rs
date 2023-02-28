@@ -68,6 +68,20 @@ pub enum TensorError {
 #[cfg(test)]
 mod tests {
     #[test]
+    fn generate_rank_combinations() {
+        use super::generate_rank_combinations;
+        let a = generate_rank_combinations(&[[0, 0], [1, 1]]);
+        println!("a:{:?}", a);
+        let b = generate_rank_combinations(&[[0, 0], [1, 1], [2, 2]]);
+        println!("b:{:?}", b);
+        assert_eq!(a[0].get(&0).unwrap(), a[1].get(&0).unwrap());
+        assert_eq!(a[0].get(&1).unwrap(), a[1].get(&1).unwrap());
+        assert_eq!(b[0].get(&0).unwrap(), b[1].get(&0).unwrap());
+        assert_eq!(b[0].get(&1).unwrap(), b[1].get(&1).unwrap());
+        assert_eq!(b[0].get(&2).unwrap(), b[1].get(&2).unwrap());
+    }
+
+    #[test]
     fn indices_cartesian_product() {
         use super::indices_cartesian_product;
         let a = indices_cartesian_product(&[2, 2]);

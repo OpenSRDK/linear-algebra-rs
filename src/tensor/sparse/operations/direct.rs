@@ -77,7 +77,7 @@ where
                         }
                         println!("accum_indices1:{:?}", accum_indices);
                         println!("indices:{:?}", indices);
-                        println!("term_index:{:?}", term_index);
+                        // println!("term_index:{:?}", term_index);
 
                         if accum_indices.len() < indices.len() {
                             for i in 0..accum_indices.len() {
@@ -86,10 +86,14 @@ where
                             accum_indices.extend(indices[accum_indices.len()..].iter());
                         } else {
                             for i in 0..indices.len() {
-                                accum_indices[i] = (accum_indices[i] + 1) * (indices[i] + 1) - 1;
+                                accum_indices[i] = accum_indices[i] * rhs_size[i] + indices[i];
+                                // if accum_indices[i] == 0 {
+                                //     accum_indices[i] = 1;
+                                // }
                             }
                         }
-                        // println!("accum_indices2:{:?}", accum_indices);
+                        println!("accum_indices2:{:?}", accum_indices);
+                        println!();
 
                         accum_value *= terms[term_index].elem(&indices).clone();
 

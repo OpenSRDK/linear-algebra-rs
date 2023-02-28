@@ -18,6 +18,9 @@ where
 {
     fn direct_product(self) -> SparseTensor<T> {
         let terms = self.collect::<Vec<_>>();
+        let rhs_size = &terms[terms.len() - 1].sizes;
+        println!("size0:{:?}", rhs_size);
+
         let new_sizes = terms.iter().fold(vec![], |mut acc, &next| {
             if acc.len() < next.sizes.len() {
                 for i in 0..acc.len() {
@@ -73,8 +76,8 @@ where
                             return (indices.clone(), terms[term_index].elem(&indices).clone());
                         }
                         println!("accum_indices1:{:?}", accum_indices);
-                        println!("indices{:?}", indices);
-                        // println!("term_index{:?}", term_index);
+                        println!("indices:{:?}", indices);
+                        println!("term_index:{:?}", term_index);
 
                         if accum_indices.len() < indices.len() {
                             for i in 0..accum_indices.len() {
@@ -86,7 +89,7 @@ where
                                 accum_indices[i] = (accum_indices[i] + 1) * (indices[i] + 1) - 1;
                             }
                         }
-                        println!("accum_indices2:{:?}", accum_indices);
+                        // println!("accum_indices2:{:?}", accum_indices);
 
                         accum_value *= terms[term_index].elem(&indices).clone();
 

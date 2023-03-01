@@ -66,6 +66,7 @@ where
                 combination.into_iter().fold(
                     (Vec::<usize>::new(), T::default()),
                     |(mut accum_indices, mut accum_value), (term_index, indices)| {
+
                         // println!(
                         //     "accum_indices:{:?}, accum_value{:?}",
                         //     accum_indices, accum_value

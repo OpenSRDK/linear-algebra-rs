@@ -24,11 +24,11 @@ where
         self,
         rank_combinations: &[HashMap<RankIndex, RankCombinationId>],
     ) -> SparseTensor<T> {
-        let tensors = self.collect::<Vec<_>>();
-        let max_rank = tensors.iter().map(|t| t.rank()).max().unwrap();
+        let terms = self.collect::<Vec<_>>();
+        let max_rank = terms.iter().map(|t| t.rank()).max().unwrap();
         let mut new_sizes = vec![1; max_rank];
 
-        for (i, t) in tensors.iter().enumerate() {
+        for (i, t) in terms.iter().enumerate() {
             for (j, &dim) in t.sizes.iter().enumerate() {
                 if rank_combinations[i].get(&j).is_none() && dim > 1 {
                     if new_sizes[j] == 1 {

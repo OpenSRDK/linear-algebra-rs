@@ -58,3 +58,51 @@ where
         vec![self, rhs].into_iter().dot_product(&rank_combinations)
     }
 }
+
+// #[cfg(test)]
+// mod tests {
+//     use super::*;
+//     use crate::sparse::SparseTensor;
+//     use crate::tensor::Tensor;
+//     use crate::Number;
+
+//     #[test]
+//     fn test_dot_product() {
+//         let mut a = SparseTensor::<f64>::new(vec![2, 2]);
+//         a[&[0, 0]] = 1.0;
+//         a[&[0, 1]] = 2.0;
+//         a[&[1, 0]] = 3.0;
+//         a[&[1, 1]] = 4.0;
+
+//         let mut b = SparseTensor::<f64>::new(vec![2, 2]);
+//         b[&[0, 0]] = 1.0;
+//         b[&[0, 1]] = 2.0;
+//         b[&[1, 0]] = 3.0;
+//         b[&[1, 1]] = 4.0;
+
+//         let mut c = SparseTensor::<f64>::new(vec![2, 2]);
+//         c[&[0, 0]] = 1.0;
+//         c[&[0, 1]] = 2.0;
+//         c[&[1, 0]] = 3.0;
+//         c[&[1, 1]] = 4.0;
+
+//         let mut d = SparseTensor::<f64>::new(vec![2, 2]);
+//         d[&[0, 0]] = 1.0;
+//         d[&[0, 1]] = 2.0;
+//         d[&[1, 0]] = 3.0;
+//         d[&[1, 1]] = 4.0;
+
+//         let rank_pairs = [[0, 0], [1, 1]];
+
+//         let result = vec![&a, &b, &c, &d].into_iter().dot_product(&rank_pairs);
+
+//         let expected = SparseTensor::<f64>::from_vec(
+//             vec![
+//                 1., 2., 3., 4., 2., 4., 6., 8., 3., 6., 9., 12., 4., 8., 12., 16.,
+//             ],
+//             vec![2, 2, 2, 2],
+//         );
+
+//         assert_eq!(result, expected);
+//     }
+// }

@@ -45,10 +45,18 @@ where
             }
         }
 
-        let mut result = SparseTensor::<T>::new(new_sizes);
-        result.elems = todo!();
+        let mut result = SparseTensor::new(new_sizes);
+        let result_size = result.sizes;
+        for i in result_size {
+            for j in 0..i {
+                for k in 0..i {
+                    result[&[i, j]] = terms[0][&[i, k]] * terms[1][&[k, j]];
+                }
+            }
+            println!("i: {:?}", i);
+        }
 
-        result
+        todo!()
     }
 }
 

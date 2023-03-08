@@ -25,16 +25,17 @@ where
         rank_combinations: &[HashMap<RankIndex, RankCombinationId>],
     ) -> SparseTensor<T> {
         let terms = self.collect::<Vec<_>>();
-        println!("terms: {:?}", terms);
         let max_rank = terms.iter().map(|t| t.rank()).max().unwrap();
-        println!("max_rank: {:?}", max_rank);
         let mut new_sizes = vec![1; max_rank];
-        println!("new_sizes: {:?}", new_sizes);
 
         for (i, t) in terms.iter().enumerate() {
             for (j, &dim) in t.sizes.iter().enumerate() {
-                println!("{:?}", t.sizes);
-                println!("i: {:?}, j: {:?}, dim: {:?}", i, j, dim);
+                // println!("{:?}", t.sizes);
+                // println!("i: {:?}, j: {:?}, dim: {:?}", i, j, dim);
+                // println!(
+                //     "rank_combinations[i].get[&j]: {:?}",
+                //     rank_combinations[i].get(&j)
+                // );
                 if rank_combinations[i].get(&j).is_none() && dim > 1 {
                     if new_sizes[j] == 1 {
                         new_sizes[j] = dim;
@@ -44,19 +45,22 @@ where
                 }
             }
         }
+        println!("new_sizes: {:?}", new_sizes);
 
-        let mut result = SparseTensor::new(new_sizes);
-        let result_size = result.sizes;
-        for i in result_size {
-            for j in 0..i {
-                for k in 0..i {
-                    result[&[i, j]] = terms[0][&[i, k]] * terms[1][&[k, j]];
+        let mut result = SparseTensor::<T>::new(new_sizes.clone());
+        //rank_combination = [2, 1]のとき
+        //kの場所が変わる
+        for i in 0..new_sizes[0] {
+            for j in 0..new_sizes[1] {
+                for k in 0..max_rank {
+                    println!("i: {:?}, j: {:?}, k: {:?}", i, j, k);
+                    result[&[i, j]] += terms[0][&[i, k]] * terms[1][&[k, j]];
+                    println!(" {:?}:, {:?}", [&[i, j]], result[&[i, j]]);
                 }
             }
-            println!("i: {:?}", i);
         }
 
-        todo!()
+        result
     }
 }
 
@@ -86,7 +90,7 @@ mod tests {
         a[&[1, 0]] = 3.0;
         a[&[1, 1]] = 4.0;
 
-        let mut b = SparseTensor::<f64>::new(vec![3, 2]);
+        let mut b = SparseTensor::<f64>::new(vec![2, 2]);
         b[&[0, 0]] = 2.0;
         b[&[0, 1]] = 4.0;
         b[&[1, 0]] = 6.0;
@@ -104,7 +108,7 @@ mod tests {
         d[&[1, 0]] = 3.0;
         d[&[1, 1]] = 4.0;
 
-        let rank_pairs = [[0, 0], [1, 1]];
+        let rank_pairs = [[0, 0], [1, 2]];
         let rank_combinations = generate_rank_combinations(&rank_pairs);
         println!("rank_combinations:{:?}", rank_combinations);
         println!("rank:{:?}", rank_combinations[0].get(&0));

@@ -28,6 +28,8 @@ where
         let max_rank = terms.iter().map(|t| t.rank()).max().unwrap();
         let mut new_sizes = vec![1; max_rank];
         println!("new_sizes0: {:?}", new_sizes);
+        let mut _rank_combination0 = 0;
+        let mut _rank_combination1 = 0;
 
         for (i, t) in terms.iter().enumerate() {
             for (j, &dim) in t.sizes.iter().enumerate() {
@@ -43,25 +45,44 @@ where
                     } else {
                         panic!("The tensor whose a rank that is not aggregated and has a dimension greater than 1 can't be included.")
                     }
+                } else if i == 0 && rank_combinations[i].get(&j).is_some() {
+                    _rank_combination0 = j;
+                } else if i == 1 && rank_combinations[i].get(&j).is_some() {
+                    _rank_combination1 = j;
                 }
             }
         }
         println!("new_sizes1: {:?}", new_sizes);
+        new_sizes = vec![2, 2, 2];
 
         let mut result = SparseTensor::<T>::new(new_sizes.clone());
-        //rank_combination = [2, 1]のとき
+        //rank_combination = [1,0]のとき
         //kの場所が変わる
+        for (r, dim) in new_sizes.iter().enumerate() {
+            println!("r: {:?}, dim:{}", r, dim);
+            for d in 0..*dim {
+                println!(" d:{}", d);
+
+                for s in 0..*dim {
+                    let mut first_term_index = vec![0; max_rank];
+
+                    first_term_index[_rank_combination0] = d;
+
+                    // println!("i: {:?}, j: {:?}, k: {:?}", i, j, k);
+                    result[&[r, j]] += terms[0][&[i, k]] * terms[1][&[k, j]];
+                    // println!("{:?}:, {:?}", [&[i, j]], result[&[i, j]]);
+                }
+
+                // result[&[i, j]] = T::zero();
+            }
+        }
+
         for i in 0..new_sizes[0] {
             for j in 0..new_sizes[1] {
                 for k in 0..max_rank {
-                    let mut first_term_index: [&[usize]; 1] = [&[0, 0]];
-                    if todo!() {
-                        //rank_combination[0] = 1のとき
-                        first_term_index[0][0] = i;
-                    } else {
-                        //rank_combination[0] = 2のとき
-                        first_term_index[0][1] = i;
-                    }
+                    let mut first_term_index = vec![0; max_rank];
+
+                    first_term_index[_rank_combination0] = j;
 
                     // println!("i: {:?}, j: {:?}, k: {:?}", i, j, k);
                     result[&[i, j]] += terms[0][&[i, k]] * terms[1][&[k, j]];
@@ -125,7 +146,7 @@ mod tests {
         d[&[1, 0]] = 3.0;
         d[&[1, 1]] = 4.0;
 
-        let rank_pairs = [[0, 2], [2, 1]];
+        let rank_pairs = [[1, 0]];
         let rank_combinations = generate_rank_combinations(&rank_pairs);
         println!("rank_combinations:{:?}", rank_combinations);
         println!("rank:{:?}", rank_combinations[0].get(&0));

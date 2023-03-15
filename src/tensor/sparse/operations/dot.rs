@@ -52,53 +52,68 @@ where
                 }
             }
         }
-        println!("new_sizes1: {:?}", new_sizes);
-        new_sizes = vec![2, 2, 2];
+        println!("new_sizes: {:?}", new_sizes);
 
         let mut result = SparseTensor::<T>::new(new_sizes.clone());
         //rank_combination = [1,0]のとき
         //kの場所が変わる
-        for (r, dim) in new_sizes.iter().enumerate() {
-            println!("r: {:?}, dim:{}", r, dim);
-            for d in 0..*dim {
-                println!(" d:{}", d);
+        let mut first_index = vec![0; max_rank];
+        let mut second_index = vec![0; max_rank];
+        // let mut result_index = vec![0; max_rank];
 
-                for s in 0..*dim {
-                    let mut first_term_index = vec![0; max_rank];
+        // for (r, dim) in new_sizes.iter().enumerate() {
+        //     println!("r: {:?}, dim:{}", r, dim);
+        //     for d in 0..*dim {
+        //         for s in 0..*dim {
+        //             first_index[r] = d;
+        //             first_index[_rank_combination0] = s;
 
-                    first_term_index[_rank_combination0] = d;
+        //             second_index[r] = d;
+        //             second_index[_rank_combination1] = s;
 
-                    // println!("i: {:?}, j: {:?}, k: {:?}", i, j, k);
-                    result[&[r, j]] += terms[0][&[i, k]] * terms[1][&[k, j]];
-                    // println!("{:?}:, {:?}", [&[i, j]], result[&[i, j]]);
-                }
+        //             result_index[0] = d;
+        //             result_index[1] = s;
 
-                // result[&[i, j]] = T::zero();
-            }
-        }
+        //             // println!("i: {:?}, j: {:?}, k: {:?}", i, j, k);
+        //             result[&result_index] += terms[0][&first_index] * terms[1][&second_index];
+        //             // println!("{:?}:, {:?}", [&[i, j]], result[&[i, j]]);
+
+        //             // result[&[i, j]] = T::zero();
+        //         }
+        //     }
+        // }
 
         for i in 0..new_sizes[0] {
             for j in 0..new_sizes[1] {
                 for k in 0..max_rank {
-                    let mut first_term_index = vec![0; max_rank];
-
-                    first_term_index[_rank_combination0] = j;
-
-                    // println!("i: {:?}, j: {:?}, k: {:?}", i, j, k);
+                    first_index[_rank_combination0] = k;
+                    second_index[_rank_combination1] = k;
                     result[&[i, j]] += terms[0][&[i, k]] * terms[1][&[k, j]];
-                    // println!("{:?}:, {:?}", [&[i, j]], result[&[i, j]]);
                 }
             }
         }
 
-        fn setIndex(rank_combinations: &[HashMap<RankIndex, RankCombinationId>]) {
-            let first_term_index = rank_combinations[0].get(&0).unwrap();
-            println!("first_term_index: {:?}", first_term_index);
-            let second_term_index = rank_combinations[1].get(&0).unwrap();
-            println!("second_term_index: {:?}", second_term_index);
-        }
-
         result
+    }
+}
+
+fn calc_elem(
+    new_sizes: [usize; 2],
+    terms: &[SparseTensor<T>],
+    rank_combinations: &[HashMap<RankIndex, RankCombinationId>],
+    result: &mut SparseTensor<T>,
+    max_rank: usize,
+    _rank_combination0: usize,
+    _rank_combination1: usize,
+) {
+    for i in 0..new_sizes[0] {
+        for j in 0..new_sizes[1] {
+            for k in 0..max_rank {
+                first_index[_rank_combination0] = k;
+                second_index[_rank_combination1] = k;
+                result[&[i, j]] += terms[0][&[i, k]] * terms[1][&[k, j]];
+            }
+        }
     }
 }
 

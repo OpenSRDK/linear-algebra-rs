@@ -93,27 +93,52 @@ where
             }
         }
 
-        result
-    }
-}
-
-fn calc_elem(
-    new_sizes: [usize; 2],
-    terms: &[SparseTensor<T>],
-    rank_combinations: &[HashMap<RankIndex, RankCombinationId>],
-    result: &mut SparseTensor<T>,
-    max_rank: usize,
-    _rank_combination0: usize,
-    _rank_combination1: usize,
-) {
-    for i in 0..new_sizes[0] {
-        for j in 0..new_sizes[1] {
-            for k in 0..max_rank {
-                first_index[_rank_combination0] = k;
-                second_index[_rank_combination1] = k;
-                result[&[i, j]] += terms[0][&[i, k]] * terms[1][&[k, j]];
+        fn push_elem(
+            k: usize,
+            new_sizes: [usize; 2],
+            first_index: &mut Vec<usize>,
+            second_index: &mut Vec<usize>,
+            rank_combination0: usize,
+            rank_combination1: usize,
+        ) {
+            loop {
+                if k == new_sizes.len() {
+                    break;
+                }
+                {
+                    for i in 0..new_sizes[k] {
+                        first_index.push(i);
+                    }
+                }
             }
         }
+
+        let new_elems = terms.iter().enumerate().fold(
+            Vec::<Vec<(usize, &Vec<usize>)>>::new(),
+            |accum, (term_index, &next_term)| {
+                if accum.is_empty() {
+                    return next_term
+                        .elems
+                        .keys()
+                        .map(|indices| vec![(term_index, indices)])
+                        .collect::<Vec<_>>();
+                };
+                accum
+                    .into_iter()
+                    .flat_map(|acc| {
+                        next_term
+                            .elems
+                            .keys()
+                            .map(|indices| [&acc[..], &[(term_index, indices)]].concat())
+                            .collect::<Vec<_>>()
+                    })
+                    .collect::<Vec<_>>()
+            },
+        );
+
+        println!("new_elems: {:?}", new_elems);
+
+        result
     }
 }
 

@@ -93,6 +93,26 @@ where
             }
         }
 
+        fn create_indeces(dimensions: &[usize]) -> Vec<Vec<usize>> {
+            let mut indeces = Vec::new();
+            if dimensions.len() == 1 {
+                for i in 0..dimensions[0] + 1 {
+                    indeces.push(vec![i]);
+                }
+            } else {
+                for i in 0..dimensions[0] + 1 {
+                    let sub_array = create_indeces(&dimensions[1..]);
+                    for j in 0..sub_array.len() {
+                        let mut elem = sub_array[j].clone();
+                        elem.insert(0, i);
+                        indeces.push(elem);
+                    }
+                }
+            }
+            indeces
+        }
+
+        let indeces = create_indeces(&new_sizes);
         fn push_elem(
             k: usize,
             new_sizes: [usize; 2],
@@ -101,42 +121,23 @@ where
             rank_combination0: usize,
             rank_combination1: usize,
         ) {
-            loop {
-                if k == new_sizes.len() {
-                    break;
+            if k < new_sizes.len() - 1 {
+                for i in 0..new_sizes[k] {
+                    first_index[k] = i;
+                    second_index[k] = i;
                 }
-                {
-                    for i in 0..new_sizes[k] {
-                        first_index.push(i);
-                    }
-                }
+                push_elem(
+                    k,
+                    new_sizes,
+                    first_index,
+                    second_index,
+                    rank_combination0,
+                    rank_combination1,
+                );
+            } else {
+                // result[] =
             }
         }
-
-        let new_elems = terms.iter().enumerate().fold(
-            Vec::<Vec<(usize, &Vec<usize>)>>::new(),
-            |accum, (term_index, &next_term)| {
-                if accum.is_empty() {
-                    return next_term
-                        .elems
-                        .keys()
-                        .map(|indices| vec![(term_index, indices)])
-                        .collect::<Vec<_>>();
-                };
-                accum
-                    .into_iter()
-                    .flat_map(|acc| {
-                        next_term
-                            .elems
-                            .keys()
-                            .map(|indices| [&acc[..], &[(term_index, indices)]].concat())
-                            .collect::<Vec<_>>()
-                    })
-                    .collect::<Vec<_>>()
-            },
-        );
-
-        println!("new_elems: {:?}", new_elems);
 
         result
     }

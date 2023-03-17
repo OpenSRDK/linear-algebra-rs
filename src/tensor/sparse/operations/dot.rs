@@ -1,8 +1,7 @@
 use crate::sparse::RankIndex;
 use crate::tensor::Tensor;
-use crate::{generate_rank_combinations, RankCombinationId, TensorError};
+use crate::{generate_rank_combinations, RankCombinationId};
 use crate::{sparse::SparseTensor, Number};
-use rand::prelude::*;
 use std::collections::HashMap;
 
 pub trait DotProduct<T>
@@ -55,90 +54,38 @@ where
         println!("new_sizes: {:?}", new_sizes);
 
         let mut result = SparseTensor::<T>::new(new_sizes.clone());
-        //rank_combination = [1,0]のとき
-        //kの場所が変わる
-        let mut first_index = vec![0; max_rank];
-        let mut second_index = vec![0; max_rank];
-        // let mut result_index = vec![0; max_rank];
 
-        // for (r, dim) in new_sizes.iter().enumerate() {
-        //     println!("r: {:?}, dim:{}", r, dim);
-        //     for d in 0..*dim {
-        //         for s in 0..*dim {
-        //             first_index[r] = d;
-        //             first_index[_rank_combination0] = s;
-
-        //             second_index[r] = d;
-        //             second_index[_rank_combination1] = s;
-
-        //             result_index[0] = d;
-        //             result_index[1] = s;
-
-        //             // println!("i: {:?}, j: {:?}, k: {:?}", i, j, k);
-        //             result[&result_index] += terms[0][&first_index] * terms[1][&second_index];
-        //             // println!("{:?}:, {:?}", [&[i, j]], result[&[i, j]]);
-
-        //             // result[&[i, j]] = T::zero();
-        //         }
-        //     }
-        // }
-
-        for i in 0..new_sizes[0] {
-            for j in 0..new_sizes[1] {
-                for k in 0..max_rank {
-                    first_index[_rank_combination0] = k;
-                    second_index[_rank_combination1] = k;
-                    result[&[i, j]] += terms[0][&[i, k]] * terms[1][&[k, j]];
-                }
-            }
-        }
-
-        fn create_indeces(dimensions: &[usize]) -> Vec<Vec<usize>> {
-            let mut indeces = Vec::new();
+        fn create_indices(dimensions: &[usize]) -> Vec<Vec<usize>> {
+            let mut indices = Vec::new();
             if dimensions.len() == 1 {
-                for i in 0..dimensions[0] + 1 {
-                    indeces.push(vec![i]);
+                for i in 0..dimensions[0] {
+                    indices.push(vec![i]);
                 }
             } else {
-                for i in 0..dimensions[0] + 1 {
-                    let sub_array = create_indeces(&dimensions[1..]);
+                for i in 0..dimensions[0] {
+                    let sub_array = create_indices(&dimensions[1..]);
                     for j in 0..sub_array.len() {
                         let mut elem = sub_array[j].clone();
                         elem.insert(0, i);
-                        indeces.push(elem);
+                        indices.push(elem);
                     }
                 }
             }
-            indeces
+            indices
         }
 
-        let indeces = create_indeces(&new_sizes);
-        fn push_elem(
-            k: usize,
-            new_sizes: [usize; 2],
-            first_index: &mut Vec<usize>,
-            second_index: &mut Vec<usize>,
-            rank_combination0: usize,
-            rank_combination1: usize,
-        ) {
-            if k < new_sizes.len() - 1 {
-                for i in 0..new_sizes[k] {
-                    first_index[k] = i;
-                    second_index[k] = i;
-                }
-                push_elem(
-                    k,
-                    new_sizes,
-                    first_index,
-                    second_index,
-                    rank_combination0,
-                    rank_combination1,
-                );
-            } else {
-                // result[] =
+        let indices = create_indices(&new_sizes);
+
+        for index in indices.iter() {
+            for k in 0..max_rank {
+                let mut first_index = index.clone();
+                first_index[_rank_combination0] = k;
+                let mut second_index = index.clone();
+                second_index[_rank_combination1] = k;
+
+                result[&index] += terms[0][&first_index] * terms[1][&second_index];
             }
         }
-
         result
     }
 }
@@ -158,9 +105,6 @@ where
 mod tests {
     use super::*;
     use crate::sparse::SparseTensor;
-    use crate::tensor::Tensor;
-    use crate::Number;
-
     #[test]
     fn test_dot_product() {
         let mut a = SparseTensor::<f64>::new(vec![2, 2]);
@@ -194,19 +138,6 @@ mod tests {
 
         let result = vec![&a, &b].into_iter().dot_product(&rank_combinations);
 
-        // let result = vec![&a, &b, &c, &d]
-        //     .into_iter()
-        //     .dot_product(&rank_combinations);
-
         println!("result:{:?}", result);
-
-        // let expected = SparseTensor::<f64>::from_vec(
-        //     vec![
-        //         1., 2., 3., 4., 2., 4., 6., 8., 3., 6., 9., 12., 4., 8., 12., 16.,
-        //     ],
-        //     vec![2, 2, 2, 2],
-        // );
-
-        // assert_eq!(result, expected);
     }
 }

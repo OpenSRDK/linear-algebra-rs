@@ -120,24 +120,37 @@ mod tests {
         b[&[1, 1]] = 8.0;
 
         let mut c = SparseTensor::<f64>::new(vec![2, 2]);
-        c[&[0, 0]] = 1.0;
-        c[&[0, 1]] = 2.0;
-        c[&[1, 0]] = 3.0;
-        c[&[1, 1]] = 4.0;
+        c[&[0, 0]] = 14.0;
+        c[&[0, 1]] = 20.0;
+        c[&[1, 0]] = 30.0;
+        c[&[1, 1]] = 44.0;
 
-        let mut d = SparseTensor::<f64>::new(vec![2, 2]);
-        d[&[0, 0]] = 1.0;
-        d[&[0, 1]] = 2.0;
-        d[&[1, 0]] = 3.0;
-        d[&[1, 1]] = 4.0;
+        let mut d = SparseTensor::<f64>::new(vec![2, 2, 2]);
+        d[&[0, 0, 0]] = 1.0;
+        d[&[0, 0, 1]] = 2.0;
+        d[&[0, 1, 0]] = 3.0;
+        d[&[0, 1, 1]] = 4.0;
+        d[&[1, 0, 0]] = 5.0;
+        d[&[1, 0, 1]] = 6.0;
+        d[&[1, 1, 0]] = 7.0;
+        d[&[1, 1, 1]] = 8.0;
+
+        let mut e = SparseTensor::<f64>::new(vec![2, 2, 2]);
+        e[&[0, 0, 0]] = 2.0;
+        e[&[0, 0, 1]] = 4.0;
+        e[&[0, 1, 0]] = 6.0;
+        e[&[0, 1, 1]] = 8.0;
+        e[&[1, 0, 0]] = 10.0;
+        e[&[1, 0, 1]] = 12.0;
+        e[&[1, 1, 0]] = 14.0;
+        e[&[1, 1, 1]] = 16.0;
 
         let rank_pairs = [[1, 0]];
         let rank_combinations = generate_rank_combinations(&rank_pairs);
-        println!("rank_combinations:{:?}", rank_combinations);
-        println!("rank:{:?}", rank_combinations[0].get(&0));
 
         let result = vec![&a, &b].into_iter().dot_product(&rank_combinations);
-
-        println!("result:{:?}", result);
+        assert_eq!(result, c);
+        let result2 = vec![&d, &e].into_iter().dot_product(&rank_combinations);
+        println!("result2: {:?}", result2);
     }
 }

@@ -26,7 +26,6 @@ where
         let terms = self.collect::<Vec<_>>();
         let max_rank = terms.iter().map(|t| t.rank()).max().unwrap();
         let mut new_sizes = vec![1; max_rank];
-        println!("new_sizes0: {:?}", new_sizes);
         let mut _rank_combination0 = 0;
         let mut _rank_combination1 = 0;
 
@@ -51,7 +50,6 @@ where
                 }
             }
         }
-        println!("new_sizes: {:?}", new_sizes);
 
         let mut result = SparseTensor::<T>::new(new_sizes.clone());
 

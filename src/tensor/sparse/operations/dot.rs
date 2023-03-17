@@ -74,8 +74,11 @@ where
 
         let indices = create_indices(&new_sizes);
 
+        if terms[0].sizes[_rank_combination0] != terms[1].sizes[_rank_combination1] {
+            panic!("The dimensions of the rank to be aggregated must be the same.");
+        }
         for index in indices.iter() {
-            for k in 0..max_rank {
+            for k in 0..terms[0].sizes[_rank_combination0] {
                 let mut first_index = index.clone();
                 first_index[_rank_combination0] = k;
                 let mut second_index = index.clone();
@@ -148,7 +151,7 @@ mod tests {
 
         let result = vec![&a, &b].into_iter().dot_product(&rank_combinations);
         assert_eq!(result, c);
-        let result2 = vec![&d, &e].into_iter().dot_product(&rank_combinations);
-        println!("result2: {:?}", result2);
+        // let result2 = vec![&d, &e].into_iter().dot_product(&rank_combinations);
+        // println!("result2: {:?}", result2);
     }
 }

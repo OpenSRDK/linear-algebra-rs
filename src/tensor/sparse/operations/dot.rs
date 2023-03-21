@@ -31,12 +31,6 @@ where
 
         for (i, t) in terms.iter().enumerate() {
             for (j, &dim) in t.sizes.iter().enumerate() {
-                println!("t.sizes:{:?}", t.sizes);
-                println!("i: {:?}, j: {:?}, dim: {:?}", i, j, dim);
-                println!(
-                    "rank_combinations[i].get[&j]: {:?}",
-                    rank_combinations[i].get(&j)
-                );
                 if rank_combinations[i].get(&j).is_none() && dim > 1 {
                     if new_sizes[j] == 1 {
                         new_sizes[j] = dim;
@@ -151,7 +145,5 @@ mod tests {
 
         let result = vec![&a, &b].into_iter().dot_product(&rank_combinations);
         assert_eq!(result, c);
-        // let result2 = vec![&d, &e].into_iter().dot_product(&rank_combinations);
-        // println!("result2: {:?}", result2);
     }
 }

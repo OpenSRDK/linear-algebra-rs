@@ -1,6 +1,6 @@
 [package]
 name = "opensrdk-linear-algebra"
-version = "0.9.2"
+version = "0.9.3"
 authors = ["Kimura Yu <33382781+KimuraYu45z@users.noreply.github.com>"]
 edition = "2018"
 description = "Standard linear algebra library using blas and lapack for OpenSRDK toolchain."
